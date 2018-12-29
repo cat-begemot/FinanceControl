@@ -1,0 +1,60 @@
+<div class="m-1">
+	<div class="row border-bottom mb-3 py-1">
+		<div class="col">
+			<h4>Accounts info</h4>	
+		</div>
+		<div class="col text-right">
+			<button class="btn btn-sm btn-dark text-light" routerLink="/accounts/add">
+				<i class="fas fa-plus-circle mr-1"></i>
+				New account
+			</button>
+		</div>
+	</div>
+	
+	
+	<h6 class="totalActive">{{activeAccountTotal}}</h6>
+	<table class="table table-sm table-bordered">
+		<tr class="activeRow text-light">
+			<th>Account name</th>
+			<th class="text-right">Balance</th>
+			<th class="text-left">Code</th>
+			<th class="text-center toolsCol">Tools</th>
+		</tr>
+		<tr *ngFor="let account of activeAccounts">
+			<td>{{account.accountName}}</td>
+			<td class="text-right">{{account.balance | number:'1.2-2'}}</td>
+			<td class="text-left">UAH</td>
+			<td class="text-center">
+				<button type="button" class="btn btn-sm btn-outline-dark mr-1 btnEdit text-light">
+					<i class="far fa-edit"></i>
+				</button>
+				<button class="btn btn-sm btn-outline-dark btnHide text-light">
+					<i class="fas fa-minus"></i>
+				</button>
+			</td>
+		</tr>
+	</table>
+
+	<h6 class="totalHidden">{{inactiveAccountTotal}}</h6>
+	<table class="table table-sm table-bordered">
+		<tr class="hiddenRow text-light">
+			<th>Account name</th>
+			<th class="text-right">Balance</th>
+			<th class="text-left">Code</th>
+			<th class="text-center toolsCol">Tools</th>
+		</tr>
+		<tr *ngFor="let account of inactiveAccounts">
+			<td>{{account.accountName}}</td>
+			<td class="text-right">{{account.balance | number:'1.2-2'}}</td>
+			<td class="text-left">UAH</td>
+			<td class="text-center">
+				<button type="button" class="btn btn-sm btn-outline-dark mr-1 btnEdit text-light">
+					<i class="far fa-edit"></i>
+				</button>
+				<button class="btn btn-sm btn-outline-dark btnActive text-light">
+						<i class="fas fa-plus"></i>
+				</button>
+			</td>
+		</tr>
+	</table>
+</div>

@@ -1,0 +1,31 @@
+<div class="m-1">
+  <div class="row border-bottom mb-3 py-1">
+    <div class="col">
+        <h4>Create account</h4>
+    </div>
+    <div class="col text-right">
+      <button class="btn btn-sm btn-dark text-light" routerLink="/accounts">
+          <i class="fas fa-sign-out-alt"></i>
+        Cancel
+      </button>
+    </div>
+  </div>
+
+  <form autocomplete="off">
+    <div class="form-group">
+      <h5 class="pb-0 mb-0">Account name</h5>
+      <h6 class="pt-0 mt-0 text-secondary">(it must be unique name from your accounts list)</h6>
+      <input class="form-control" name="name" placeholder="Name" [(ngModel)]="newAccount.accountName"/>
+    </div>
+    <div class="form-group">
+      <h5 class="pb-0 mb-0">Start amount</h5>
+      <h6 class="pt-0 mt-0 text-secondary">(start sum from which accouting will begin)</h6>
+      <input class="form-control" name="amount" placeholder="0.00" [(ngModel)]="newAccount.startAmount"/>
+    </div>
+    <button type="button" class="btn btn-dark text-ligth" (click)="clickCreateAccount(); clearAccountFields()"
+      routerLink="/accounts">
+      <i class="fas fa-plus-circle mr-1"></i>
+      Create account
+    </button>
+  </form>
+</div>
