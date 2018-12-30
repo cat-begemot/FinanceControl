@@ -40,5 +40,11 @@ namespace FinanceControl.Controllers
 		{
 			repository.CreateAccount(newAccount);
 		}
+
+		[HttpGet("currencies")]
+		public IEnumerable<Currency> GetAllCurrencies()
+		{
+			return repository.GetCurrencies();
+		}
 	}
 }

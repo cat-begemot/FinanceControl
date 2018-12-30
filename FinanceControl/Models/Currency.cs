@@ -14,7 +14,5 @@ namespace FinanceControl.Models
 
 		// Navigations properties
 		public IEnumerable<Account> Accounts { get; set; }
-
-		// Foreign keys
 	}
 }

@@ -14,5 +14,9 @@ namespace FinanceControl.Models
 		public decimal Balance { get; set; }
 		public int Sequence { get; set; }
 		public bool ActiveAccount { get; set; }
+		public string Description { get; set; }
+
+		// Navigation property
+		public Currency Currency { get; set; }
 	}
 }

@@ -1,3 +1,5 @@
+import { Currency } from "./currency.model";
+
 export interface IAccount{
 	accountId: number;
 	accountName: string;
@@ -8,12 +10,16 @@ export interface IAccount{
 }
 
 export class Account{
-	constructor(
+	constructor(		
 		public accountId?: number,
 		public accountName?: string,
 		public startAmount?: number,
 		public balance?: number,
 		public sequence?: number,
-		public activeAccount?: boolean
+		public activeAccount?: boolean,
+		public description?: string,
+
+		// Navigation properties
+		public currency?: Currency,
 	) { }
 }

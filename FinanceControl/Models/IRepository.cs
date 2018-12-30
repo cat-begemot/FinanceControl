@@ -11,5 +11,6 @@ namespace FinanceControl.Models
 		IEnumerable<Account> GetInactiveAccount();
 		Account GetAccountById(long id);
 		void CreateAccount(Account newAccount);
+		IEnumerable<Currency> GetCurrencies();
 	}
 }

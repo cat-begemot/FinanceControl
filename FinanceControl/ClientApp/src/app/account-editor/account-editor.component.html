@@ -17,11 +17,26 @@
       <h6 class="pt-0 mt-0 text-secondary">(it must be unique name from your accounts list)</h6>
       <input class="form-control" name="name" placeholder="Name" [(ngModel)]="newAccount.accountName"/>
     </div>
+
     <div class="form-group">
       <h5 class="pb-0 mb-0">Start amount</h5>
       <h6 class="pt-0 mt-0 text-secondary">(start sum from which accouting will begin)</h6>
       <input class="form-control" name="amount" placeholder="0.00" [(ngModel)]="newAccount.startAmount"/>
     </div>
+
+    <div class="form-group">
+      <h5>Currency</h5>
+      <select class="form-control">
+        <option *ngFor="let currency of currenciesList" name="currency"
+          (click)="clickCurrency(currency)">{{currency.code}}</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <h5>Description</h5>
+      <textarea class="form-control" name="description" [(ngModel)]="newAccount.description"></textarea>
+    </div>
+    
     <button type="button" class="btn btn-dark text-ligth" (click)="clickCreateAccount(); clearAccountFields()"
       routerLink="/accounts">
       <i class="fas fa-plus-circle mr-1"></i>
