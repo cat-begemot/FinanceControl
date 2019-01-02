@@ -1,14 +1,5 @@
 import { Currency } from "./currency.model";
 
-export interface IAccount{
-	accountId: number;
-	accountName: string;
-	startAmount: number;
-	balance: number;
-	sequence: number;
-	activeAccount: boolean;
-}
-
 export class Account{
 	constructor(		
 		public accountId?: number,
@@ -17,6 +8,7 @@ export class Account{
 		public balance?: number,
 		public sequence?: number,
 		public activeAccount?: boolean,
+		public currencyId?: number,
 		public description?: string,
 
 		// Navigation properties

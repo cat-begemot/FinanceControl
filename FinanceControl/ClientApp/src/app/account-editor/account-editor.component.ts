@@ -50,12 +50,11 @@ export class AccountEditorComponent implements OnInit{
     this.newAccount.balance=this.newAccount.startAmount;
     this.newAccount.sequence=0;
     this.newAccount.activeAccount=true;
+    this.newAccount.currencyId=this.newAccount.currency.currencyId;
     this.newAccount.currency=null;
 
     // Create account
     this.repository.createAccount(this.newAccount);
-
-   console.log(this.newAccount.accountName);
   }
 
   clearAccountFields(){

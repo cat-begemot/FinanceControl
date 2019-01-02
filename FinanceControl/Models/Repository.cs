@@ -21,15 +21,12 @@ namespace FinanceControl.Models
 		/// <param name="newAccount">id=0</param>
 		public void CreateAccount(Account newAccount)
 		{
-			newAccount.AccountId = 0;
-			if (newAccount.Currency==null)
-			{
-				var tempCurrency = context.Currencies.Where(currency => currency.Code == "UAH").FirstOrDefault();
-				if (tempCurrency != null)
-					newAccount.Currency = tempCurrency;
-			}
+			// TODO: add data checks
 
-			context.Accounts.Add(newAccount);
+			newAccount.AccountId = 0;
+			newAccount.Currency = null;
+			
+			var temp=context.Accounts.Add(newAccount);		
 			context.SaveChanges();
 		}
 
