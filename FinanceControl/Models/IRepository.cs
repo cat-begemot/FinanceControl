@@ -12,5 +12,7 @@ namespace FinanceControl.Models
 		Account GetAccountById(long id);
 		void CreateAccount(Account newAccount);
 		IEnumerable<Currency> GetCurrencies();
+		void DeleteAccount(long id);
+		void UpdateAccount(Account updatedAccount);
 	}
 }

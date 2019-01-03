@@ -46,5 +46,17 @@ namespace FinanceControl.Controllers
 		{
 			return repository.GetCurrencies();
 		}
+
+		[HttpDelete("{id}")]
+		public void DeleteAccount([FromRoute] long id)
+		{
+			repository.DeleteAccount(id);
+		}
+
+		[HttpPut]
+		public void UpdateAccount([FromBody] Account updatedAccount)
+		{
+			repository.UpdateAccount(updatedAccount);
+		}
 	}
 }

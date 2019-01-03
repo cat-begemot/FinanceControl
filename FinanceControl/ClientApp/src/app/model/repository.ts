@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Account } from './account.model';
 import { Currency } from "./currency.model";
 import { HttpClient } from "@angular/common/http";
-import { identifierModuleUrl } from '@angular/compiler';
+import { Observable } from "rxjs";
 
 const accountUrl: string = "api/accounts";
 
@@ -10,48 +10,39 @@ const accountUrl: string = "api/accounts";
   providedIn: 'root'
 })
 export class Repository {
-  
-
-
   constructor(
     private http: HttpClient
   ) { }
 
   // Account section
-  public account: Account;
-  public getAccount(accountId: number){
-    this.http.get(accountUrl + "/" + accountId.toString()).subscribe((response: Account) => {
-      this.account=response;
-    });
+  //Get account by Id
+  public getAccountById(accountId: number): Observable<Account>{
+    return this.http.get<Account>(accountUrl + "/" + accountId.toString());
   }
   
-  
-  public activeAccounts: Account[];
-  public getActiveAccounts(){
-    this.http.get(accountUrl + "/active").subscribe((response: Account[])=>
-      {
-        this.activeAccounts=response;
-        console.log("Request active accounts...");
-      });            
+  // Get array with active accounts
+  public activeAccounts(): Observable<Account[]>{
+    return this.http.get<Account[]>(accountUrl + "/active");
   }
 
-  public createAccount(newAccount: Account){
-    console.log(newAccount);
-    this.http.post(accountUrl, newAccount).subscribe(response => {
-      this.getActiveAccounts();
-      console.log("AFTER: Request create account...");
-    });
+  // Create new account
+  public createAccount(newAccount: Account): Observable<any>{
+    return this.http.post(accountUrl, newAccount);
+  }
+
+  // Delete account
+  public deleteAccount(accountId: number): Observable<any>{
+    return this.http.delete(accountUrl + "/" + accountId);
+  }
+
+  // Change account
+  public updateAccount(updatedAccount: Account): Observable<any>{
+    return this.http.put(accountUrl, updatedAccount);
   }
 
   // Currency section
-
-  public currenciesList: Currency[];
-  public getCurrenciesList(){
-    this.http.get(accountUrl + "/currencies").subscribe((response: Currency[])=>
-    {
-      this.currenciesList=response;
-      console.log("Request currencies...");
-    });
-
+  // Get all currencies
+  public get allCurrencies(): Observable<Currency[]>{
+    return this.http.get<Currency[]>(accountUrl + "/currencies");
   }
 }
