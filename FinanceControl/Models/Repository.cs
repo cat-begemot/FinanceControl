@@ -76,5 +76,22 @@ namespace FinanceControl.Models
 
 			return currenciesList;
 		}
+
+		public void DeleteAccount(long id)
+		{
+			Account remAccount = context.Accounts.Where(account => account.AccountId == id).FirstOrDefault();
+			if(remAccount!=null)
+			{
+				context.Accounts.Remove(remAccount);
+				context.SaveChanges();
+			}
+		}
+		
+		public void UpdateAccount(Account updatedAccount)
+		{
+			updatedAccount.Currency = null;
+			context.Accounts.Update(updatedAccount);
+			context.SaveChanges();
+		}
 	}
 }

@@ -8,7 +8,8 @@ import { Repository } from "../model/repository";
   styleUrls: ['./account-info.component.css']
 })
 export class AccountInfoComponent implements OnInit{ 
-  private _accountsStatus: AccountsStatus;
+  public _accountsStatus: AccountsStatus;
+  public activeAccounts: Account[];
   
   constructor(
     private repository: Repository
@@ -16,21 +17,23 @@ export class AccountInfoComponent implements OnInit{
 
   ngOnInit(){
     this._accountsStatus=new AccountsStatus(0, "Loading...");
-    this.repository.getActiveAccounts();
+    this.getActiveAccounts();
+  }
+  
+  public getActiveAccounts(): void{
+    this.repository.activeAccounts().subscribe(response => 
+      {
+        this.activeAccounts = response;
+      });
   }
 
-  clickAccount(accountId: number){
-      
-  }
-
-  // Properties getters
-  get activeAccounts(): Account[]{
-    return this.repository.activeAccounts;
+  public click_UpdateButton(){    
+    console.log(this.activeAccounts.length);
   }
 
   get accountsStatus(): AccountsStatus{    
-    if(this.repository.activeAccounts!==null && this.repository.activeAccounts!==undefined){
-      this._accountsStatus.accountsNumbers = this.repository.activeAccounts.length;
+    if(this.activeAccounts!==null && this.activeAccounts!==undefined){
+      this._accountsStatus.accountsNumbers = this.activeAccounts.length;
       if(this._accountsStatus.accountsNumbers==0)
         this._accountsStatus.infoString="No accounts yet";
       else if(this._accountsStatus.accountsNumbers==1)
@@ -40,7 +43,10 @@ export class AccountInfoComponent implements OnInit{
       return this._accountsStatus;
     }
   }
+
 }
+
+
 
 class AccountsStatus{
   constructor(
