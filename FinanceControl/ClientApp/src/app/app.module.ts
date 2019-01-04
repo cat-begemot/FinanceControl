@@ -8,12 +8,16 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AccountInfoComponent } from './account-info/account-info.component';
 import { AccountEditorComponent } from './account-info/account-editor/account-editor.component';
+import { CurrencyEditorComponent } from './account-info/currency-info/currency-editor/currency-editor.component';
+import { CurrencyInfoComponent } from './account-info/currency-info/currency-info.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     AccountInfoComponent,
-    AccountEditorComponent
+    AccountEditorComponent,
+    CurrencyEditorComponent,
+    CurrencyInfoComponent
   ],
   imports: [
     BrowserModule,
