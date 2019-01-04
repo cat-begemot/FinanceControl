@@ -7,7 +7,7 @@ import { ReactiveFormsModule } from "@angular/forms";
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AccountInfoComponent } from './account-info/account-info.component';
-import { AccountEditorComponent } from './account-editor/account-editor.component';
+import { AccountEditorComponent } from './account-info/account-editor/account-editor.component';
 
 @NgModule({
   declarations: [

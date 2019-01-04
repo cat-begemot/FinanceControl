@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Account } from "../model/account.model";
-import { Currency } from "../model/currency.model";
-import { Repository } from "../model/repository";
+import { Account } from "../../model/account.model";
+import { Currency } from "../../model/currency.model";
+import { Repository } from "../../model/repository";
 import { ActivatedRoute } from "@angular/router";
 import { Router } from "@angular/router";
 import { FormControl } from "@angular/forms";
