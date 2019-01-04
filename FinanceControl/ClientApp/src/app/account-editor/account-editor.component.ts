@@ -46,7 +46,10 @@ export class AccountEditorComponent implements OnInit{
     {
       this.editMode=true;
       this.editorHeader="Edit account";
-      this.repository.getAccountById(id).subscribe(response => this.currentAccount=response);
+      this.repository.getAccountById(id).subscribe(response => {
+        this.currentAccount=response;
+        this.currencySelect.setValue(this.currentAccount.currency.currencyId);
+      });
     }
   }
 
@@ -83,11 +86,6 @@ export class AccountEditorComponent implements OnInit{
     this.repository.deleteAccount(this.currentAccount.accountId).subscribe(()=>{
       this.routerNav.navigate(["/accounts"]);
     });    
-  }
-
-  public selectActiveOption(currency: Currency): boolean{
-    console.log(currency.currencyId==this.currentAccount.currencyId);
-    return currency.currencyId==this.currentAccount.currencyId;
   }
 
   public click_HideActivateAccount(mode: boolean): void{

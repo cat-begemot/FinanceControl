@@ -34,8 +34,7 @@
     <div class="form-group">
       <h5>Currency</h5>
       <select class="form-control" [formControl]="currencySelect">
-        <option *ngFor="let currency of currencies" name="currency"
-           [selected]="selectActiveOption(currency)" [value]="currency.currencyId">{{currency.code}}</option>
+        <option *ngFor="let currency of currencies" name="currency" [value]="currency.currencyId">{{currency.code}}</option>
       </select>
     </div>
 
