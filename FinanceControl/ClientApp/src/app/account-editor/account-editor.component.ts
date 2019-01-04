@@ -4,6 +4,7 @@ import { Currency } from "../model/currency.model";
 import { Repository } from "../model/repository";
 import { ActivatedRoute } from "@angular/router";
 import { Router } from "@angular/router";
+import { FormControl } from "@angular/forms";
 
 @Component({
   selector: 'account-editor',
@@ -16,6 +17,7 @@ export class AccountEditorComponent implements OnInit{
   public editMode: boolean;
   public editorHeader: string;
   public showActiveAccountsMode: boolean;
+  public currencySelect: FormControl = new FormControl('');
 
   constructor(
     private repository: Repository,
@@ -33,8 +35,10 @@ export class AccountEditorComponent implements OnInit{
     this.currentAccount.activeAccount=this.showActiveAccountsMode;
     this.checkEditorMode();
     this.getAllCurrencies();
+
+    this.currencySelect.valueChanges.subscribe((response: number) => this.currentAccount.currencyId=response);
   }
-  
+
   public checkEditorMode(): void
   {
     const id: number = +this.router.snapshot.paramMap.get('id');
@@ -48,10 +52,6 @@ export class AccountEditorComponent implements OnInit{
 
   getAllCurrencies(): void{
     this.repository.allCurrencies.subscribe(response => this.currencies = response);
-  }
-
-  clickCurrency(currency: Currency){
-    this.currentAccount.currencyId=currency.currencyId;
   }
 
   // Create a new or change existed account
@@ -86,6 +86,7 @@ export class AccountEditorComponent implements OnInit{
   }
 
   public selectActiveOption(currency: Currency): boolean{
+    console.log(currency.currencyId==this.currentAccount.currencyId);
     return currency.currencyId==this.currentAccount.currencyId;
   }
 

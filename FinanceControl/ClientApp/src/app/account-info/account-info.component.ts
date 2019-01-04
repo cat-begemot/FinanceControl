@@ -27,10 +27,6 @@ export class AccountInfoComponent implements OnInit{
       });
   }
 
-  public click_UpdateButton(){
-    console.log(this.activeAccounts.length);
-  }
-
   get accountsStatus(): AccountsStatus{
     if(this.activeAccounts!==null && this.activeAccounts!==undefined){
       this._accountsStatus.accountsNumbers = this.activeAccounts.length;
