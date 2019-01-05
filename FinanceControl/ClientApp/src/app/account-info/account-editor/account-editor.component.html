@@ -3,8 +3,8 @@
     <div class="col">
         <h4>{{editorHeader}}</h4>
     </div>
-    <div class="col text-right">
-      <button class="btn btn-sm btn-dark text-light" routerLink="/accounts">
+    <div class="col-1 text-right">
+      <button class="btn btn-sm btn-dark text-light float-right" style="width: 80px" routerLink="/accounts/{{activeMode}}">
         <i class="fas fa-sign-out-alt"></i>
         Cancel
       </button>
@@ -41,7 +41,8 @@
 
     <div class="form-group">
       <h5>Description</h5>
-      <textarea class="form-control" name="description" [(ngModel)]="currentAccount.description"></textarea>
+      <textarea class="form-control" name="description" [(ngModel)]="currentAccount.description"
+        placeholder="Description"></textarea>
     </div>
     
     <div class="form-row">
@@ -56,21 +57,21 @@
           Save
         </button>
 
-        <button *ngIf="showActiveAccountsMode && editMode" type="button" class="btn btn-dark text-light ml-1"
+        <button *ngIf="activeMode && editMode" type="button" class="btn btn-dark text-light ml-1"
           (click)="click_HideActivateAccount(false)">
             <i class="fas fa-minus"></i>
             Hide
         </button>
 
-        <button *ngIf="!showActiveAccountsMode && editMode" type="button" class="btn btn-dark text-light ml-1"
+        <button *ngIf="!activeMode && editMode" type="button" class="btn btn-dark text-light ml-1"
           (click)="click_HideActivateAccount(true)">
             <i class="fas fa-plus"></i>
             Activate
         </button>
       </div>
       
-      <div *ngIf="editMode" class="col">
-        <button type="button" class="btn btn-dark text-light float-right" (click)="clickDeleteAccount()">
+      <div *ngIf="editMode" class="col-1">
+        <button type="button" class="btn btn-dark text-light float-right" (click)="clickDeleteAccount()" style="width: 90px">
             <i class="far fa-trash-alt"></i>
             Delete
         </button>

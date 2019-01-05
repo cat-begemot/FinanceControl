@@ -16,8 +16,8 @@ export class AccountEditorComponent implements OnInit{
   public currencies: Currency[];
   public editMode: boolean;
   public editorHeader: string;
-  public showActiveAccountsMode: boolean;
   public currencySelect: FormControl = new FormControl('');
+  public activeMode: boolean; // Active or hidden account was passed to editor
 
   constructor(
     private repository: Repository,
@@ -27,13 +27,19 @@ export class AccountEditorComponent implements OnInit{
 
   ngOnInit()
   {    
-    this.editMode=false;
-    this.showActiveAccountsMode=true;
-    this.editorHeader="Create account";
     this.currentAccount=new Account();
-    this.currentAccount.currencyId=1;
-    this.currentAccount.activeAccount=this.showActiveAccountsMode;
+
+    // catch passed value about mode from route
+    let paramVal: string = this.router.snapshot.paramMap.get('activeMode');
+    if(paramVal=="true")
+      this.activeMode=true;
+    else
+      this.activeMode=false;
+
+    this.currentAccount.activeAccount=this.activeMode;
+    
     this.checkEditorMode();
+
     this.getAllCurrencies();
 
     this.currencySelect.valueChanges.subscribe((response: number) => this.currentAccount.currencyId=response);
@@ -42,14 +48,19 @@ export class AccountEditorComponent implements OnInit{
   public checkEditorMode(): void
   {
     const id: number = +this.router.snapshot.paramMap.get('id');
-    if(id!=0) // if id==0 - CREATE a new account, else - EDIT existed account
-    {
+    if(id!=0){ // if id!=0 - edit existed account, else - create new one
       this.editMode=true;
       this.editorHeader="Edit account";
+
       this.repository.getAccountById(id).subscribe(response => {
         this.currentAccount=response;
-        this.currencySelect.setValue(this.currentAccount.currency.currencyId);
+        this.currencySelect.setValue(this.currentAccount.currencyId);
       });
+    } else {
+      this.editMode=false;
+      this.editorHeader="Create account";
+      this.currentAccount.currencyId=1;
+      this.currencySelect.setValue(this.currentAccount.currencyId); // set default currency when create account (save user preference)
     }
   }
 
@@ -77,14 +88,14 @@ export class AccountEditorComponent implements OnInit{
   clickEditAccount(){
     this.currentAccount.currency=null;
     this.repository.updateAccount(this.currentAccount).subscribe(()=>{
-      this.routerNav.navigate(["/accounts"]);
+      this.routerNav.navigate(["/accounts", {activeMode: this.activeMode}]);
     });
   }
 
   // Delete selected account
   clickDeleteAccount(){
     this.repository.deleteAccount(this.currentAccount.accountId).subscribe(()=>{
-      this.routerNav.navigate(["/accounts"]);
+      this.routerNav.navigate(["/accounts", {activeMode: this.activeMode}]);
     });    
   }
 

@@ -122,7 +122,7 @@ namespace FinanceControl.Models
 			if(updatedCurrency.CurrencyId!=0)
 			{
 				updatedCurrency.Accounts = null;
-				context.Update(updatedCurrency);
+				context.Currencies.Update(updatedCurrency);
 				context.SaveChanges();
 			}
 		}

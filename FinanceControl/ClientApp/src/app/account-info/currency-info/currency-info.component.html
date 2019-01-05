@@ -1,3 +1,26 @@
-<p>
-  currency-info works!
-</p>
+<div class="m-1">
+	<div class="row border-bottom mb-3 py-1">
+		<div class="col-7">
+			<h4>Currencies</h4>	
+		</div>
+		<div class="col text-right">
+			<button class="btn btn-sm btn-dark text-light" routerLink="/currencies/add">
+				<i class="fas fa-plus-circle mr-1"></i>
+				New
+			</button>
+		</div>
+	</div>
+
+	<table class="table table-sm table-bordered">
+			<tr class="bg-dark text-light">
+				<th style="font-size: 1.1em; font-weight: 600;">Code</th>
+				<th style="font-size: 1.1em; font-weight: 600;">Description</th>
+			</tr>
+			<tr *ngFor="let currency of currencies">
+				<td>
+					<a routerLink="/currencies/edit/{{currency.currencyId}}" class="text-dark">{{currency.code}}</a>
+				</td>
+				<td class="text-left" style="transform: translateX(3px)">{{currency.description}}</td>
+			</tr>
+		</table>
+	</div>

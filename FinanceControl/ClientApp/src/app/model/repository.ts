@@ -18,8 +18,12 @@ export class Repository {
   // ACCOUNT SECTION ===========================================================================================
 
   // Get array with active accounts
-  public activeAccounts(): Observable<Account[]>{
+  public getActiveAccounts(): Observable<Account[]>{
     return this.http.get<Account[]>(accountUrl + "/active");
+  }
+
+  public getHiddenAccounts(): Observable<Account[]>{
+    return this.http.get<Account[]>(accountUrl + "/" + "inactive");
   }
 
   //Get account by Id
@@ -65,6 +69,6 @@ export class Repository {
 
   // Delete currency
   public deleteCurrency(currencyId: number): Observable<any>{
-    return this.http.delete(currencyId + "/" + currencyId);
+    return this.http.delete(currencyUrl + "/" + currencyId);
   }
 }

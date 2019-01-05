@@ -1,34 +1,3 @@
-.toolsCol{
-	width: 80px;
-}
-
-.btnEdit{
-	background-color: rgb(200, 150, 30);
-	border: 1px solid rgb(140, 100, 0);
-}
-
-.btnHide{
-	background-color: rgb(150, 100, 100);
-	border: 1px solid rgb(100, 30, 30);
-}
-
-.btnActive{
-	background-color: rgb(75, 100, 75);
-	border: 1px solid rgb(30, 50, 30);
-}
-
-.activeRow{
-	background-color: rgb(75, 100, 75);
-}
-
-.hiddenRow{
-	background-color:  rgb(150, 100, 100);
-}
-
 .totalActive{
 	color: rgb(40, 70, 40);
-}
-
-.totalHidden{
-	color:  rgb(110, 40, 40);
 }
