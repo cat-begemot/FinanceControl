@@ -26,8 +26,8 @@ namespace FinanceControl.Models
 
 			newAccount.AccountId = 0;
 			newAccount.Currency = null;
-			
-			var temp=context.Accounts.Add(newAccount);		
+
+			var temp = context.Accounts.Add(newAccount);
 			context.SaveChanges();
 		}
 
@@ -44,23 +44,43 @@ namespace FinanceControl.Models
 			return accountById;
 		}
 
-		public IEnumerable<Account> GetActiveAccount()
+		/// <summary>
+		/// Get active accounts
+		/// </summary>
+		/// <param name="currencyId">
+		/// 0 - returns all active accounts. In other cases returns active accounts with appropriate currency
+		/// </param>
+		/// <returns></returns>
+		public IEnumerable<Account> GetActiveAccount(long currencyId=0)
 		{
 			IQueryable<Account> activeAccounts = context.Accounts
 				.Where(account => account.ActiveAccount == true)
-				.Include(account=>account.Currency);
+				.Include(account => account.Currency);
 
+			if (currencyId != 0)
+				activeAccounts = activeAccounts.Where(account => account.CurrencyId == currencyId);
+			
 			foreach (var account in activeAccounts)
 				account.Currency.Accounts = null;
 
 			return activeAccounts;
 		}
 
-		public IEnumerable<Account> GetInactiveAccount()
+		/// <summary>
+		/// Get hidden accounts
+		/// </summary>
+		/// <param name="currencyId">
+		/// 0 - returns all hidden accounts. In other cases returns hidden accounts with appropriate currency
+		/// </param>
+		/// <returns></returns>
+		public IEnumerable<Account> GetInactiveAccount(long currencyId=0)
 		{
 			IQueryable<Account> inactiveAccounts = context.Accounts
 				.Where(account => account.ActiveAccount == false)
-				.Include(Account=>Account.Currency);
+				.Include(Account => Account.Currency);
+
+			if (currencyId != 0)
+				inactiveAccounts = inactiveAccounts.Where(account => account.CurrencyId == currencyId);
 
 			foreach (var account in inactiveAccounts)
 				account.Currency.Accounts = null;
@@ -71,13 +91,13 @@ namespace FinanceControl.Models
 		public void DeleteAccount(long id)
 		{
 			Account remAccount = context.Accounts.Where(account => account.AccountId == id).FirstOrDefault();
-			if(remAccount!=null)
+			if (remAccount != null)
 			{
 				context.Accounts.Remove(remAccount);
 				context.SaveChanges();
 			}
 		}
-		
+
 		public void UpdateAccount(Account updatedAccount)
 		{
 			updatedAccount.Currency = null;
@@ -87,9 +107,65 @@ namespace FinanceControl.Models
 		#endregion
 
 		#region Currencies
+		/*
 		public IEnumerable<Currency> GetCurrencies()
 		{
 			IQueryable<Currency> currenciesList = context.Currencies;
+
+			foreach (var currency in currenciesList)
+				currency.Accounts = null;
+
+			return currenciesList;
+		}*/
+
+		// Get only currencies which is being in defined type of account
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="method">
+		/// "none" - get all currencies,
+		/// "active" - get currencies for active accounts,
+		/// "hidden" - get currencies for hidden accounts
+		/// </param>
+		/// <returns></returns>
+		public IEnumerable<Currency> GetCurrencies(string method = "none")
+		{
+			IQueryable<Currency> currenciesList;
+
+			if (method == "none")
+			{
+				currenciesList = context.Currencies;
+			}
+			else if(method=="active" || method=="hidden")
+			{
+				bool isActive=false;
+				if (method == "active")
+					isActive = true;
+				else if (method == "hidden")
+					isActive = false;
+
+				IQueryable<Account> accountsCurrList = context.Accounts
+					.Where(acc => acc.ActiveAccount == isActive)
+					.Include(acc => acc.Currency);
+
+				foreach (var acc in accountsCurrList)
+					acc.Currency.Accounts = null;
+
+				List<string> curList = new List<string>();
+
+				foreach (var account in accountsCurrList)
+				{
+					if (!curList.Contains<string>(account.Currency.Code))
+						curList.Add(account.Currency.Code);
+				}
+
+				currenciesList = context.Currencies
+					.Where(curr => curList.Contains<string>(curr.Code));
+			}
+			else
+			{
+				return null;
+			}
 
 			foreach (var currency in currenciesList)
 				currency.Accounts = null;

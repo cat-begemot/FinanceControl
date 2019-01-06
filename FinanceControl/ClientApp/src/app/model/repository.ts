@@ -18,12 +18,13 @@ export class Repository {
   // ACCOUNT SECTION ===========================================================================================
 
   // Get array with active accounts
-  public getActiveAccounts(): Observable<Account[]>{
-    return this.http.get<Account[]>(accountUrl + "/active");
+  public getActiveAccounts(currencyId: number): Observable<Account[]>{
+    return this.http.get<Account[]>(accountUrl + "/active/" + currencyId);
   }
 
-  public getHiddenAccounts(): Observable<Account[]>{
-    return this.http.get<Account[]>(accountUrl + "/" + "inactive");
+  // Get array witn hidden accounts
+  public getHiddenAccounts(currencyId: number): Observable<Account[]>{
+    return this.http.get<Account[]>(accountUrl + "/" + "inactive/" + currencyId);
   }
 
   //Get account by Id
@@ -49,7 +50,11 @@ export class Repository {
   // CURRENCY SECTION ===========================================================================================
   // Get all currencies
   public get allCurrencies(): Observable<Currency[]>{
-    return this.http.get<Currency[]>(accountUrl + "/currencies");
+    return this.http.get<Currency[]>(accountUrl + "/currencies/none");
+  }
+
+  public getAllCurrencies(method: string): Observable<Currency[]>{
+    return this.http.get<Currency[]>(accountUrl + `/currencies/${method}`);
   }
 
   // Get currency by ID

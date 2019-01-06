@@ -17,16 +17,16 @@ namespace FinanceControl.Controllers
 			repository = repo;
 		}
 
-		[HttpGet("active")]
-		public IEnumerable<Account> GetActiveAccount()
+		[HttpGet("active/{currencyId}")]
+		public IEnumerable<Account> GetActiveAccount([FromRoute] long currencyId)
 		{
-			return repository.GetActiveAccount();
+			return repository.GetActiveAccount(currencyId);
 		}
 
-		[HttpGet("inactive")]
-		public IEnumerable<Account> GetInactiveAccount()
+		[HttpGet("inactive/{currencyId}")]
+		public IEnumerable<Account> GetInactiveAccount([FromRoute] long currencyId)
 		{
-			return repository.GetInactiveAccount();
+			return repository.GetInactiveAccount(currencyId);
 		}
 
 		[HttpGet("{id}")]
@@ -41,12 +41,6 @@ namespace FinanceControl.Controllers
 			repository.CreateAccount(newAccount);
 		}
 
-		[HttpGet("currencies")]
-		public IEnumerable<Currency> GetAllCurrencies()
-		{
-			return repository.GetCurrencies();
-		}
-
 		[HttpDelete("{id}")]
 		public void DeleteAccount([FromRoute] long id)
 		{
@@ -57,6 +51,13 @@ namespace FinanceControl.Controllers
 		public void UpdateAccount([FromBody] Account updatedAccount)
 		{
 			repository.UpdateAccount(updatedAccount);
+		}
+
+		// Move to CurrenciesController
+		[HttpGet("currencies/{method}")]
+		public IEnumerable<Currency> GetAllCurrencies([FromRoute] string method="none")
+		{
+			return repository.GetCurrencies(method);
 		}
 	}
 }

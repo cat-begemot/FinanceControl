@@ -3,6 +3,7 @@ import { Account } from "../model/account.model";
 import { Currency } from "../model/currency.model";
 import { Repository } from "../model/repository";
 import { ActivatedRoute } from "@angular/router";
+import { FormControl} from "@angular/forms";
 
 @Component({
   selector: 'account-info',
@@ -12,19 +13,21 @@ import { ActivatedRoute } from "@angular/router";
 export class AccountInfoComponent implements OnInit{ 
   public accountsStatusInfo: AccountsStatus;
   public accounts: Account[];
-  public currencies: Currency[];
-  public activeMode: boolean;
-  
+  public currencies: Currency[]; // currencies which is consisting of filter (show only currency of active or hidden accounts)
+  public activeMode: boolean; // show active accounts or hidden account
+  public selectCurrency: FormControl; // link to dropbox elements with currencies list
+
   constructor(
     private repository: Repository,
     private router: ActivatedRoute
   ) { }
 
-  ngOnInit(){    
+  ngOnInit(){
     this.accountsStatusInfo=new AccountsStatus();
     this.restoreActiveMode(); // Must be restored from session (temporary from routing)
     
-    this.loadAppropriateAccountsType();
+    this.selectCurrency=new FormControl('ALL');
+    this.loadAppropriateAccountsType(0);
     this.getCurrencies();
   }
   
@@ -38,35 +41,49 @@ export class AccountInfoComponent implements OnInit{
       this.activeMode=false;
   }
 
+  // get appropriate currencies list
   public getCurrencies(): void{
-    this.repository.allCurrencies.subscribe(response =>{
+    let method: string;
+    if(this.activeMode==true)
+      method="active";
+    else
+      method="hidden";
+
+    this.repository.getAllCurrencies(method).subscribe(response =>{
       this.currencies=response;
     });
   }
 
-  public getActiveAccounts(): void{
-    this.repository.getActiveAccounts().subscribe(response => 
-      {
-        this.accounts = response;
-      });
+  // filter accounts by currency
+  public change_SelectCurrency(): void{
+    if(this.selectCurrency.value=="ALL"){
+      // load all account
+      this.loadAppropriateAccountsType(0);
+    } else {
+      // load accounts by selected curency
+      this.loadAppropriateAccountsType(this.selectCurrency.value);
+    }
   }
 
   // Event handler. It invoked when change type of account via toggle
   public change_accountsType()
   {
     this.activeMode=!this.activeMode;
-    this.loadAppropriateAccountsType();
+    this.selectCurrency.setValue('ALL');
+    this.getCurrencies();
+    this.loadAppropriateAccountsType(0);
+    this.change_SelectCurrency();
   }
 
   // Working acorrding to value of activeMode variable
-  private loadAppropriateAccountsType(){
+  private loadAppropriateAccountsType(currencyId: number){
     if(this.activeMode){
-      this.repository.getActiveAccounts().subscribe(response => {
+      this.repository.getActiveAccounts(currencyId).subscribe(response => {
         this.accounts=response;
         this.accountsStatusInfo=this.accountsStatus;
       });
     } else{
-      this.repository.getHiddenAccounts().subscribe(response => {
+      this.repository.getHiddenAccounts(currencyId).subscribe(response => {
         this.accounts=response;
         this.accountsStatusInfo=this.accountsStatus;
       });
@@ -88,6 +105,9 @@ export class AccountInfoComponent implements OnInit{
       this.accountsStatusInfo.infoString=`1 ${typeMode}`;
     else
       this.accountsStatusInfo.infoString=`${this.accountsStatusInfo.accountsNumbers} ${typeMode}`;
+    
+    if(this.selectCurrency.value!="ALL")
+      this.accountsStatusInfo.infoString+=" (currency filter was applied)";
     return this.accountsStatusInfo;
   }
 

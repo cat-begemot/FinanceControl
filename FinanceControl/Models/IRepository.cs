@@ -8,15 +8,15 @@ namespace FinanceControl.Models
 	public interface IRepository
 	{
 		// Account section
-		IEnumerable<Account> GetActiveAccount();
-		IEnumerable<Account> GetInactiveAccount();
+		IEnumerable<Account> GetActiveAccount(long currencyId=0);
+		IEnumerable<Account> GetInactiveAccount(long currencyId=0);
 		Account GetAccountById(long id);
 		void CreateAccount(Account newAccount);
 		void UpdateAccount(Account updatedAccount);
 		void DeleteAccount(long id);
 
 		// Currency section
-		IEnumerable<Currency> GetCurrencies();
+		IEnumerable<Currency> GetCurrencies(string method="none");
 		Currency GetCurrencyById(long id);
 		void CreateCurrency(Currency newCurrency);
 		void UpdateCurrency(Currency updatedCurrency);

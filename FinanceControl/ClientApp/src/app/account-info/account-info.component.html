@@ -36,10 +36,10 @@
 			<th class="align-middle" style="font-size: 1.1em; font-weight: 600;">Account name</th>
 			<th class="text-right align-middle" style="font-size: 1.1em; font-weight: 600;">Balance</th>
 			<th style="width: 70px; font-weight: 600;">
-				<select class="custom-select custom-select-sm font-weight-bold"
-					style="height: 30px; transform: translateY(0px); width: 70px;">
-						<option>ALL</option>
-						<option *ngFor="let currency of currencies">{{currency.code}}</option>
+				<select class="custom-select custom-select-sm font-weight-bold" [formControl]="selectCurrency"
+					style="height: 30px; transform: translateY(0px); font-size: 10pt; width: 80px;" (change)="change_SelectCurrency()">
+						<option value="ALL">ALL</option>
+						<option *ngFor="let currency of currencies" [value]="currency.currencyId" >{{currency.code}}</option>
 				</select>
 			</th>
 		</tr>
