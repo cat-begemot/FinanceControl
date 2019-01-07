@@ -110,7 +110,6 @@ export class AccountInfoComponent implements OnInit{
       this.accountsStatusInfo.infoString+=" (currency filter was applied)";
     return this.accountsStatusInfo;
   }
-
 }
 
 class AccountsStatus{

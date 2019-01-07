@@ -3,16 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http.Abstractions;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace FinanceControl.Models
 {
 	public class Repository : IRepository
 	{
 		private DbRepositoryContext context;
+		private IHttpContextAccessor httpContextAccessor;
 
-		public Repository(DbRepositoryContext ctx)
+		public Repository(DbRepositoryContext ctx, IHttpContextAccessor httpContAcc)
 		{
 			context = ctx;
+			httpContextAccessor = httpContAcc;
 		}
 
 		#region Accounts
@@ -214,6 +220,22 @@ namespace FinanceControl.Models
 				context.SaveChanges();
 			}
 		}
-		#endregion
+		#endregion // Currency section
+
+		#region Session section
+		public Account GetSessionAccount()
+		{
+			string value = httpContextAccessor.HttpContext.Session.GetString("currentAccount");
+			return JsonConvert.DeserializeObject<Account>(value);
+
+		}
+
+		public void SetSessionAccount(Account currentAccount)
+		{
+			string value = JsonConvert.SerializeObject(currentAccount);
+			httpContextAccessor.HttpContext.Session.SetString("currentAccount", value);
+		}
+		#endregion // Session section
+
 	}
 }

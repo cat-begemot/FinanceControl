@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace FinanceControl.Models
 {
 	public interface IRepository
-	{
+	{		
 		// Account section
 		IEnumerable<Account> GetActiveAccount(long currencyId=0);
 		IEnumerable<Account> GetInactiveAccount(long currencyId=0);
@@ -21,5 +21,9 @@ namespace FinanceControl.Models
 		void CreateCurrency(Currency newCurrency);
 		void UpdateCurrency(Currency updatedCurrency);
 		void DeleteCurrency(long id);
+
+		// Session section
+		Account GetSessionAccount();
+		void SetSessionAccount(Account currentAccount);
 	}
 }

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators } from "@angular/forms";
+import { FormGroup, FormControl, Validators, AbstractControl } from "@angular/forms";
 import { Repository } from 'src/app/model/repository';
 import { Currency } from "../../../model/currency.model";
 import { Router, ActivatedRoute } from "@angular/router";
@@ -81,7 +81,7 @@ export class CurrencyEditorComponent implements OnInit {
   }
 
   // check if control is invalid, dirty and and touched
-  public isInvalid(control: FormControl): boolean{
+  public isInvalid(control: AbstractControl): boolean{
     return control.invalid && ( control.dirty || control.touched);
   }
 
