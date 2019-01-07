@@ -4,7 +4,8 @@ import { Currency } from "../../model/currency.model";
 import { Repository } from "../../model/repository";
 import { ActivatedRoute } from "@angular/router";
 import { Router } from "@angular/router";
-import { FormControl } from "@angular/forms";
+import { FormControl, Validator, Validators } from "@angular/forms";
+
 
 @Component({
   selector: 'account-editor',
@@ -16,7 +17,7 @@ export class AccountEditorComponent implements OnInit{
   public currencies: Currency[];
   public editMode: boolean;
   public editorHeader: string;
-  public currencySelect: FormControl = new FormControl('');
+  public currencySelect: FormControl = new FormControl('', Validators.required);
   public activeMode: boolean; // Active or hidden account was passed to editor
 
   constructor(
@@ -59,7 +60,7 @@ export class AccountEditorComponent implements OnInit{
     } else {
       this.editMode=false;
       this.editorHeader="Create account";
-      this.currentAccount.currencyId=1;
+      //this.currentAccount.currencyId=1;
       this.currencySelect.setValue(this.currentAccount.currencyId); // set default currency when create account (save user preference)
     }
   }
@@ -102,5 +103,10 @@ export class AccountEditorComponent implements OnInit{
   public click_HideActivateAccount(mode: boolean): void{
     this.currentAccount.activeAccount=mode;
     this.clickEditAccount();
+  }
+
+  // control validation
+  public isInvalid(control: any): boolean{
+    return control.invalid && (control.dirty || control.touched);
   }
 }

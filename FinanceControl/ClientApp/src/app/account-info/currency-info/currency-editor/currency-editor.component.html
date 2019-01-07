@@ -16,7 +16,10 @@
       <h5 class="pb-0 mb-0">Code</h5>
       <h6 class="pt-0 mt-0 text-secondary">(3-letter international code)</h6>
 			<input class="form-control" name="code" placeholder="Code"
-				formControlName="code"/>
+				formControlName="code" requried [class.is-invalid]="isInvalid(code())" />
+			<div *ngIf="isInvalid(code())" class="text-danger">
+				Code name is requried
+			</div>
 		</div>
 
 		<div class="form-group">
@@ -28,14 +31,14 @@
 
 		<div class="form-row">
 			<div *ngIf="!editMode" class="col">
-				<button type="submit" class="btn btn-dark text-ligth">
+				<button type="submit" class="btn btn-dark text-ligth" [disabled]="currencyForm.invalid">
 					<i class="fas fa-plus-circle mr-1"></i>
 					Create
 				</button>
 			</div>
 
 			<div *ngIf="editMode" class="col">
-				<button type="submit" class="btn btn-dark text-ligth">
+				<button type="submit" class="btn btn-dark text-ligth" [disabled]="currencyForm.invalid">
 						<i class="fas fa-edit"></i>
 					Save
 				</button>

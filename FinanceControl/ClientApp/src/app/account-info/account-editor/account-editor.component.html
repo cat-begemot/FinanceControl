@@ -11,24 +11,32 @@
     </div>
   </div>
 
-  <form autocomplete="off">
+  <form autocomplete="off" #accountEditorForm="ngForm" >
     <div class="form-group">
       <h5 class="pb-0 mb-0">Account name</h5>
       <h6 class="pt-0 mt-0 text-secondary">(it must be unique name from your accounts list)</h6>
-      <input class="form-control" name="name" placeholder="Name" [(ngModel)]="currentAccount.accountName"/>
+      <input class="form-control" name="name" placeholder="Name" [(ngModel)]="currentAccount.accountName"
+        required #nameControl="ngModel" [class.is-invalid]="isInvalid(nameControl)"/>
+      <div *ngIf="isInvalid(nameControl)" class="text-danger">
+        Account name is required
+      </div>
     </div>
 
     <div class="form-group">      
       <h5 class="pb-0 mb-0">Start amount</h5>
       <h6 class="pt-0 mt-0 text-secondary">(start sum from which accouting will begin)</h6>
       <div class="input-group">
-        <input class="form-control" name="amount" placeholder="0.00" [(ngModel)]="currentAccount.startAmount"/>
-        <select class="form-control input-group-append ml-1" [formControl]="currencySelect">
+        <input class="form-control" name="amount" placeholder="0.00" [(ngModel)]="currentAccount.startAmount"
+          pattern="[0-9]*\.?[0-9]*" #startAmountControl="ngModel" [class.is-invalid]="isInvalid(startAmountControl)"/>
+        <select class="form-control input-group-append ml-1" [formControl]="currencySelect" required>
           <option *ngFor="let currency of currencies" name="currency" [value]="currency.currencyId">{{currency.code}}</option>
         </select>
         <button type="button" class="btn btn-dark text-light input-group-append ml-1" routerLink="/currencies/add">
           <i class="fas fa-edit" style="font-size: 16pt"></i>
         </button>
+      </div>
+      <div *ngIf="isInvalid(startAmountControl)" class="text-danger">
+        Only numbers are allowed
       </div>
     </div>
 
@@ -36,8 +44,12 @@
       <h5 class="pb-0 mb-0">Balance</h5>
       <h6 class="pt-0 mt-0 text-secondary">(current account balance)</h6>
       <input class="form-control" name="balance" placeholder="0.00" [(ngModel)]="currentAccount.balance"
-        [disabled]="!editMode"/>
+        #balanceControl="ngModel" pattern="[0-9]*\.?[0-9]*" [disabled]="!editMode"/>
+      <div *ngIf="isInvalid(balanceControl)" class="text-danger">
+          Only number are allowed
+      </div>
     </div>
+    
 
     <div class="form-group">
       <h5>Description</h5>
@@ -47,12 +59,14 @@
     
     <div class="form-row">
       <div class="col">
-        <button *ngIf="!editMode" type="button" class="btn btn-dark text-ligth" (click)="clickCreateAccount()">
-          <i class="fas fa-plus-circle mr-1"></i>
-          Create
+        <button *ngIf="!editMode" type="button" name="btn_create" class="btn btn-dark text-ligth" (click)="clickCreateAccount()"
+          [disabled]="accountEditorForm.invalid || currencySelect.invalid">
+            <i class="fas fa-plus-circle mr-1"></i>
+            Create
         </button>
         
-        <button *ngIf="editMode" type="button" class="btn btn-dark text-ligth" (click)="clickEditAccount()">
+        <button *ngIf="editMode" type="button" class="btn btn-dark text-ligth" (click)="clickEditAccount()"
+          [disabled]="accountEditorForm.invalid || currencySelect.invalid">
           <i class="fas fa-edit"></i>
           Save
         </button>

@@ -39,17 +39,19 @@
 				<select class="custom-select custom-select-sm font-weight-bold" [formControl]="selectCurrency"
 					style="height: 30px; transform: translateY(0px); font-size: 10pt; width: 80px;" (change)="change_SelectCurrency()">
 						<option value="ALL">ALL</option>
-						<option *ngFor="let currency of currencies" [value]="currency.currencyId" >{{currency.code}}</option>
+						<option *ngFor="let currency of currencies" [value]="currency.currencyId">{{currency.code}}</option>
 				</select>
 			</th>
 		</tr>
 		
 		<tr *ngFor="let account of accounts">
 			<td>
-				<a routerLink="/accounts/edit/{{account.accountId}}/{{activeMode}}" class="text-dark">{{account.accountName}}</a>
+					<a routerLink="/accounts/edit/{{account.accountId}}/{{activeMode}}"
+					class="text-dark">{{account.accountName}}</a>
 			</td>
 			<td class="text-right">{{account.balance | number:'1.2-2'}}</td>
 			<td class="text-left" style="transform: translateX(3px)">{{account.currency.code}}</td>
 		</tr>
 	</table>
+
 </div>

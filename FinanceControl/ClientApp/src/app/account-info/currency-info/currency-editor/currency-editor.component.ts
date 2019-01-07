@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, FormBuilder } from "@angular/forms";
+import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { Repository } from 'src/app/model/repository';
 import { Currency } from "../../../model/currency.model";
 import { Router, ActivatedRoute } from "@angular/router";
@@ -11,16 +11,11 @@ import { Location } from "@angular/common";
   styleUrls: ['./currency-editor.component.css']
 })
 export class CurrencyEditorComponent implements OnInit {
-  // Form model
-  public currencyForm: FormGroup = new FormGroup({
-    code: new FormControl(''),
-    description: new FormControl('')
-  });
-
   public currentCurrency: Currency;
   public editMode: boolean; // Create new or edit exist curreny
   public editorHeader: string; // Header value on the top of component
-  
+  public currencyForm: FormGroup;  // Form model
+
   constructor(
     private repository: Repository,
     private router: ActivatedRoute,
@@ -31,7 +26,10 @@ export class CurrencyEditorComponent implements OnInit {
   ngOnInit() {
     this.currentCurrency=new Currency();
     this.setEditMode();
-
+    this.currencyForm = new FormGroup({
+      code: new FormControl(this.currentCurrency.code, Validators.required),
+      description: new FormControl(this.currentCurrency.description)
+    });
   }
 
   private setEditMode(){
@@ -80,5 +78,14 @@ export class CurrencyEditorComponent implements OnInit {
     this.repository.deleteCurrency(this.currentCurrency.currencyId).subscribe(()=>{
       this.routerNav.navigate(["/currencies"]);
     });
+  }
+
+  // check if control is invalid, dirty and and touched
+  public isInvalid(control: FormControl): boolean{
+    return control.invalid && ( control.dirty || control.touched);
+  }
+
+  public code(){
+    return this.currencyForm.get('code');
   }
 }
