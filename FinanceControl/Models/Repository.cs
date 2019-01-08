@@ -226,7 +226,10 @@ namespace FinanceControl.Models
 		public Account GetSessionAccount()
 		{
 			string value = httpContextAccessor.HttpContext.Session.GetString("currentAccount");
-			return JsonConvert.DeserializeObject<Account>(value);
+			if (value == null)
+				return new Account();
+			else
+				return JsonConvert.DeserializeObject<Account>(value);
 
 		}
 

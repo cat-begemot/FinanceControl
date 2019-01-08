@@ -9,6 +9,8 @@ using Microsoft.Extensions.DependencyInjection;
 using FinanceControl.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace FinanceControl
 {
@@ -49,12 +51,27 @@ namespace FinanceControl
 				});
 			services.BuildServiceProvider().GetService<DbRepositoryContext>().Database.Migrate();
 			services.AddTransient<IRepository, Repository>();
+
+			// Identity configurations
+			services.AddDbContext<IdentityDataContext>(options => options.UseSqlServer(Configuration["ConnectionStrings:DefaultConnection"]));
+			services.AddIdentity<IdentityUser, IdentityRole>(options=>
+			{
+				options.Password.RequireDigit = false;
+				options.Password.RequiredLength = 3;
+				options.Password.RequiredUniqueChars = 0;
+				options.Password.RequireLowercase = false;
+				options.Password.RequireNonAlphanumeric = false;
+				options.Password.RequireUppercase = false;
+			}).AddEntityFrameworkStores<IdentityDataContext>();
+			
+			//IdentitySeedData.SeedDatabase(services);
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
 		public void Configure(IApplicationBuilder app, IHostingEnvironment env)
 		{
 			app.UseSession();
+			app.UseIdentity();
 			app.UseStaticFiles();
 			app.UseMvc(routes =>
 			{
