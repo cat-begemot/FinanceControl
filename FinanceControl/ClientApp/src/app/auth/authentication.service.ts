@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Repository } from "../model/repository";
 import { Router } from "@angular/router";
-import { Observable } from "rxjs"
-
-
+import { Observable, of } from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -17,24 +15,33 @@ export class AuthenticationService {
   constructor(
     private repository: Repository,
     private router: Router
-  ) { }
+  ) { 
+      // check whether is client authenticated
+      this.repository.isAuthenticated().subscribe((response: string)=>{
+        if(response=="true"){
+          this.authenticated=true;
+        } else{
+          this.authenticated=false;
+        }
+      });
+  }
 
-  public login(): boolean{
-    this.authenticated=false;
-    this.repository.login(this.name, this.password).subscribe(response=>{
+  public login(): Observable<boolean>{
+    let obs:  Observable<any> = this.repository.login(this.name, this.password);
+
+    obs.subscribe(response=>{
       if(response==true)
       {
         this.authenticated=true;
-        this.password=null;
-        //this.router.navigateByUrl(this.callBackUrl || "/accounts");
+        this.password=null; 
       }
     });
-    return this.authenticated;
+
+    return obs;
   }
 
   public logout(): void{
     this.authenticated=false;
     this.repository.logout().subscribe(()=>{});
-    //this.router.navigateByUrl("/login");
   }
 }

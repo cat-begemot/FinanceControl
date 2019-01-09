@@ -6,33 +6,40 @@
 		<div class="col text-right">
 			<button class="btn btn-sm btn-dark text-light">
 				<i class="fas fa-plus-circle mr-1"></i>
-				Registration
+				Sign up
 			</button>
 		</div>
   </div>
   
   <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" autocomplete="off">
+    <div *ngIf="!appStatus.validCredentials" class="alert alert-danger p-2" role="alert">
+      <h5 class="alert-heading">Invalid credentials!</h5>
+      <p class="my-0 py-0">User login or password is invalid.</p>
+      <hr class="my-2">
+      <p class="my-0 py-0">Please check and try again.</p>
+    </div>
+    
     <div class="form-group">
      <h5>Login</h5>
-     <input class="form-control" formControlName="loginControl" placeholder="Login" required />
+     <input class="form-control" formControlName="loginControl" placeholder="Login"
+        name="login" [class.is-invalid]="isInvalid(getLoginControl())" required />
+     <div *ngIf="isInvalid(getLoginControl())" class="text-danger">
+       Login is required
+     </div>
     </div>
 
     <div class="form-group">
       <h5>Password</h5>
-      <input class="form-control" formControlName="passwordControl" placeholder="Password" required />
+      <input class="form-control" formControlName="passwordControl" placeholder="Password" required
+        name="password" [class.is-invalid]="isInvalid(getPasswordControl())" />
+      <div *ngIf="isInvalid(getPasswordControl())" class="text-danger">
+        Password is required
+      </div>
     </div>
+
 
     <button type="submit" class="btn btn-dark text-light" [disabled]="loginForm.invalid">
       <i class="fas fa-sign-in-alt"></i>
-      Sign in
-    </button>
-
-    <button type="button" class="btn btn-dark text-light ml-1" (click)="click_Logout()">
-      <i class="fas fa-sign-out-alt"></i>
-      Sign out
-    </button>
-
-    <button type="button" class="btn btn-dark text-light ml-1" (click)="click_GetUser()">
-      Get User
+      Log in
     </button>
   </form>

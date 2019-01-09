@@ -16,7 +16,7 @@
       <h5 class="pb-0 mb-0">Code</h5>
       <h6 class="pt-0 mt-0 text-secondary">(3-letter international code)</h6>
 			<input class="form-control" name="code" placeholder="Code"
-				formControlName="code" requried [class.is-invalid]="isInvalid(code())" />
+				formControlName="code" required [class.is-invalid]="isInvalid(code())" />
 			<div *ngIf="isInvalid(code())" class="text-danger">
 				Code name is requried
 			</div>

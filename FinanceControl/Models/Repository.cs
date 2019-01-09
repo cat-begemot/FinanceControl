@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Http.Abstractions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Identity;
+
 
 namespace FinanceControl.Models
 {
@@ -14,11 +16,16 @@ namespace FinanceControl.Models
 	{
 		private DbRepositoryContext context;
 		private IHttpContextAccessor httpContextAccessor;
+		private UserManager<IdentityUser> userManager;
+		private SignInManager<IdentityUser> signInManager;
 
-		public Repository(DbRepositoryContext ctx, IHttpContextAccessor httpContAcc)
+		public Repository(DbRepositoryContext ctx, IHttpContextAccessor httpContAcc, 
+			UserManager<IdentityUser> userMgr, SignInManager<IdentityUser> signInMgr)
 		{
 			context = ctx;
 			httpContextAccessor = httpContAcc;
+			userManager = userMgr;
+			signInManager = signInMgr;
 		}
 
 		#region Accounts
@@ -255,15 +262,11 @@ namespace FinanceControl.Models
 		public void RemoveSessionUserId()
 		{
 			httpContextAccessor.HttpContext.Session.Remove("currentUserId");
+		}
 
-			/*
-			var entry = context.Set<Sessions>();
-			Sessions entity = entry.Where(session => session.Id == httpContextAccessor.HttpContext.Session.Id).FirstOrDefault();
-			if(entity!=null)
-			{
-				entry.Remove(entity);
-				context.SaveChanges();
-			}*/
+		public bool IsUserAuthenticated()
+		{
+			return httpContextAccessor.HttpContext.User.Identity.IsAuthenticated;
 		}
 		#endregion // Session section
 

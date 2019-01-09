@@ -22,29 +22,5 @@ namespace FinanceControl.Controllers
 			repository = repo;
 		}
 
-		[HttpGet("currentAccount")]
-		public Account GetSessionAccount()
-		{
-			return repository.GetSessionAccount();			
-		}
-
-		[HttpPost("currentAccount")]
-		public void SetSessionAccount([FromBody] Account currentAccount)
-		{
-			repository.SetSessionAccount(currentAccount);
-		}
-
-		[HttpGet("currentUserId")]
-		public string GetSessionUserId()
-		{
-			return repository.GetSessionUserId();
-		}
-
-		[HttpPost("currentUserId")]
-		public void SetSessionUserId([FromBody] string userId)
-		{
-			repository.SetSessionUserId(userId);
-		}
-
 	}
 }

@@ -25,6 +25,7 @@ namespace FinanceControl.Models
 		// Session section
 		Account GetSessionAccount();
 		void SetSessionAccount(Account currentAccount);
+		bool IsUserAuthenticated();
 
 		string GetSessionUserId();
 		void SetSessionUserId(string userId);

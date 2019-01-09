@@ -24,6 +24,11 @@ namespace FinanceControl.Controllers
 			repository = repo;
 		}
 
+		/// <summary>
+		/// Log in client
+		/// </summary>
+		/// <param name="creds"></param>
+		/// <returns></returns>
 		[HttpPost("login")]
 		public async Task<bool> Login([FromBody] LoginViewModel creds)
 		{
@@ -33,31 +38,28 @@ namespace FinanceControl.Controllers
 				await signInManager.SignOutAsync();
 				Microsoft.AspNetCore.Identity.SignInResult result = await signInManager.PasswordSignInAsync(user, creds.Password, false, false);
 
-				//
-				if (result.Succeeded)
-				{
-					var session = new SessionsController(repository);
-					session.SetSessionUserId(user.Id);
-				}
-				//
-
 				return result.Succeeded;
 			}
 			return false;
 		}
 
+		/// <summary>
+		/// Log out client
+		/// </summary>
 		[HttpGet("logout")]
 		public async void Logout()
 		{
 			await signInManager.SignOutAsync();
-			repository.RemoveSessionUserId();
 		}
 
-		[HttpGet("getUser")]
-		public string GetUserId()
+		/// <summary>
+		/// Check whether client is already athorized
+		/// </summary>
+		/// <returns></returns>
+		[HttpGet("isAuth")]
+		public bool IsUserAuthenticated()
 		{
-
-			return repository.GetSessionUserId();
+			return repository.IsUserAuthenticated();
 		}
 
 	}

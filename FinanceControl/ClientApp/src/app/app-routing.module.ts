@@ -7,7 +7,8 @@ import { CurrencyEditorComponent } from './account-info/currency-info/currency-e
 import { AuthenticationComponent } from "./auth/authentication/authentication.component";
 
 const routes: Routes = [
-  {path: '', redirectTo: '/accounts', pathMatch: 'full'},
+  {path: '', redirectTo: '/login', pathMatch: 'full'},
+  {path: 'login', component: AuthenticationComponent},
   {path: 'accounts/add', component: AccountEditorComponent},
   {path: 'accounts', component: AccountInfoComponent},
   {path: 'accounts', component: AccountInfoComponent},

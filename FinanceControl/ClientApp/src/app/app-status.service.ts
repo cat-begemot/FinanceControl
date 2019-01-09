@@ -5,10 +5,15 @@ import { Account } from "./model/account.model";
   providedIn: 'root'
 })
 export class AppStatusService {
-  public activeAccountsMode: boolean = true; // if true - app shows active accounts, else - it shows hidden ones
-  public currentAccount: Account=new Account(); // stores current Account values for Account editor (it helps to avoid server requests)
+  public activeAccountsMode: boolean; // if true - app shows active accounts, else - it shows hidden ones
+  public currentAccount: Account; // stores current Account values for Account editor (it helps to avoid server requests)
+  public validCredentials: boolean; // report of authorization trying
 
-  constructor() { }
+  constructor() { 
+    this.activeAccountsMode=true;
+    this.currentAccount=new Account();
+    this.validCredentials=true;
+  }
 
   // clear current Account object
   public clearAccount(): void{

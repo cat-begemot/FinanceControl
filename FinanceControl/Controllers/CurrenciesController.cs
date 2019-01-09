@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using FinanceControl.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FinanceControl.Controllers
 {
+	[Authorize]
 	[Route("api/currencies")]
 	public class CurrenciesController : Controller
 	{

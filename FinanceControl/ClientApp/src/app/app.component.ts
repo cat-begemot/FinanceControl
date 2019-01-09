@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { AuthenticationService } from './auth/authentication.service';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +7,13 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'ClientApp';
+  constructor(
+    private authService: AuthenticationService
+  ) { }
+
+  public click_Logout(){
+    if(this.authService.authenticated==true){
+      this.authService.logout();
+    }
+  }
 }

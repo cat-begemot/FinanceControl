@@ -87,4 +87,8 @@ export class Repository {
   public logout(): Observable<any>{
     return this.http.get<any>(loginUrl + "/logout");
   }
+
+  public isAuthenticated(): Observable<any>{
+    return this.http.get(loginUrl + "/isAuth", {responseType: 'text'});
+  }
 }
