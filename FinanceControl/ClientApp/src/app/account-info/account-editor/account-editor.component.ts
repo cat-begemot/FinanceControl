@@ -5,6 +5,7 @@ import { Repository } from "../../model/repository";
 import { ActivatedRoute } from "@angular/router";
 import { Router } from "@angular/router";
 import { FormControl, Validators } from "@angular/forms";
+import { AppStatusService } from "../../app-status.service";
 
 
 @Component({
@@ -18,26 +19,19 @@ export class AccountEditorComponent implements OnInit{
   public editMode: boolean;
   public editorHeader: string;
   public currencySelect: FormControl = new FormControl('', Validators.required);
-  public activeMode: boolean; // Active or hidden account was passed to editor
 
   constructor(
     private repository: Repository,
     private router: ActivatedRoute,
-    private routerNav: Router
+    private routerNav: Router,
+    private appStatus: AppStatusService
   ) { }
 
   ngOnInit()
   {    
     this.currentAccount=new Account();
 
-    // catch passed value about mode from route
-    let paramVal: string = this.router.snapshot.paramMap.get('activeMode');
-    if(paramVal=="true")
-      this.activeMode=true;
-    else
-      this.activeMode=false;
-
-    this.currentAccount.activeAccount=this.activeMode;
+    this.currentAccount.activeAccount=this.appStatus.activeAccountsMode;
     
     this.checkEditorMode();
 
@@ -107,7 +101,7 @@ export class AccountEditorComponent implements OnInit{
   clickEditAccount(){
     this.currentAccount.currency=null;
     this.repository.updateAccount(this.currentAccount).subscribe(()=>{
-      this.routerNav.navigate(["/accounts", {activeMode: this.activeMode}]);
+      this.routerNav.navigate(["/accounts"]);
       this.clearSessionForCurrentAccount();
     });
   }
@@ -115,7 +109,7 @@ export class AccountEditorComponent implements OnInit{
   // Delete selected account
   clickDeleteAccount(){
     this.repository.deleteAccount(this.currentAccount.accountId).subscribe(()=>{
-      this.routerNav.navigate(["/accounts", {activeMode: this.activeMode}]);
+      this.routerNav.navigate(["/accounts"]);
       this.clearSessionForCurrentAccount();
     });
   }
@@ -143,7 +137,7 @@ export class AccountEditorComponent implements OnInit{
 
   // Event for "Cancel" button
   public click_Cancel(){
-    this.routerNav.navigate(["/accounts", {activeMode: this.activeMode}]);
+    this.routerNav.navigate(["/accounts"]);
     this.clearSessionForCurrentAccount();
   }
 }
