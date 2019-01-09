@@ -36,11 +36,4 @@ export class AuthenticationComponent implements OnInit {
     if(this.authService.authenticated)
       this.authService.logout();
   }
-
-  // test function
-  public click_GetUser(){    
-    this.repository.getUser().subscribe(response=>{
-      console.info(response);
-    });
-  }
 }
