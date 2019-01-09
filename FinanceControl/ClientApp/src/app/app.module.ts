@@ -11,6 +11,7 @@ import { AccountEditorComponent } from './account-info/account-editor/account-ed
 import { CurrencyEditorComponent } from './account-info/currency-info/currency-editor/currency-editor.component';
 import { CurrencyInfoComponent } from './account-info/currency-info/currency-info.component';
 import { AuthenticationComponent } from './auth/authentication/authentication.component';
+import { SignupComponent } from './auth/signup/signup.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { AuthenticationComponent } from './auth/authentication/authentication.co
     AccountEditorComponent,
     CurrencyEditorComponent,
     CurrencyInfoComponent,
-    AuthenticationComponent
+    AuthenticationComponent,
+    SignupComponent
   ],
   imports: [
     BrowserModule,

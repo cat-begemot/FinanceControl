@@ -17,22 +17,23 @@ namespace FinanceControl.Models
 		private const string userPassword = "user123";
 		private const string userRole = "User";
 
-		public static void SeedDatabase(IServiceCollection services)
+		/*
+		public async static void SeedDatabase(IServiceCollection services)
 		{
 			ServiceProvider service = services.BuildServiceProvider();
 
 			service.GetRequiredService<IdentityDataContext>().Database.Migrate();
 
-			/*
-			UserManager<IdentityUser> userManager = service.GetRequiredService<UserManager<IdentityUser>>();
+			
+			UserManager<User> userManager = service.GetRequiredService<UserManager<User>>();
 			RoleManager<IdentityRole> roleManager = service.GetRequiredService<RoleManager<IdentityRole>>();
 
-			IdentityUser user = await userManager.FindByNameAsync(userLogin);
+			User user = await userManager.FindByNameAsync(userLogin);
 			IdentityRole role = await roleManager.FindByNameAsync(userRole);
 
 			if(user==null)
 			{
-				user = new IdentityUser(userLogin);
+				user = new User(userLogin);
 				IdentityResult result = await userManager.CreateAsync(user, userPassword);
 				if(!result.Succeeded)
 				{
@@ -56,7 +57,9 @@ namespace FinanceControl.Models
 				if (!result.Succeeded)
 					throw new Exception("Cannot add user to role: " + result.Errors.FirstOrDefault());
 			}
-			*/
+			
 		}
+
+	*/
 	}
 }

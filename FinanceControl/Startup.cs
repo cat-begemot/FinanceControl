@@ -54,7 +54,7 @@ namespace FinanceControl
 
 			// Identity configurations
 			services.AddDbContext<IdentityDataContext>(options => options.UseSqlServer(Configuration["ConnectionStrings:DefaultConnection"]));
-			services.AddIdentity<IdentityUser, IdentityRole>(options=>
+			services.AddIdentity<User, IdentityRole>(options=>
 			{
 				options.Password.RequireDigit = false;
 				options.Password.RequiredLength = 3;

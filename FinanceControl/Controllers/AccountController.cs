@@ -13,11 +13,11 @@ namespace FinanceControl.Controllers
 	[Route("api/account")]
 	public class AccountController : Controller
 	{
-		private UserManager<IdentityUser> userManager;
-		private SignInManager<IdentityUser> signInManager;
+		private UserManager<User> userManager;
+		private SignInManager<User> signInManager;
 		private IRepository repository;
 
-		public AccountController(UserManager<IdentityUser> userMgr, SignInManager<IdentityUser> signInMgr, IRepository repo)
+		public AccountController(UserManager<User> userMgr, SignInManager<User> signInMgr, IRepository repo)
 		{
 			userManager = userMgr;
 			signInManager = signInMgr;
@@ -32,7 +32,7 @@ namespace FinanceControl.Controllers
 		[HttpPost("login")]
 		public async Task<bool> Login([FromBody] LoginViewModel creds)
 		{
-			IdentityUser user = await userManager.FindByNameAsync(creds.Name);
+			User user = await userManager.FindByNameAsync(creds.Name);
 			if(user!=null)
 			{
 				await signInManager.SignOutAsync();

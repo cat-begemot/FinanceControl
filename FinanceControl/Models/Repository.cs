@@ -120,16 +120,6 @@ namespace FinanceControl.Models
 		#endregion
 
 		#region Currencies
-		/*
-		public IEnumerable<Currency> GetCurrencies()
-		{
-			IQueryable<Currency> currenciesList = context.Currencies;
-
-			foreach (var currency in currenciesList)
-				currency.Accounts = null;
-
-			return currenciesList;
-		}*/
 
 		// Get only currencies which is being in defined type of account
 		/// <summary>
@@ -272,6 +262,7 @@ namespace FinanceControl.Models
 
 	}
 
+	// Temporary session table description
 	public class Sessions
 	{
 		public string Id { get; set; }

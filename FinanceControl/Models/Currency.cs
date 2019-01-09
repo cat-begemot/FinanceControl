@@ -8,6 +8,7 @@ namespace FinanceControl.Models
 	public class Currency
 	{
 		// Table column
+		public long UserId { get; set; }
 		public long CurrencyId { get; set; }
 		public string Code { get; set; }
 		public string Description { get; set; }
