@@ -5,6 +5,7 @@ import { Repository } from "../../model/repository";
 import { ActivatedRoute } from "@angular/router";
 import { Router } from "@angular/router";
 import { FormControl, Validators } from "@angular/forms";
+import { AppStatusService } from "../../app-status.service";
 
 
 @Component({
@@ -13,31 +14,23 @@ import { FormControl, Validators } from "@angular/forms";
   styleUrls: ['./account-editor.component.css']
 })
 export class AccountEditorComponent implements OnInit{
-  public currentAccount: Account;
   public currencies: Currency[];
   public editMode: boolean;
   public editorHeader: string;
   public currencySelect: FormControl = new FormControl('', Validators.required);
-  public activeMode: boolean; // Active or hidden account was passed to editor
 
   constructor(
     private repository: Repository,
     private router: ActivatedRoute,
-    private routerNav: Router
+    private routerNav: Router,
+    private appStatus: AppStatusService
   ) { }
 
   ngOnInit()
   {    
-    this.currentAccount=new Account();
+    this.appStatus.currentAccount;
 
-    // catch passed value about mode from route
-    let paramVal: string = this.router.snapshot.paramMap.get('activeMode');
-    if(paramVal=="true")
-      this.activeMode=true;
-    else
-      this.activeMode=false;
-
-    this.currentAccount.activeAccount=this.activeMode;
+    this.appStatus.currentAccount.activeAccount=this.appStatus.activeAccountsMode;
     
     this.checkEditorMode();
 
@@ -45,7 +38,7 @@ export class AccountEditorComponent implements OnInit{
 
     // Subscribe on currency selector
     this.currencySelect.valueChanges.subscribe((response: number) => {
-      this.currentAccount.currencyId=response;
+      this.appStatus.currentAccount.currencyId=response;
     });
   }
 
@@ -58,28 +51,17 @@ export class AccountEditorComponent implements OnInit{
       this.editorHeader="Edit account";
 
       this.repository.getAccountById(id).subscribe(response => { // get account with Id from routing
-        this.repository.getSessionData("currentAccount").subscribe((sessionResponse: Account)=>{ // get account from session
-          if(sessionResponse.accountId!=response.accountId){ // compare session and routing accounts
-            // if not the same Account, show new account
-            this.currentAccount=response;
-            this.currencySelect.setValue(this.currentAccount.currencyId);
-            this.repository.setSessionData("currentAccount", this.currentAccount).subscribe(()=> { });
-          } else{
-            // if the same Account, show account from session
-            this.currentAccount=sessionResponse;
-            this.currencySelect.setValue(this.currentAccount.currencyId);
-          }
-        });
+        if(this.appStatus.currentAccount.accountId!=response.accountId){
+          this.appStatus.currentAccount=response;
+        }
+        this.currencySelect.setValue(this.appStatus.currentAccount.currencyId);
       });
     } else {
       this.editMode=false;
       this.editorHeader="Create account";
-      this.repository.getSessionData("currentAccount").subscribe((response: Account)=>{
-        this.currentAccount=response;
-        if(this.currentAccount.currencyId!=0){
-          this.currencySelect.setValue(this.currentAccount.currencyId);
-        }
-      });
+      if(this.appStatus.currentAccount.currencyId!=0){
+        this.currencySelect.setValue(this.appStatus.currentAccount.currencyId);
+      }
     }
   }
 
@@ -90,38 +72,39 @@ export class AccountEditorComponent implements OnInit{
   // Create a new or change existed account
   clickCreateAccount(){
     // Arrange new account properties
-    this.currentAccount.accountId=0;
-    this.currentAccount.balance=this.currentAccount.startAmount;
-    this.currentAccount.sequence=0;
-    this.currentAccount.activeAccount=true;
-    this.currentAccount.currency=null;
+    this.appStatus.currentAccount.accountId=0;
+    this.appStatus.currentAccount.balance=this.appStatus.currentAccount.startAmount;
+    this.appStatus.currentAccount.sequence=0;
+    this.appStatus.currentAccount.activeAccount=true;
+    this.appStatus.currentAccount.currency=null;
 
     // Create account
-    this.repository.createAccount(this.currentAccount).subscribe(()=>{
+    this.repository.createAccount(this.appStatus.currentAccount).subscribe(()=>{
       // Navigate to parent route after receive response from Web server
       this.routerNav.navigate(["/accounts"]);
+      this.appStatus.clearAccount();
     });
   }
 
   // Edit existed account
   clickEditAccount(){
-    this.currentAccount.currency=null;
-    this.repository.updateAccount(this.currentAccount).subscribe(()=>{
-      this.routerNav.navigate(["/accounts", {activeMode: this.activeMode}]);
-      this.clearSessionForCurrentAccount();
+    this.appStatus.currentAccount.currency=null;
+    this.repository.updateAccount(this.appStatus.currentAccount).subscribe(()=>{
+      this.routerNav.navigate(["/accounts"]);
+      this.appStatus.clearAccount();
     });
   }
 
   // Delete selected account
   clickDeleteAccount(){
-    this.repository.deleteAccount(this.currentAccount.accountId).subscribe(()=>{
-      this.routerNav.navigate(["/accounts", {activeMode: this.activeMode}]);
-      this.clearSessionForCurrentAccount();
+    this.repository.deleteAccount(this.appStatus.currentAccount.accountId).subscribe(()=>{
+      this.routerNav.navigate(["/accounts"]);
+      this.appStatus.clearAccount();
     });
   }
 
   public click_HideActivateAccount(mode: boolean): void{
-    this.currentAccount.activeAccount=mode;
+    this.appStatus.currentAccount.activeAccount=mode;
     this.clickEditAccount();
   }
 
@@ -132,18 +115,12 @@ export class AccountEditorComponent implements OnInit{
 
   // add currency during editing account
   public click_AddCurrency(){
-    this.repository.setSessionData("currentAccount", this.currentAccount).subscribe(()=> { });
     this.routerNav.navigate(["/currencies/add"]);
-  }
-
-  // clear currentAccount in session if transaction with Account was succesful
-  private clearSessionForCurrentAccount(): void{
-    this.repository.setSessionData("currentAccount", new Account()).subscribe(()=>{ });
   }
 
   // Event for "Cancel" button
   public click_Cancel(){
-    this.routerNav.navigate(["/accounts", {activeMode: this.activeMode}]);
-    this.clearSessionForCurrentAccount();
+    this.routerNav.navigate(["/accounts"]);
+    this.appStatus.clearAccount();
   }
 }

@@ -4,6 +4,7 @@ import { Currency } from "../model/currency.model";
 import { Repository } from "../model/repository";
 import { ActivatedRoute } from "@angular/router";
 import { FormControl} from "@angular/forms";
+import { AppStatusService } from "../app-status.service";
 
 @Component({
   selector: 'account-info',
@@ -14,37 +15,25 @@ export class AccountInfoComponent implements OnInit{
   public accountsStatusInfo: AccountsStatus;
   public accounts: Account[];
   public currencies: Currency[]; // currencies which is consisting of filter (show only currency of active or hidden accounts)
-  public activeMode: boolean; // show active accounts or hidden account
   public selectCurrency: FormControl; // link to dropbox elements with currencies list
 
   constructor(
     private repository: Repository,
-    private router: ActivatedRoute
+    private router: ActivatedRoute,
+    private appStatus: AppStatusService
   ) { }
 
   ngOnInit(){
     this.accountsStatusInfo=new AccountsStatus();
-    this.restoreActiveMode(); // Must be restored from session (temporary from routing)
-    
     this.selectCurrency=new FormControl('ALL');
     this.loadAppropriateAccountsType(0);
     this.getCurrencies();
-  }
-  
-  public restoreActiveMode(): void{
-    // catch passed value about mode from route
-    let paramVal: string = this.router.snapshot.paramMap.get('activeMode');
-    
-    if(paramVal=="true" || paramVal==null)
-      this.activeMode=true;
-    else
-      this.activeMode=false;
   }
 
   // get appropriate currencies list
   public getCurrencies(): void{
     let method: string;
-    if(this.activeMode==true)
+    if(this.appStatus.activeAccountsMode==true)
       method="active";
     else
       method="hidden";
@@ -68,16 +57,16 @@ export class AccountInfoComponent implements OnInit{
   // Event handler. It invoked when change type of account via toggle
   public change_accountsType()
   {
-    this.activeMode=!this.activeMode;
+    this.appStatus.activeAccountsMode=!this.appStatus.activeAccountsMode;
     this.selectCurrency.setValue('ALL');
     this.getCurrencies();
     this.loadAppropriateAccountsType(0);
     this.change_SelectCurrency();
   }
 
-  // Working acorrding to value of activeMode variable
+  // Working acorrding to value of appStatus.activeAccountsMode
   private loadAppropriateAccountsType(currencyId: number){
-    if(this.activeMode){
+    if(this.appStatus.activeAccountsMode){
       this.repository.getActiveAccounts(currencyId).subscribe(response => {
         this.accounts=response;
         this.accountsStatusInfo=this.accountsStatus;
@@ -93,7 +82,7 @@ export class AccountInfoComponent implements OnInit{
   // It forms total info string about define type of accounts
   get accountsStatus(): AccountsStatus{
     let typeMode: string;
-    if(this.activeMode)
+    if(this.appStatus.activeAccountsMode)
       typeMode="active";
     else
       typeMode="hidden";

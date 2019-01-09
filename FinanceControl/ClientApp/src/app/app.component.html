@@ -1,3 +1,4 @@
+<!--
 <div class="nav navbar p-1" style="background: rgba(0, 0, 0, 0.85)">
 	
 	<div class="col-1 p-0" style="font-size: 16pt">
@@ -12,9 +13,46 @@
 			<a class="nav-link text-light" routerLink="/accounts">Acc</a>
 		</li>
 		<li class="nav-item">
-			<a class="nav-link text-light" routerLink="/currencies">Curr</a>
+			<a class="nav-link text-light" routerLink="/accounts">Acc</a>
 		</li>
 	</ul>
 </div>
+-->
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark p-1">
+	<a class="navbar-brand p-0" style="transform: translateY(-3px)">
+		<i class="far fa-hand-point-right text-light fa-lg" style="transform: translateY(-2px)"></i>	
+		<span class="text-light ml-3" style="font-size: 30px">Finances</span>
+	</a>
+
+	<button class="navbar-toggler p-1" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" 
+		aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"
+		style="transform: translateY(-2px)">
+    	<span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active ml-2">
+				<a class="nav-link text-light" routerLink="/accounts">
+					<i class="fas fa-list-ul text-light"></i>
+					Accounts
+				</a>
+      </li>
+      <li class="nav-item ml-2">
+				<a class="nav-link text-light" routerLink="/currencies">
+					<i class="far fa-credit-card text-light"></i>
+					Currencies
+				</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link text-light border-top">
+					<i class="fas fa-sign-out-alt text-light"></i>
+					Log out
+				</a>
+			</li>
+		</ul>
+  </div>
+</nav>
 
 <router-outlet></router-outlet>

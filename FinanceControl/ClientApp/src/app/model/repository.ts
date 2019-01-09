@@ -6,7 +6,6 @@ import { Observable } from "rxjs";
 
 const accountUrl: string = "api/accounts";
 const currencyUrl: string = "api/currencies";
-const sessionUrl: string = "api/sessions";
 const loginUrl: string = "api/account";
 
 @Injectable({
@@ -79,17 +78,6 @@ export class Repository {
     return this.http.delete(currencyUrl + "/" + currencyId);
   }
 
-  // SESSION SECTION ===========================================================================================
-  // get sessiod data by key
-  public getSessionData(key: string): Observable<any>{
-    return this.http.get<any>(sessionUrl + "/" + key);
-  }
-
-  // save session data by key
-  public setSessionData(key: string, value: any): Observable<any>{
-    return this.http.post<any>(sessionUrl + "/" + key, value);
-  }
-
   // AUTHENTICATION SECTION ===========================================================================================
   // login
   public login(name: string, password: string): Observable<any>{
@@ -98,9 +86,5 @@ export class Repository {
 
   public logout(): Observable<any>{
     return this.http.get<any>(loginUrl + "/logout");
-  }
-
-  public getUser(): Observable<string>{
-    return this.http.get(sessionUrl + "/currentUserId", {responseType: 'text'});
   }
 }

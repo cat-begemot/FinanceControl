@@ -4,7 +4,7 @@
 			<h4>Accounts</h4>
 		</div>
 		<div class="col text-right">
-			<button class="btn btn-sm btn-dark text-light" routerLink="/accounts/add/{{activeMode}}">
+			<button class="btn btn-sm btn-dark text-light" routerLink="/accounts/add">
 				<i class="fas fa-plus-circle mr-1"></i>
 				New
 			</button>
@@ -15,7 +15,7 @@
 		<tr>
 			<td style="width: 20px">
 				<div class="custom-control custom-switch mb-1">
-					<input type="checkbox" class="custom-control-input" id="accountsType" [attr.checked]="activeMode ? 'checked' : null"
+					<input type="checkbox" class="custom-control-input" id="accountsType" [attr.checked]="appStatus.activeAccountsMode ? 'checked' : null"
 						(click)="change_accountsType()"/>
 					<label class="custom-control-label totalActive" for="accountsType"></label>
 				</div>
@@ -24,7 +24,7 @@
 				{{accountsStatusInfo?.infoString}}
 			</td>
 		</tr>
-		<tr *ngIf="!activeMode">
+		<tr *ngIf="!appStatus.activeAccountsMode">
 			<td colspan="2"style="font-size: 0.9rem; transform: translateY(-3px); color: rgb(130,0,0)">
 				(these ones do not take part in the accounting)
 			</td>
@@ -46,7 +46,7 @@
 		
 		<tr *ngFor="let account of accounts">
 			<td>
-					<a routerLink="/accounts/edit/{{account.accountId}}/{{activeMode}}"
+					<a routerLink="/accounts/edit/{{account.accountId}}"
 					class="text-dark">{{account.accountName}}</a>
 			</td>
 			<td class="text-right">{{account.balance | number:'1.2-2'}}</td>

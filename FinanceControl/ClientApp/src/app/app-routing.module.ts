@@ -7,12 +7,11 @@ import { CurrencyEditorComponent } from './account-info/currency-info/currency-e
 import { AuthenticationComponent } from "./auth/authentication/authentication.component";
 
 const routes: Routes = [
-  {path: '', redirectTo: '/login', pathMatch: 'full'},
-  {path: 'login', component: AuthenticationComponent},
-  {path: 'accounts/add/:activeMode', component: AccountEditorComponent},
-  {path: 'accounts/:activeMode', component: AccountInfoComponent},
+  {path: '', redirectTo: '/accounts', pathMatch: 'full'},
+  {path: 'accounts/add', component: AccountEditorComponent},
   {path: 'accounts', component: AccountInfoComponent},
-  {path: 'accounts/edit/:id/:activeMode', component: AccountEditorComponent},
+  {path: 'accounts', component: AccountInfoComponent},
+  {path: 'accounts/edit/:id', component: AccountEditorComponent},
   {path: 'currencies', component: CurrencyInfoComponent},
   {path: 'currencies/add', component: CurrencyEditorComponent},
   {path: 'currencies/edit/:id', component: CurrencyEditorComponent}
