@@ -16,5 +16,6 @@ namespace FinanceControl.Models
 
 		public DbSet<Account> Accounts { get; set; }
 		public DbSet<Currency> Currencies { get; set; }
+
 	}
 }

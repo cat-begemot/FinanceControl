@@ -230,7 +230,6 @@ namespace FinanceControl.Models
 				return new Account();
 			else
 				return JsonConvert.DeserializeObject<Account>(value);
-
 		}
 
 		public void SetSessionAccount(Account currentAccount)
@@ -238,7 +237,44 @@ namespace FinanceControl.Models
 			string value = JsonConvert.SerializeObject(currentAccount);
 			httpContextAccessor.HttpContext.Session.SetString("currentAccount", value);
 		}
+
+		public string GetSessionUserId()
+		{
+			string value = httpContextAccessor.HttpContext.Session.GetString("currentUserId");
+			if (value == null)
+				return new String("");
+			else
+				return value;
+		}
+
+		public void SetSessionUserId(string userId)
+		{
+			httpContextAccessor.HttpContext.Session.SetString("currentUserId", userId);
+		}
+
+		public void RemoveSessionUserId()
+		{
+			httpContextAccessor.HttpContext.Session.Remove("currentUserId");
+
+			/*
+			var entry = context.Set<Sessions>();
+			Sessions entity = entry.Where(session => session.Id == httpContextAccessor.HttpContext.Session.Id).FirstOrDefault();
+			if(entity!=null)
+			{
+				entry.Remove(entity);
+				context.SaveChanges();
+			}*/
+		}
 		#endregion // Session section
 
+	}
+
+	public class Sessions
+	{
+		public string Id { get; set; }
+		public IEnumerable<char> Value { get; set; }
+		public DateTime ExpiresAtTime { get; set; }
+		public long SlidingExpirationInSeconds { get; set; }
+		public DateTime AbsoluteExpiration { get; set; }
 	}
 }

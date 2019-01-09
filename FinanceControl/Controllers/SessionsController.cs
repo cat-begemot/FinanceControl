@@ -34,5 +34,17 @@ namespace FinanceControl.Controllers
 			repository.SetSessionAccount(currentAccount);
 		}
 
+		[HttpGet("currentUserId")]
+		public string GetSessionUserId()
+		{
+			return repository.GetSessionUserId();
+		}
+
+		[HttpPost("currentUserId")]
+		public void SetSessionUserId([FromBody] string userId)
+		{
+			repository.SetSessionUserId(userId);
+		}
+
 	}
 }

@@ -10,6 +10,7 @@ import { AccountInfoComponent } from './account-info/account-info.component';
 import { AccountEditorComponent } from './account-info/account-editor/account-editor.component';
 import { CurrencyEditorComponent } from './account-info/currency-info/currency-editor/currency-editor.component';
 import { CurrencyInfoComponent } from './account-info/currency-info/currency-info.component';
+import { AuthenticationComponent } from './auth/authentication/authentication.component';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import { CurrencyInfoComponent } from './account-info/currency-info/currency-inf
     AccountInfoComponent,
     AccountEditorComponent,
     CurrencyEditorComponent,
-    CurrencyInfoComponent
+    CurrencyInfoComponent,
+    AuthenticationComponent
   ],
   imports: [
     BrowserModule,

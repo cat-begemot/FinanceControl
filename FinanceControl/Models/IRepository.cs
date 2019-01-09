@@ -25,5 +25,9 @@ namespace FinanceControl.Models
 		// Session section
 		Account GetSessionAccount();
 		void SetSessionAccount(Account currentAccount);
+
+		string GetSessionUserId();
+		void SetSessionUserId(string userId);
+		void RemoveSessionUserId();
 	}
 }

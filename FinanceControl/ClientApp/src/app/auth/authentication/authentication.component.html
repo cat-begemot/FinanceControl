@@ -1,0 +1,38 @@
+<div class="m-1">
+	<div class="row border-bottom mb-3 py-1">
+		<div class="col-7">
+			<h4>Sign in</h4>
+		</div>
+		<div class="col text-right">
+			<button class="btn btn-sm btn-dark text-light">
+				<i class="fas fa-plus-circle mr-1"></i>
+				Registration
+			</button>
+		</div>
+  </div>
+  
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" autocomplete="off">
+    <div class="form-group">
+     <h5>Login</h5>
+     <input class="form-control" formControlName="loginControl" placeholder="Login" required />
+    </div>
+
+    <div class="form-group">
+      <h5>Password</h5>
+      <input class="form-control" formControlName="passwordControl" placeholder="Password" required />
+    </div>
+
+    <button type="submit" class="btn btn-dark text-light" [disabled]="loginForm.invalid">
+      <i class="fas fa-sign-in-alt"></i>
+      Sign in
+    </button>
+
+    <button type="button" class="btn btn-dark text-light ml-1" (click)="click_Logout()">
+      <i class="fas fa-sign-out-alt"></i>
+      Sign out
+    </button>
+
+    <button type="button" class="btn btn-dark text-light ml-1" (click)="click_GetUser()">
+      Get User
+    </button>
+  </form>
