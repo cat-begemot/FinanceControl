@@ -6,7 +6,6 @@ import { Observable } from "rxjs";
 
 const accountUrl: string = "api/accounts";
 const currencyUrl: string = "api/currencies";
-const sessionUrl: string = "api/sessions";
 
 @Injectable({
   providedIn: 'root'
@@ -76,14 +75,5 @@ export class Repository {
   // Delete currency
   public deleteCurrency(currencyId: number): Observable<any>{
     return this.http.delete(currencyUrl + "/" + currencyId);
-  }
-
-  // SESSION SECTION ===========================================================================================
-  public getSessionData(key: string): Observable<any>{
-    return this.http.get<any>(sessionUrl + "/" + key);
-  }
-
-  public setSessionData(key: string, value: any): Observable<any>{
-    return this.http.post<any>(sessionUrl + "/" + key, value);
   }
 }

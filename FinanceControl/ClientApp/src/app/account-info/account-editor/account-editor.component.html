@@ -15,7 +15,7 @@
     <div class="form-group">
       <h5 class="pb-0 mb-0">Account name</h5>
       <h6 class="pt-0 mt-0 text-secondary">(it must be unique name from your accounts list)</h6>
-      <input class="form-control" name="name" placeholder="Name" [(ngModel)]="currentAccount.accountName"
+      <input class="form-control" name="name" placeholder="Name" [(ngModel)]="appStatus.currentAccount.accountName"
         required #nameControl="ngModel" [class.is-invalid]="isInvalid(nameControl)"/>
       <div *ngIf="isInvalid(nameControl)" class="text-danger">
         Account name is required
@@ -26,7 +26,7 @@
       <h5 class="pb-0 mb-0">Start amount</h5>
       <h6 class="pt-0 mt-0 text-secondary">(start sum from which accouting will begin)</h6>
       <div class="input-group">
-        <input class="form-control" name="amount" placeholder="0.00" [(ngModel)]="currentAccount.startAmount"
+        <input class="form-control" name="amount" placeholder="0.00" [(ngModel)]="appStatus.currentAccount.startAmount"
           pattern="[0-9]*\.?[0-9]*" #startAmountControl="ngModel" [class.is-invalid]="isInvalid(startAmountControl)"/>
         <select class="form-control input-group-append ml-1" [formControl]="currencySelect" required>
           <option *ngFor="let currency of currencies" name="currency" [value]="currency.currencyId">{{currency.code}}</option>
@@ -43,7 +43,7 @@
     <div class="form-group">
       <h5 class="pb-0 mb-0">Balance</h5>
       <h6 class="pt-0 mt-0 text-secondary">(current account balance)</h6>
-      <input class="form-control" name="balance" placeholder="0.00" [(ngModel)]="currentAccount.balance"
+      <input class="form-control" name="balance" placeholder="0.00" [(ngModel)]="appStatus.currentAccount.balance"
         #balanceControl="ngModel" pattern="[0-9]*\.?[0-9]*" [disabled]="!editMode"/>
       <div *ngIf="isInvalid(balanceControl)" class="text-danger">
           Only number are allowed
@@ -53,7 +53,7 @@
 
     <div class="form-group">
       <h5>Description</h5>
-      <textarea class="form-control" name="description" [(ngModel)]="currentAccount.description"
+      <textarea class="form-control" name="description" [(ngModel)]="appStatus.currentAccount.description"
         placeholder="Description"></textarea>
     </div>
     
