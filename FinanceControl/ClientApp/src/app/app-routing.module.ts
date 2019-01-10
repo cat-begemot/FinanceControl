@@ -5,10 +5,12 @@ import { AccountEditorComponent } from './account-info/account-editor/account-ed
 import { CurrencyInfoComponent } from './account-info/currency-info/currency-info.component';
 import { CurrencyEditorComponent } from './account-info/currency-info/currency-editor/currency-editor.component';
 import { AuthenticationComponent } from "./auth/authentication/authentication.component";
+import { SignupComponent } from "./auth/signup/signup.component";
 
 const routes: Routes = [
   {path: '', redirectTo: '/login', pathMatch: 'full'},
   {path: 'login', component: AuthenticationComponent},
+  {path: 'signup', component: SignupComponent},
   {path: 'accounts/add', component: AccountEditorComponent},
   {path: 'accounts', component: AccountInfoComponent},
   {path: 'accounts', component: AccountInfoComponent},

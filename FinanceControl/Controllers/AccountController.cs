@@ -33,7 +33,7 @@ namespace FinanceControl.Controllers
 		public async Task<bool> Login([FromBody] LoginViewModel creds)
 		{
 			User user = await userManager.FindByNameAsync(creds.Name);
-			if(user!=null)
+			if (user != null)
 			{
 				await signInManager.SignOutAsync();
 				Microsoft.AspNetCore.Identity.SignInResult result = await signInManager.PasswordSignInAsync(user, creds.Password, false, false);
@@ -60,6 +60,37 @@ namespace FinanceControl.Controllers
 		public bool IsUserAuthenticated()
 		{
 			return repository.IsUserAuthenticated();
+		}
+
+		[HttpPost("isNameExist/{userName}")]
+		public bool IsNameExist([FromRoute] string userName)
+		{
+			if (userName == "" || userName == null)
+				return true;
+
+			User tempUser = userManager.Users.Where(user => user.NormalizedUserName == userName.ToUpper()).FirstOrDefault();
+			if (tempUser == null)
+				return false;
+			else
+				return true;
+		}
+
+		[HttpPost("createUserProfile")]
+		public async Task<bool> CreateUserProfile([FromBody] LoginViewModel creds)
+		{
+			User newUser = new User(creds.Name);
+			IdentityResult result = await userManager.CreateAsync(newUser, creds.Password);
+
+			if (result.Succeeded)
+				return true;
+			else
+				return false;
+		}
+
+		[HttpGet("getCurrentUserName")]
+		public string GetCurrentUserName()
+		{
+			return HttpContext.User.Identity.Name;
 		}
 
 	}

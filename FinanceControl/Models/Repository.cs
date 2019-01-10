@@ -16,16 +16,25 @@ namespace FinanceControl.Models
 	{
 		private DbRepositoryContext context;
 		private IHttpContextAccessor httpContextAccessor;
-		private UserManager<IdentityUser> userManager;
-		private SignInManager<IdentityUser> signInManager;
+		private UserManager<User> userManager;
+		private SignInManager<User> signInManager;
+		private long currentUserId;
 
 		public Repository(DbRepositoryContext ctx, IHttpContextAccessor httpContAcc, 
-			UserManager<IdentityUser> userMgr, SignInManager<IdentityUser> signInMgr)
+			UserManager<User> userMgr, SignInManager<User> signInMgr)
 		{
 			context = ctx;
 			httpContextAccessor = httpContAcc;
 			userManager = userMgr;
 			signInManager = signInMgr;
+
+			// set currentUserId value
+			string currentUserName = httpContextAccessor.HttpContext.User.Identity.Name;
+			User currentUser = userManager.Users.Where(user => user.UserName == currentUserName).FirstOrDefault();
+			if(currentUser!=null)
+			{
+				currentUserId = currentUser.UserId;
+			}
 		}
 
 		#region Accounts
@@ -39,6 +48,7 @@ namespace FinanceControl.Models
 
 			newAccount.AccountId = 0;
 			newAccount.Currency = null;
+			newAccount.UserId = currentUserId;
 
 			var temp = context.Accounts.Add(newAccount);
 			context.SaveChanges();
@@ -67,11 +77,11 @@ namespace FinanceControl.Models
 		public IEnumerable<Account> GetActiveAccount(long currencyId=0)
 		{
 			IQueryable<Account> activeAccounts = context.Accounts
-				.Where(account => account.ActiveAccount == true)
+				.Where(account => account.UserId == currentUserId && account.ActiveAccount == true)
 				.Include(account => account.Currency);
 
 			if (currencyId != 0)
-				activeAccounts = activeAccounts.Where(account => account.CurrencyId == currencyId);
+				activeAccounts = activeAccounts.Where(account => account.UserId ==currentUserId && account.CurrencyId == currencyId);
 			
 			foreach (var account in activeAccounts)
 				account.Currency.Accounts = null;
@@ -89,11 +99,11 @@ namespace FinanceControl.Models
 		public IEnumerable<Account> GetInactiveAccount(long currencyId=0)
 		{
 			IQueryable<Account> inactiveAccounts = context.Accounts
-				.Where(account => account.ActiveAccount == false)
+				.Where(account => account.UserId == currentUserId && account.ActiveAccount == false)
 				.Include(Account => Account.Currency);
 
 			if (currencyId != 0)
-				inactiveAccounts = inactiveAccounts.Where(account => account.CurrencyId == currencyId);
+				inactiveAccounts = inactiveAccounts.Where(account => account.UserId == currentUserId && account.CurrencyId == currencyId);
 
 			foreach (var account in inactiveAccounts)
 				account.Currency.Accounts = null;
@@ -137,7 +147,7 @@ namespace FinanceControl.Models
 
 			if (method == "none")
 			{
-				currenciesList = context.Currencies;
+				currenciesList = context.Currencies.Where(currency=>currency.UserId==currentUserId);
 			}
 			else if(method=="active" || method=="hidden")
 			{
@@ -148,7 +158,7 @@ namespace FinanceControl.Models
 					isActive = false;
 
 				IQueryable<Account> accountsCurrList = context.Accounts
-					.Where(acc => acc.ActiveAccount == isActive)
+					.Where(acc => acc.UserId==currentUserId && acc.ActiveAccount == isActive)
 					.Include(acc => acc.Currency);
 
 				foreach (var acc in accountsCurrList)
@@ -192,6 +202,7 @@ namespace FinanceControl.Models
 		{
 			newCurrency.CurrencyId = 0;
 			newCurrency.Accounts = null;
+			newCurrency.UserId = currentUserId;
 			context.Add(newCurrency);
 			context.SaveChanges();
 		}

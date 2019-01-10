@@ -4,31 +4,42 @@
       <h4>Create profile</h4>
     </div>
     <div class="col text-right">
-      <button class="btn btn-sm btn-dark text-light">
-        <i class="fas fa-plus-circle mr-1"></i>
+      <button type="button" class="btn btn-sm btn-dark text-light" (click)="click_Cancel()">
+        <i class="fas fa-times mr-1"></i>
         Cancel
       </button>
     </div>
   </div>
 
-  <form [formGroup]="signUpForm" (ngSubmit)="onSubmit">
+  <form [formGroup]="signUpForm" (ngSubmit)="onSubmit()" autocomplete="off">
     <div class="form-group">
       <h5>Login</h5>
-      <input type="text" class="form-control" placeholder="Login" formControlName="logonControl" required/>
+      <input type="text" class="form-control" placeholder="Login" formControlName="loginControl" required 
+        [class.is-invalid]="isInvalid(loginControl) || errorLogin" (change)="change_checkLogin()" [class.ng-invalid]="errorLogin" />
+      <div *ngIf="isInvalid(loginControl)" class="text-danger">
+        Login is required
+      </div>
+      <div *ngIf="errorLogin" class="text-danger">
+        This login is already existed. Please enter a new one
+      </div>
     </div>
 
     <div class="form-group">
       <h5>Password</h5>
-      <input type="password" class="forn-control" formControlName="passwordControl" required />
+      <input type="password" class="form-control" formControlName="passwordControl" required />
     </div>
 
     <div class="form-group">
       <h5>Confirm password</h5>
-      <input type="password" class="form-control" formControlName="passwordConfirmationControl" required />
+      <input type="password" class="form-control" formControlName="passwordConfirmationControl" required
+        (change)="change_pswConfirm()" [class.ng-invalid]="errorPasswordConfirmation" [class.is-invalid]="errorPasswordConfirmation"/>
+        <div *ngIf="errorPasswordConfirmation" class="text-danger">
+          Password confirmation doesn't match the initial one
+        </div>
     </div>
     
-    <button type="submit" class="btn btn-dark text-light" [disabled]="signUpForm.invalid">
-      <i class="fas fa-sign-in-alt"></i>
+    <button type="submit" class="btn btn-dark text-light" [disabled]="signUpForm.invalid || errorLogin || errorPasswordConfirmation">
+      <i class="fas fa-plus-circle mr-1"></i>
       Create
     </button>
   </form>

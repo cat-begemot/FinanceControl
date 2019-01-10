@@ -11,6 +11,7 @@ export class AuthenticationService {
   public password: string;
   public callBackUrl: string;
   public authenticated: boolean;
+  public isSuccessfullyCreated: boolean;
 
   constructor(
     private repository: Repository,
@@ -24,6 +25,7 @@ export class AuthenticationService {
           this.authenticated=false;
         }
       });
+      this.isSuccessfullyCreated=false;
   }
 
   public login(): Observable<boolean>{
@@ -43,5 +45,16 @@ export class AuthenticationService {
   public logout(): void{
     this.authenticated=false;
     this.repository.logout().subscribe(()=>{});
+  }
+
+  public createUserProfile(): Observable<boolean>{
+    this.isSuccessfullyCreated=false;
+    let obs: Observable<any> = this.repository.createUserProfile(this.name, this.password);
+
+    obs.subscribe(response=>{
+      this.isSuccessfullyCreated=true;
+    });
+
+    return obs;
   }
 }

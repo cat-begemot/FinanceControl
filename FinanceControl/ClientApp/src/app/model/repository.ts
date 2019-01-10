@@ -91,4 +91,12 @@ export class Repository {
   public isAuthenticated(): Observable<any>{
     return this.http.get(loginUrl + "/isAuth", {responseType: 'text'});
   }
+
+  public isLoginExist(name: string): Observable<any>{
+    return this.http.post(loginUrl + "/isNameExist" + "/" + name, {responseType: 'text'});
+  }
+
+  public createUserProfile(name: string, password: string): Observable<any>{
+    return this.http.post<any>(loginUrl + "/createUserProfile", {name: name, password: password});
+  }
 }
