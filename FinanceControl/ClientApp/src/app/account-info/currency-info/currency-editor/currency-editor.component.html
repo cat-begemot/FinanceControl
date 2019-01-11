@@ -5,7 +5,7 @@
     </div>
     <div class="col-1 text-right">
       <button class="btn btn-sm btn-dark text-light float-right" style="width: 80px" (click)="click_Cancel()">
-        <i class="fas fa-sign-out-alt"></i>
+        <i class="fas fa-sign-out-alt mr-1"></i>
         Cancel
       </button>
     </div>
@@ -39,14 +39,14 @@
 
 			<div *ngIf="editMode" class="col">
 				<button type="submit" class="btn btn-dark text-ligth" [disabled]="currencyForm.invalid">
-						<i class="fas fa-edit"></i>
+						<i class="fas fa-edit mr-1"></i>
 					Save
 				</button>
 			</div>
 
 			<div *ngIf="editMode" class="col">
 				<button type="button" class="btn btn-dark text-light float-right" (click)="click_Delete()" style="width: 100px">
-					<i class="far fa-trash-alt"></i>
+					<i class="far fa-trash-alt mr-1"></i>
 					Delete
 				</button>
 			</div>
