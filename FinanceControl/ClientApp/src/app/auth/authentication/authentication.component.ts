@@ -26,6 +26,10 @@ export class AuthenticationComponent implements OnInit {
       passwordControl: new FormControl('', Validators.required)
     });
     this.loginForm.valueChanges.subscribe(()=>this.appStatus.validCredentials=true);
+
+    if(this.authService.authenticated==true){
+      this.routerNav.navigate(["/accounts"]);
+    }
   }
 
   public onSubmit(){

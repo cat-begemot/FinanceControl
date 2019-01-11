@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { AuthenticationService } from './auth/authentication.service';
 import { Router } from "@angular/router";
 
@@ -7,7 +7,7 @@ import { Router } from "@angular/router";
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
   constructor(
     public authService: AuthenticationService,
     private routerNav: Router
@@ -16,12 +16,6 @@ export class AppComponent implements OnInit {
   public click_Logout(){
     if(this.authService.authenticated==true){
       this.authService.logout();
-    }
-  }
-
-  ngOnInit(){
-    if(this.authService.authenticated==true){
-      this.routerNav.navigate(["/accounts"]);
     }
   }
 }
