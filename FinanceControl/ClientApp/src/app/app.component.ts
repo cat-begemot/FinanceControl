@@ -8,7 +8,7 @@ import { AuthenticationService } from './auth/authentication.service';
 })
 export class AppComponent {
   constructor(
-    private authService: AuthenticationService
+    public authService: AuthenticationService
   ) { }
 
   public click_Logout(){

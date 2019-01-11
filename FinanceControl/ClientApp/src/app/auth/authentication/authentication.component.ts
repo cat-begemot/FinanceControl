@@ -17,7 +17,7 @@ export class AuthenticationComponent implements OnInit {
     private authService: AuthenticationService,
     private repository: Repository,
     private routerNav: Router,
-    private appStatus: AppStatusService
+    public appStatus: AppStatusService
   ) { }
 
   ngOnInit() {

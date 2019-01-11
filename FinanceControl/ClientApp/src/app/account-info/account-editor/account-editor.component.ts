@@ -23,7 +23,7 @@ export class AccountEditorComponent implements OnInit{
     private repository: Repository,
     private router: ActivatedRoute,
     private routerNav: Router,
-    private appStatus: AppStatusService
+    public appStatus: AppStatusService
   ) { }
 
   ngOnInit()

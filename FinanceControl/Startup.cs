@@ -42,18 +42,32 @@ namespace FinanceControl
 			});
 
 			if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Production")
+			{
 				services.AddDbContext<DbRepositoryContext>(options =>
 					options.UseSqlServer(Configuration.GetConnectionString("connectionString")));
+				services.AddDbContext<IdentityDataContext>(options =>
+					options.UseSqlServer(Configuration.GetConnectionString("connectionString")));
+			}
 			else
+			{
 				services.AddDbContext<DbRepositoryContext>(options =>
 				{
 					options.UseSqlServer(Configuration["ConnectionStrings:DefaultConnection"]);
 				});
+				services.AddDbContext<IdentityDataContext>(options =>
+				{
+					options.UseSqlServer(Configuration["ConnectionStrings:DefaultConnection"]);
+				});
+			}
+
+			// Apply migrations
 			services.BuildServiceProvider().GetService<DbRepositoryContext>().Database.Migrate();
+			services.BuildServiceProvider().GetService<IdentityDataContext>().Database.Migrate();
+
+
 			services.AddTransient<IRepository, Repository>();
 
 			// Identity configurations
-			services.AddDbContext<IdentityDataContext>(options => options.UseSqlServer(Configuration["ConnectionStrings:DefaultConnection"]));
 			services.AddIdentity<User, IdentityRole>(options=>
 			{
 				options.Password.RequireDigit = false;
@@ -64,7 +78,6 @@ namespace FinanceControl
 				options.Password.RequireUppercase = false;
 			}).AddEntityFrameworkStores<IdentityDataContext>();
 			
-			//IdentitySeedData.SeedDatabase(services);
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -20,7 +20,7 @@ export class AccountInfoComponent implements OnInit{
   constructor(
     private repository: Repository,
     private router: ActivatedRoute,
-    private appStatus: AppStatusService
+    public appStatus: AppStatusService
   ) { }
 
   ngOnInit(){

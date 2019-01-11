@@ -71,13 +71,13 @@
           Save
         </button>
 
-        <button *ngIf="activeMode && editMode" type="button" class="btn btn-dark text-light ml-1"
+        <button *ngIf="appStatus.activeAccountsMode && editMode" type="button" class="btn btn-dark text-light ml-1"
           (click)="click_HideActivateAccount(false)">
             <i class="fas fa-minus"></i>
             Hide
         </button>
 
-        <button *ngIf="!activeMode && editMode" type="button" class="btn btn-dark text-light ml-1"
+        <button *ngIf="!appStatus.activeAccountsMode && editMode" type="button" class="btn btn-dark text-light ml-1"
           (click)="click_HideActivateAccount(true)">
             <i class="fas fa-plus"></i>
             Activate
