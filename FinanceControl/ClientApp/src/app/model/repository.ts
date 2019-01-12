@@ -93,9 +93,8 @@ export class Repository {
     return this.http.get<any>(loginUrl + "/logout");
   }
 
-  // check it crefully
-  public isAuthenticated(): Observable<any>{
-    return this.http.get(loginUrl + "/isAuth", {responseType: 'text'});
+  public isAuthenticated(): Observable<boolean>{
+    return this.http.get<boolean>(loginUrl + "/isAuth");
   }
 
   public isLoginExist(name: string): Observable<any>{

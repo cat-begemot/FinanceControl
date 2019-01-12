@@ -8,7 +8,8 @@ import { AuthenticationComponent } from "./auth/authentication/authentication.co
 import { SignupComponent } from "./auth/signup/signup.component";
 
 const routes: Routes = [
-  {path: '', redirectTo: '/login', pathMatch: 'full'},
+  {path: '', redirectTo: '/accounts', pathMatch: 'full'},
+  
   {path: 'login', component: AuthenticationComponent},
   {path: 'signup', component: SignupComponent},
   {path: 'accounts/add', component: AccountEditorComponent},

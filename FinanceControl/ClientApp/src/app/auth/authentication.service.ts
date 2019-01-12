@@ -15,17 +15,19 @@ export class AuthenticationService {
 
   constructor(
     private repository: Repository,
-    private router: Router
+    private routerNav: Router
   ) { 
-      // check whether is client authenticated
-      this.repository.isAuthenticated().subscribe((response: string)=>{
-        if(response=="true"){
-          this.authenticated=true;
-        } else{
-          this.authenticated=false;
-        }
-      });
-      this.isSuccessfullyCreated=false;
+    // Check whether the user is already had authenticated
+    this.repository.isAuthenticated().subscribe(response=>{
+      if(response){
+        this.authenticated=true;
+      } else {
+        this.authenticated=false;
+        this.routerNav.navigate(["/login"]);
+      }
+    });
+    
+    this.isSuccessfullyCreated=false;
   }
 
   public login(): Observable<boolean>{
@@ -38,7 +40,7 @@ export class AuthenticationService {
         this.password=null; 
       }
     });
-
+  
     return obs;
   }
 
