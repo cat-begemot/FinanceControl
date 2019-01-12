@@ -12,6 +12,12 @@ import { CurrencyEditorComponent } from './account-info/currency-info/currency-e
 import { CurrencyInfoComponent } from './account-info/currency-info/currency-info.component';
 import { AuthenticationComponent } from './auth/authentication/authentication.component';
 import { SignupComponent } from './auth/signup/signup.component';
+import { ItemsInfoComponent } from './items-info/items-info.component';
+import { ItemEditorComponent } from './items-info/item-editor/item-editor.component';
+import { GroupsInfoComponent } from './items-info/groups-info/groups-info.component';
+import { GroupEditorComponent } from './items-info/groups-info/group-editor/group-editor.component';
+import { KindsInfoComponent } from './items-info/kinds-info/kinds-info.component';
+import { KindEditorComponent } from './items-info/kinds-info/kind-editor/kind-editor.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +27,13 @@ import { SignupComponent } from './auth/signup/signup.component';
     CurrencyEditorComponent,
     CurrencyInfoComponent,
     AuthenticationComponent,
-    SignupComponent
+    SignupComponent,
+    ItemsInfoComponent,
+    ItemEditorComponent,
+    GroupsInfoComponent,
+    GroupEditorComponent,
+    KindsInfoComponent,
+    KindEditorComponent
   ],
   imports: [
     BrowserModule,

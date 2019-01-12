@@ -46,12 +46,22 @@ namespace FinanceControl.Models
 		{
 			// TODO: add data checks
 
+			// Add account to Items table
+			Item newItem = new Item();
+			newItem.UserId = currentUserId;
+			newItem.Name = newAccount.AccountName;
+			var result = context.Items.Add(newItem);
+			context.SaveChanges();
+
+			// Add account to Accounts table
 			newAccount.AccountId = 0;
 			newAccount.Currency = null;
 			newAccount.UserId = currentUserId;
-
-			var temp = context.Accounts.Add(newAccount);
+			newAccount.ItemId = result.Entity.ItemId;
+			context.Accounts.Add(newAccount);
 			context.SaveChanges();
+
+
 		}
 
 
@@ -116,6 +126,10 @@ namespace FinanceControl.Models
 			Account remAccount = context.Accounts.Where(account => account.AccountId == id).FirstOrDefault();
 			if (remAccount != null)
 			{
+				Item remItem = context.Items.Where(item => item.ItemId == remAccount.ItemId).FirstOrDefault();
+				if (remItem != null)
+					context.Items.Remove(remItem);
+
 				context.Accounts.Remove(remAccount);
 				context.SaveChanges();
 			}
@@ -125,6 +139,14 @@ namespace FinanceControl.Models
 		{
 			updatedAccount.Currency = null;
 			context.Accounts.Update(updatedAccount);
+
+			Item updatedItem = context.Items.Where(item => item.ItemId == updatedAccount.ItemId).FirstOrDefault();
+			if(updatedItem!=null && updatedItem.Name!=updatedAccount.AccountName)
+			{
+				updatedItem.Name = updatedAccount.AccountName;
+				context.Items.Update(updatedItem);
+			}
+
 			context.SaveChanges();
 		}
 		#endregion

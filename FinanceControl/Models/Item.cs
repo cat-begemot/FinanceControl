@@ -13,5 +13,8 @@ namespace FinanceControl.Models
 
 		public long GroupId { get; set; } // FK
 		public long KindId { get; set; } // FK
+
+		public IEnumerable<Group> Groups { get; set; }
+		public IEnumerable<Kind> Kinds { get; set; }
 	}
 }
