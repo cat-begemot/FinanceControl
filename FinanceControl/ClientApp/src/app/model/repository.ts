@@ -63,6 +63,11 @@ export class Repository {
     return this.http.get<Currency>(currencyUrl + "/" + currencyId);
   }
 
+  // Check wether currency code is exist. If true - it is already existed
+  public isCurrencyCodeExist(code: string): Observable<boolean>{
+    return this.http.get<boolean>(currencyUrl + "/isCurrencyCodeExist/" + code);
+  }
+
   // Create new curency
   public createCurrency(newCurrency: Currency): Observable<any>{
     return this.http.post(currencyUrl, newCurrency);
@@ -88,6 +93,7 @@ export class Repository {
     return this.http.get<any>(loginUrl + "/logout");
   }
 
+  // check it crefully
   public isAuthenticated(): Observable<any>{
     return this.http.get(loginUrl + "/isAuth", {responseType: 'text'});
   }

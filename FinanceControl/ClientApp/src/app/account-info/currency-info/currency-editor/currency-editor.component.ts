@@ -15,6 +15,7 @@ export class CurrencyEditorComponent implements OnInit {
   public editMode: boolean; // Create new or edit exist curreny
   public editorHeader: string; // Header value on the top of component
   public currencyForm: FormGroup;  // Form model
+  public isCurrencyCodeExist: boolean; // If it is true - new currency code is already existed
 
   constructor(
     private repository: Repository,
@@ -30,6 +31,7 @@ export class CurrencyEditorComponent implements OnInit {
       code: new FormControl(this.currentCurrency.code, Validators.required),
       description: new FormControl(this.currentCurrency.description)
     });
+    this.isCurrencyCodeExist=false;
   }
 
   private setEditMode(){
@@ -85,7 +87,18 @@ export class CurrencyEditorComponent implements OnInit {
     return control.invalid && ( control.dirty || control.touched);
   }
 
+  // returns code control
   public code(){
     return this.currencyForm.get('code');
+  }
+
+  public change_Code(): void{
+    this.repository.isCurrencyCodeExist(this.code().value).subscribe(response=>{
+      if(response==true){
+        this.isCurrencyCodeExist=true;
+      } else{
+        this.isCurrencyCodeExist=false;
+      }
+    });
   }
 }

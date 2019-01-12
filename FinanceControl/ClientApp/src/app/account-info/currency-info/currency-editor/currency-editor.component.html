@@ -4,7 +4,7 @@
         <h4>{{editorHeader}}</h4>
     </div>
     <div class="col-1 text-right">
-      <button class="btn btn-sm btn-dark text-light float-right" style="width: 80px" (click)="click_Cancel()">
+      <button class="btn btn-sm btn-dark text-light float-right" style="width: 100px" (click)="click_Cancel()">
         <i class="fas fa-sign-out-alt mr-1"></i>
         Cancel
       </button>
@@ -15,10 +15,14 @@
     <div class="form-group">
       <h5 class="pb-0 mb-0">Code</h5>
       <h6 class="pt-0 mt-0 text-secondary">(3-letter international code)</h6>
-			<input class="form-control" name="code" placeholder="Code"
-				formControlName="code" required [class.is-invalid]="isInvalid(code())" />
+			<input class="form-control" name="code" placeholder="Code" (change)="change_Code()"
+				formControlName="code" required [class.is-invalid]="isInvalid(code()) || isCurrencyCodeExist"
+				[class.ng-invalid]="isCurrencyCodeExist" />
 			<div *ngIf="isInvalid(code())" class="text-danger">
 				Code name is requried
+			</div>
+			<div *ngIf="isCurrencyCodeExist" class="text-danger">
+				Currency code must be unique. Try new code please
 			</div>
 		</div>
 
@@ -31,14 +35,14 @@
 
 		<div class="form-row">
 			<div *ngIf="!editMode" class="col">
-				<button type="submit" class="btn btn-dark text-ligth" [disabled]="currencyForm.invalid">
+				<button type="submit" class="btn btn-dark text-ligth" [disabled]="currencyForm.invalid || isCurrencyCodeExist">
 					<i class="fas fa-plus-circle mr-1"></i>
 					Create
 				</button>
 			</div>
 
 			<div *ngIf="editMode" class="col">
-				<button type="submit" class="btn btn-dark text-ligth" [disabled]="currencyForm.invalid">
+				<button type="submit" class="btn btn-dark text-ligth" [disabled]="currencyForm.invalid || isCurrencyCodeExist">
 						<i class="fas fa-edit mr-1"></i>
 					Save
 				</button>

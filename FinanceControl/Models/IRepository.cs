@@ -21,6 +21,7 @@ namespace FinanceControl.Models
 		void CreateCurrency(Currency newCurrency);
 		void UpdateCurrency(Currency updatedCurrency);
 		void DeleteCurrency(long id);
+		bool IsCurrencyCodeExist(string code);
 
 		// Session section
 		Account GetSessionAccount();

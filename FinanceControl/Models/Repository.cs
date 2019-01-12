@@ -198,6 +198,21 @@ namespace FinanceControl.Models
 			return currency;
 		}
 
+		/// <summary>
+		/// Check weather currency code is already existed in database
+		/// </summary>
+		/// <param name="code"></param>
+		/// <returns>true - is existed</returns>
+		public bool IsCurrencyCodeExist(string code)
+		{
+			Currency tempCurrency = context.Currencies
+				.Where(currency => currency.UserId == currentUserId && currency.Code.ToUpper() == code.ToUpper())
+				.FirstOrDefault();
+			if (tempCurrency != null)
+				return true;
+			return false;
+		}
+
 		public void CreateCurrency(Currency newCurrency)
 		{
 			newCurrency.CurrencyId = 0;

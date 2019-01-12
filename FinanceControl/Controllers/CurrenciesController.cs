@@ -36,6 +36,18 @@ namespace FinanceControl.Controllers
 			repository.CreateCurrency(newCurrency);
 		}
 
+		/// <summary>
+		/// POST: api/currencies/isCurrencyCodeExist
+		/// Return true if currency code is already existed
+		/// </summary>
+		/// <param name="code"></param>
+		/// <returns></returns>
+		[HttpGet("isCurrencyCodeExist/{code}")]
+		public bool IsCurrencyCodeExist([FromRoute] string code)
+		{
+			return repository.IsCurrencyCodeExist(code);
+		}
+
 		[HttpPut]
 		public void UpdateCurrency([FromBody] Currency updatedCurrency)
 		{
