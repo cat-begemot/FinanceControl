@@ -6,6 +6,7 @@ import { ActivatedRoute } from "@angular/router";
 import { Router } from "@angular/router";
 import { FormControl, Validators } from "@angular/forms";
 import { AppStatusService } from "../../app-status.service";
+import { GroupType } from "../../model/group.model";
 
 
 @Component({
@@ -122,5 +123,10 @@ export class AccountEditorComponent implements OnInit{
   public click_Cancel(){
     this.routerNav.navigate(["/accounts"]);
     this.appStatus.clearAccount();
+  }
+
+  public click_AddGroup(): void{
+    this.appStatus.groupEditorCaller=GroupType.Account;
+    this.routerNav.navigate(["/groups/add"]);
   }
 }

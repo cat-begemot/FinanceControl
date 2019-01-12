@@ -1,15 +1,15 @@
 export enum GroupType{
-	Account,
-	Expense,
-	Income
+	None=-1,
+	Account=0,
+	Expense=1,
+	Income=2
 }
 
 export class Group{
 	constructor(
-		public groupId: number,
-		public userId: number,
-		public type: GroupType,
-		public name: string,
-		public comment: string
+		public groupId?: number,
+		public type?: GroupType,
+		public name?: string,
+		public comment?: string
 	) { }
 }

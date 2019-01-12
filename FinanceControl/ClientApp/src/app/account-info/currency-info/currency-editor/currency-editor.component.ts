@@ -53,23 +53,30 @@ export class CurrencyEditorComponent implements OnInit {
   }
 
   public onSubmit(){
-    // get data from form
-    this.currentCurrency.code=this.currencyForm.get("code").value;
-    this.currentCurrency.description=this.currencyForm.get("description").value;
-    this.currentCurrency.accounts=null;
+    // first check if currency code is unique
+    this.repository.isCurrencyCodeExist(this.code().value).subscribe(response=>{
+      if(response==true){
+        this.isCurrencyCodeExist=true;
+      } else{
+        this.isCurrencyCodeExist=false;
+        // get data from form
+        this.currentCurrency.code=this.currencyForm.get("code").value;
+        this.currentCurrency.description=this.currencyForm.get("description").value;
+        this.currentCurrency.accounts=null;
 
-    if(this.editMode){ // edit currency
-      this.repository.updateCurrency(this.currentCurrency).subscribe(()=>{
-        this.location.back();
-      });
-    } else { // create new currency
-      this.currentCurrency.currencyId=0;
-      
-      this.repository.createCurrency(this.currentCurrency).subscribe(()=>{
-        this.location.back();
-      });
-    }
-
+        if(this.editMode){ // edit currency
+          this.repository.updateCurrency(this.currentCurrency).subscribe(()=>{
+            this.location.back();
+          });
+        } else { // create new currency
+          this.currentCurrency.currencyId=0;
+          
+          this.repository.createCurrency(this.currentCurrency).subscribe(()=>{
+            this.location.back();
+          });
+        }
+      }
+    });
   }
 
   public click_Cancel(){

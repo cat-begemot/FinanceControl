@@ -3,10 +3,12 @@ import { Account } from './account.model';
 import { Currency } from "./currency.model";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
+import { Group } from './group.model';
 
 const accountUrl: string = "api/accounts";
 const currencyUrl: string = "api/currencies";
 const loginUrl: string = "api/account";
+const groupsUrl: string = "api/groups";
 
 @Injectable({
   providedIn: 'root'
@@ -103,5 +105,14 @@ export class Repository {
 
   public createUserProfile(name: string, password: string): Observable<any>{
     return this.http.post<any>(loginUrl + "/createUserProfile", {name: name, password: password});
+  }
+
+  // GROUP SECTION ===========================================================================================
+  public createGroup(newGroup: Group): Observable<any>{
+    return this.http.post(groupsUrl, newGroup);
+  }
+
+  public isGroupNameExists(name: string): Observable<boolean>{
+    return this.http.get<boolean>(groupsUrl + `/isGroupNameExists/${name}`);
   }
 }

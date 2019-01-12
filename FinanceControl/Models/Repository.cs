@@ -60,8 +60,6 @@ namespace FinanceControl.Models
 			newAccount.ItemId = result.Entity.ItemId;
 			context.Accounts.Add(newAccount);
 			context.SaveChanges();
-
-
 		}
 
 
@@ -307,6 +305,51 @@ namespace FinanceControl.Models
 		}
 		#endregion // Session section
 
+		#region Group section
+		public void CreateGroup(Group newGroup)
+		{
+			newGroup.UserId = currentUserId;
+			context.Groups.Add(newGroup);
+			context.SaveChanges();
+		}
+
+		public bool IsGroupNameExists(string name)
+		{
+			Group tempGroup = context.Groups.Where(group => group.UserId == currentUserId && group.Name == name).FirstOrDefault();
+			if (tempGroup != null)
+				return true;
+			return false;
+		}
+
+		public IEnumerable<Group> GetAllGroups()
+		{
+			return context.Groups.Where(group => group.UserId == currentUserId);
+		}
+
+		public void UpdateGroup(Group updatedGroup)
+		{
+			if (updatedGroup.GroupId > 0)
+			{
+				context.Groups.Update(updatedGroup);
+				context.SaveChanges();
+			}
+		}
+
+		public void DeleteGroup(long id)
+		{
+			Group tempGroup = context.Groups.Where(group => group.GroupId == id).FirstOrDefault();
+			if(tempGroup!=null)
+			{
+				context.Groups.Remove(tempGroup);
+				context.SaveChanges();
+			}
+		}
+
+		public Group GetGroupById(long id)
+		{
+			return context.Groups.Where(group => group.GroupId == id).FirstOrDefault();
+		}
+		#endregion
 	}
 
 	// Temporary session table description

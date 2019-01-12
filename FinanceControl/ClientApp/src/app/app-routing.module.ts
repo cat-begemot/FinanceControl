@@ -6,19 +6,21 @@ import { CurrencyInfoComponent } from './account-info/currency-info/currency-inf
 import { CurrencyEditorComponent } from './account-info/currency-info/currency-editor/currency-editor.component';
 import { AuthenticationComponent } from "./auth/authentication/authentication.component";
 import { SignupComponent } from "./auth/signup/signup.component";
+import { GroupEditorComponent} from "./items-info/groups-info/group-editor/group-editor.component";
 
 const routes: Routes = [
   {path: '', redirectTo: '/accounts', pathMatch: 'full'},
   
   {path: 'login', component: AuthenticationComponent},
   {path: 'signup', component: SignupComponent},
+  {path: 'accounts', component: AccountInfoComponent},
   {path: 'accounts/add', component: AccountEditorComponent},
-  {path: 'accounts', component: AccountInfoComponent},
-  {path: 'accounts', component: AccountInfoComponent},
   {path: 'accounts/edit/:id', component: AccountEditorComponent},
   {path: 'currencies', component: CurrencyInfoComponent},
   {path: 'currencies/add', component: CurrencyEditorComponent},
-  {path: 'currencies/edit/:id', component: CurrencyEditorComponent}
+  {path: 'currencies/edit/:id', component: CurrencyEditorComponent},
+  {path: 'groups/add', component: GroupEditorComponent},
+  {path: 'groups/edit/:id', component: GroupEditorComponent}
 ];
 
 @NgModule({

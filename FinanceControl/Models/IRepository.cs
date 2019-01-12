@@ -34,5 +34,13 @@ namespace FinanceControl.Models
 
 		// Account section
 
+
+		// Group section
+		void CreateGroup(Group newGroup);
+		bool IsGroupNameExists(string name);
+		IEnumerable<Group> GetAllGroups();
+		void UpdateGroup(Group updatedGroup);
+		void DeleteGroup(long id);
+		Group GetGroupById(long id);
 	}
 }
