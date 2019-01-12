@@ -160,20 +160,19 @@ namespace FinanceControl.Models
 				IQueryable<Account> accountsCurrList = context.Accounts
 					.Where(acc => acc.UserId==currentUserId && acc.ActiveAccount == isActive)
 					.Include(acc => acc.Currency);
-
-				foreach (var acc in accountsCurrList)
-					acc.Currency.Accounts = null;
+				
 
 				List<string> curList = new List<string>();
 
 				foreach (var account in accountsCurrList)
 				{
+					account.Currency.Accounts = null;
 					if (!curList.Contains<string>(account.Currency.Code))
 						curList.Add(account.Currency.Code);
 				}
 
 				currenciesList = context.Currencies
-					.Where(curr => curList.Contains<string>(curr.Code));
+					.Where(curr => curr.UserId == currentUserId && curList.Contains<string>(curr.Code));
 			}
 			else
 			{

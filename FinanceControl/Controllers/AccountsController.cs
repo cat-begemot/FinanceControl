@@ -55,6 +55,8 @@ namespace FinanceControl.Controllers
 			repository.UpdateAccount(updatedAccount);
 		}
 
+
+
 		// Move to CurrenciesController
 		[HttpGet("currencies/{method}")]
 		public IEnumerable<Currency> GetAllCurrencies([FromRoute] string method="none")

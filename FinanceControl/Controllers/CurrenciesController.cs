@@ -38,7 +38,7 @@ namespace FinanceControl.Controllers
 
 		/// <summary>
 		/// POST: api/currencies/isCurrencyCodeExist
-		/// Return true if currency code is already existed
+		/// Checks whether currency code is already existed
 		/// </summary>
 		/// <param name="code"></param>
 		/// <returns></returns>
