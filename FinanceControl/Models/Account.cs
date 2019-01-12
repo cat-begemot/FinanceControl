@@ -8,8 +8,9 @@ namespace FinanceControl.Models
 	public class Account
 	{
 		// Table column
-		public long UserId { get; set; }
 		public long AccountId { get; set; }
+		public long UserId { get; set; }
+		public long Item { get; set; }
 		public string AccountName { get; set; }
 		public decimal StartAmount { get; set; }
 		public decimal Balance { get; set; }
