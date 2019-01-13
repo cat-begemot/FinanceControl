@@ -21,5 +21,6 @@ namespace FinanceControl.Models
 
 		// Navigation property
 		public Currency Currency { get; set; }
+		public Item Item { get; set; }
 	}
 }

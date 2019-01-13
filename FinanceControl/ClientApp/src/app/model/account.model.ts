@@ -1,4 +1,5 @@
 import { Currency } from "./currency.model";
+import { Item } from "./item.model";
 
 export class Account{
 	constructor(		
@@ -13,5 +14,6 @@ export class Account{
 
 		// Navigation properties
 		public currency?: Currency,
+		public item?: Item
 	) { }
 }

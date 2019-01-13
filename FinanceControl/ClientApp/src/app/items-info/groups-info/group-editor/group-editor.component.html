@@ -34,7 +34,7 @@
           Group name is required
         </div>
         <div *ngIf="isGroupNameExist" class="text-danger">
-          This name already exists
+          This group name already exists
         </div>
       </div>
 
@@ -48,7 +48,7 @@
         <div *ngIf="!editMode" class="col">
           <button type="submit" class="btn btn-dark text-ligth" [disabled]="groupForm.invalid || isGroupNameExist">
             <i class="fas fa-plus-circle mr-1"></i>
-            Create\
+            Create
           </button>
         </div>
   

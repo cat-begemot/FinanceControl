@@ -6,8 +6,7 @@ import { ActivatedRoute } from "@angular/router";
 import { Router } from "@angular/router";
 import { FormControl, Validators } from "@angular/forms";
 import { AppStatusService } from "../../app-status.service";
-import { GroupType } from "../../model/group.model";
-
+import { Group, GroupType } from "../../model/group.model";
 
 @Component({
   selector: 'account-editor',
@@ -16,9 +15,11 @@ import { GroupType } from "../../model/group.model";
 })
 export class AccountEditorComponent implements OnInit{
   public currencies: Currency[];
+  public groups: Group[];
   public editMode: boolean;
   public editorHeader: string;
   public currencySelect: FormControl = new FormControl('', Validators.required);
+  public groupSelect: FormControl = new FormControl('', Validators.required);
 
   constructor(
     private repository: Repository,
@@ -29,8 +30,6 @@ export class AccountEditorComponent implements OnInit{
 
   ngOnInit()
   {    
-    this.appStatus.currentAccount;
-
     this.appStatus.currentAccount.activeAccount=this.appStatus.activeAccountsMode;
     
     this.checkEditorMode();
@@ -40,6 +39,14 @@ export class AccountEditorComponent implements OnInit{
     // Subscribe on currency selector
     this.currencySelect.valueChanges.subscribe((response: number) => {
       this.appStatus.currentAccount.currencyId=response;
+    });
+    // Subscrive on group selector
+    this.groupSelect.valueChanges.subscribe((response: number)=>{
+      this.appStatus.currentAccount.item.groupId=response;
+    });
+
+    this.repository.getAllGroup(GroupType.Account).subscribe(response=>{
+      this.groups=response;
     });
   }
 
@@ -56,6 +63,7 @@ export class AccountEditorComponent implements OnInit{
           this.appStatus.currentAccount=response;
         }
         this.currencySelect.setValue(this.appStatus.currentAccount.currencyId);
+        this.groupSelect.setValue(this.appStatus.currentAccount.item.groupId);
       });
     } else {
       this.editMode=false;

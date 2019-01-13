@@ -31,10 +31,14 @@ namespace FinanceControl.Controllers
 			return repository.IsGroupNameExists(name);
 		}
 
-		[HttpGet]
-		public IEnumerable<Group> GetAllGroups()
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <returns></returns>
+		[HttpGet("all/{type}")]
+		public IEnumerable<Group> GetAllGroups([FromRoute] GroupType type)
 		{
-			return repository.GetAllGroups();
+			return repository.GetAllGroups(type);
 		}
 
 		[HttpPut]

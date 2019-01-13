@@ -7,9 +7,10 @@ namespace FinanceControl.Models
 {
 	public enum GroupType
 	{
-		Account,
-		Expense,
-		Income
+		None=-1,
+		Account=0,
+		Expense=1,
+		Income=2
 	}
 
 	public class Group

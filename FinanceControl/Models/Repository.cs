@@ -50,6 +50,7 @@ namespace FinanceControl.Models
 			Item newItem = new Item();
 			newItem.UserId = currentUserId;
 			newItem.Name = newAccount.AccountName;
+			newItem.GroupId = newAccount.Item.GroupId;
 			var result = context.Items.Add(newItem);
 			context.SaveChanges();
 
@@ -68,6 +69,7 @@ namespace FinanceControl.Models
 			Account accountById = context.Accounts
 				.Where(account => account.AccountId == id)
 				.Include(account => account.Currency)
+				.Include(account=>account.Item)
 				.FirstOrDefault();
 
 			accountById.Currency.Accounts = null;
@@ -135,15 +137,17 @@ namespace FinanceControl.Models
 
 		public void UpdateAccount(Account updatedAccount)
 		{
-			updatedAccount.Currency = null;
-			context.Accounts.Update(updatedAccount);
-
 			Item updatedItem = context.Items.Where(item => item.ItemId == updatedAccount.ItemId).FirstOrDefault();
-			if(updatedItem!=null && updatedItem.Name!=updatedAccount.AccountName)
+			if(updatedItem!=null)
 			{
 				updatedItem.Name = updatedAccount.AccountName;
+				updatedItem.GroupId = updatedAccount.Item.GroupId;
 				context.Items.Update(updatedItem);
 			}
+
+			updatedAccount.Currency = null;
+			updatedAccount.Item = null;
+			context.Accounts.Update(updatedAccount);
 
 			context.SaveChanges();
 		}
@@ -321,9 +325,13 @@ namespace FinanceControl.Models
 			return false;
 		}
 
-		public IEnumerable<Group> GetAllGroups()
+		public IEnumerable<Group> GetAllGroups(GroupType type)
 		{
-			return context.Groups.Where(group => group.UserId == currentUserId);
+			if (type == GroupType.None)
+				return context.Groups.Where(group => group.UserId == currentUserId);
+			else
+				return context.Groups
+					.Where(group => group.UserId == currentUserId && group.Type==type);
 		}
 
 		public void UpdateGroup(Group updatedGroup)

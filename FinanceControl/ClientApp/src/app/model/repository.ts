@@ -3,7 +3,7 @@ import { Account } from './account.model';
 import { Currency } from "./currency.model";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
-import { Group } from './group.model';
+import { Group, GroupType } from './group.model';
 
 const accountUrl: string = "api/accounts";
 const currencyUrl: string = "api/currencies";
@@ -114,5 +114,9 @@ export class Repository {
 
   public isGroupNameExists(name: string): Observable<boolean>{
     return this.http.get<boolean>(groupsUrl + `/isGroupNameExists/${name}`);
+  }
+
+  public getAllGroup(type: GroupType): Observable<Group[]>{
+    return this.http.get<Group[]>(groupsUrl + "/all/" + type);
   }
 }
