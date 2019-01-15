@@ -7,6 +7,7 @@ import { CurrencyEditorComponent } from './account-info/currency-info/currency-e
 import { AuthenticationComponent } from "./auth/authentication/authentication.component";
 import { SignupComponent } from "./auth/signup/signup.component";
 import { GroupEditorComponent} from "./items-info/groups-info/group-editor/group-editor.component";
+import { GroupsInfoComponent } from "./items-info/groups-info/groups-info.component";
 
 const routes: Routes = [
   {path: '', redirectTo: '/accounts', pathMatch: 'full'},
@@ -19,6 +20,7 @@ const routes: Routes = [
   {path: 'currencies', component: CurrencyInfoComponent},
   {path: 'currencies/add', component: CurrencyEditorComponent},
   {path: 'currencies/edit/:id', component: CurrencyEditorComponent},
+  {path: 'groups', component: GroupsInfoComponent},
   {path: 'groups/add', component: GroupEditorComponent},
   {path: 'groups/edit/:id', component: GroupEditorComponent}
 ];

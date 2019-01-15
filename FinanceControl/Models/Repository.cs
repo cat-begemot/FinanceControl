@@ -328,10 +328,10 @@ namespace FinanceControl.Models
 		public IEnumerable<Group> GetAllGroups(GroupType type)
 		{
 			if (type == GroupType.None)
-				return context.Groups.Where(group => group.UserId == currentUserId);
+				return context.Groups.Where(group => group.UserId == currentUserId).OrderBy(group => Enum.GetValues(typeof(GroupType)).GetValue((int)group.Type));
 			else
 				return context.Groups
-					.Where(group => group.UserId == currentUserId && group.Type==type);
+					.Where(group => group.UserId == currentUserId && group.Type == type);
 		}
 
 		public void UpdateGroup(Group updatedGroup)

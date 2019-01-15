@@ -56,6 +56,7 @@ export class GroupEditorComponent implements OnInit {
       this.editorHeader="Edit group";
       this.editMode=true;
       this.repository.getGroupById(id).subscribe(response=>{
+        this.typeControl.setValue(response.type);
         this.nameControl.setValue(response.name);
         this.commentControl.setValue(response.comment);
         this.currentGroup=response;

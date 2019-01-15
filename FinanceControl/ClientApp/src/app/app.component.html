@@ -28,6 +28,13 @@
 					Currencies
 				</a>
 			</li>
+
+			<li class="nav-item ml-2" [hidden]="!authService.authenticated" data-toggle="collapse" data-target=".navbar-collapse.show">
+				<a class="nav-link text-light" routerLink="/groups">
+					<i class="fas fa-layer-group text-warning"></i>
+					Groups
+				</a>
+			</li>
 			
 			<hr *ngIf="authService.authenticated" class="border-secondary m-0" />
 
