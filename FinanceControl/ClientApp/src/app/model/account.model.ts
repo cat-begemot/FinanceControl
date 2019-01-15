@@ -15,5 +15,7 @@ export class Account{
 		// Navigation properties
 		public currency?: Currency,
 		public item?: Item
-	) { }
+	) { 
+		this.item=new Item();
+	}
 }

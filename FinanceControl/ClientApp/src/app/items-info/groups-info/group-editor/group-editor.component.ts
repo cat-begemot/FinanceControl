@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from "@angular/common";
-import { FormGroup, FormControl, Validators, AbstractControl } from "@angular/forms";
+import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { AppStatusService } from "../../../app-status.service";
 import { Group, GroupType } from "../../../model/group.model";
 import { Repository } from 'src/app/model/repository';
+import { ActivatedRoute } from "@angular/router";
 
 @Component({
   selector: 'app-group-editor',
@@ -20,7 +21,8 @@ export class GroupEditorComponent implements OnInit {
   constructor(
     private location: Location,
     private appStatus: AppStatusService,
-    private repository: Repository
+    private repository: Repository,
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit() {
@@ -30,8 +32,7 @@ export class GroupEditorComponent implements OnInit {
       commentControl: new FormControl('')
     });
     
-    this.editorHeader="Create group";
-    this.editMode=false;
+    this.checkEditorMode();
 
     if(this.appStatus.groupEditorCaller!=GroupType.None){
       this.typeControl.setValue(this.appStatus.groupEditorCaller);
@@ -46,21 +47,44 @@ export class GroupEditorComponent implements OnInit {
     this.location.back();
   }
 
+  public checkEditorMode(): void{
+    let id=+this.route.snapshot.paramMap.get("id");
+    if(id==0){ // Create a new group
+      this.editorHeader="Create group";
+      this.editMode=false;
+    } else { // Edit exist group
+      this.editorHeader="Edit group";
+      this.editMode=true;
+      this.repository.getGroupById(id).subscribe(response=>{
+        this.nameControl.setValue(response.name);
+        this.commentControl.setValue(response.comment);
+        this.currentGroup=response;
+      });
+    }
+  }
+
   public onSubmit(): void{
-    // first check if group name is unique
-    this.repository.isGroupNameExists(this.nameControl.value).subscribe(response=>{
-      if(response){
-        this.isGroupNameExist=true;
-      } else {
-        this.isGroupNameExist=false;
-        this.currentGroup.type=this.typeControl.value;
-        this.currentGroup.name=this.nameControl.value;
-        this.currentGroup.comment=this.commentControl.value;
-        this.repository.createGroup(this.currentGroup).subscribe(()=>{
-          this.location.back();
-        });        
-      }
-    });
+    this.currentGroup.type=this.typeControl.value;
+    this.currentGroup.name=this.nameControl.value;
+    this.currentGroup.comment=this.commentControl.value;
+
+    if(this.editMode){ // The item exists because it is editing now
+      this.isGroupNameExist=false;
+      this.repository.updateGroup(this.currentGroup).subscribe(()=>{
+        this.location.back();
+      });
+    } else { // check weather item exists
+      this.repository.isGroupNameExists(this.nameControl.value).subscribe(response=>{
+        if(response){ // An error is occured - entered name exists
+          this.isGroupNameExist=true;
+        } else { 
+          this.currentGroup.groupId=0;
+          this.repository.createGroup(this.currentGroup).subscribe(()=>{
+            this.location.back();
+          }); 
+        }
+      });
+    }
   }
 
   public isInvalid(control: FormControl): boolean{
@@ -80,12 +104,22 @@ export class GroupEditorComponent implements OnInit {
   }
 
   public change_nameControl():void {
-    this.repository.isGroupNameExists(this.nameControl.value).subscribe(response=>{
-      if(response){
-        this.isGroupNameExist=true;
-      } else {
-        this.isGroupNameExist=false;
-      }
+    if(this.editMode){ // The item exists because it is editing now
+      this.isGroupNameExist=false;
+    } else { // check weather exists
+      this.repository.isGroupNameExists(this.nameControl.value).subscribe(response=>{
+        if(response){
+          this.isGroupNameExist=true;
+        } else {
+          this.isGroupNameExist=false;
+        }
+      });
+    }
+  }
+
+  public click_deleteGroup(){
+    this.repository.deleteGroup(this.currentGroup.groupId).subscribe(()=>{
+      this.location.back();
     });
   }
 }

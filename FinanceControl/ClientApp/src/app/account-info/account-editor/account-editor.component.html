@@ -30,7 +30,7 @@
           <option *ngFor="let group of groups" [value]="group.groupId">{{group.name}}</option>
         </select>
         <!-- Edit elected group -->
-        <button type="button" class="btn btn-dark text-light input-group-append ml-1">
+        <button type="button" class="btn btn-dark text-light input-group-append ml-1" (click)="click_groupEdit()">
           <i class="fas fa-edit" style="font-size: 16pt"></i>
         </button>
         <!-- Add new group -->
@@ -103,13 +103,13 @@
     <div class="form-row">
       <div class="col">
         <button *ngIf="!editMode" type="button" name="btn_create" class="btn btn-dark text-ligth" (click)="clickCreateAccount()"
-          [disabled]="accountEditorForm.invalid || currencySelect.invalid">
+          [disabled]="accountEditorForm.invalid || currencySelect.invalid || groupSelect.invalid">
             <i class="fas fa-plus-circle mr-1"></i>
             Create
         </button>
         
         <button *ngIf="editMode" type="button" class="btn btn-dark text-ligth" (click)="clickEditAccount()"
-          [disabled]="accountEditorForm.invalid || currencySelect.invalid">
+          [disabled]="accountEditorForm.invalid || currencySelect.invalid || groupSelect.invalid">
           <i class="far fa-save mr-1"></i>
           Save
         </button>

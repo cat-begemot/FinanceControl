@@ -119,4 +119,16 @@ export class Repository {
   public getAllGroup(type: GroupType): Observable<Group[]>{
     return this.http.get<Group[]>(groupsUrl + "/all/" + type);
   }
+
+  public getGroupById(id: number): Observable<Group>{
+    return this.http.get<Group>(groupsUrl + `/${id}`);
+  }
+
+  public updateGroup(updatedGroup: Group): Observable<any>{
+    return this.http.put<any>(groupsUrl, updatedGroup);
+  }
+
+  public deleteGroup(id: number): Observable<any>{
+    return this.http.delete<any>(`${groupsUrl}/${id}`);
+  }
 }

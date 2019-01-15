@@ -9,7 +9,7 @@ export class AppStatusService {
   public activeAccountsMode: boolean; // if true - app shows active accounts, else - it shows hidden ones
   public currentAccount: Account; // stores current Account values for Account editor (it helps to avoid server requests)
   public validCredentials: boolean; // report of authorization trying
-  public groupEditorCaller: GroupType; // "none" - will be a new group; 
+  public groupEditorCaller: GroupType; // "none" - will be a new group; else - block Type fields in edit/create group form
 
   constructor() { 
     this.activeAccountsMode=true;

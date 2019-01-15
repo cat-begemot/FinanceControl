@@ -86,6 +86,7 @@ export class AccountEditorComponent implements OnInit{
     this.appStatus.currentAccount.sequence=0;
     this.appStatus.currentAccount.activeAccount=true;
     this.appStatus.currentAccount.currency=null;
+    this.appStatus.currentAccount.item.groupId=this.groupSelect.value;
 
     // Create account
     this.repository.createAccount(this.appStatus.currentAccount).subscribe(()=>{
@@ -137,4 +138,9 @@ export class AccountEditorComponent implements OnInit{
     this.appStatus.groupEditorCaller=GroupType.Account;
     this.routerNav.navigate(["/groups/add"]);
   }
+
+  public click_groupEdit(){
+    this.appStatus.groupEditorCaller=GroupType.Account;
+    this.routerNav.navigate(["/groups/edit/", this.groupSelect.value]);
+  } 
 }
