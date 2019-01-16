@@ -1,4 +1,6 @@
 import { Comment } from "./comment.model";
+import { Account } from "./account.model";
+import { Item } from "./item.model";
 
 export class Transaction {
 	constructor(
@@ -10,6 +12,9 @@ export class Transaction {
 		public currencyAmount?: number,
 		public rateToAccCurr?: number,
 		public accountBalance?: number,
-		public comment?: Comment
+		public comment?: Comment,
+
+		public account?: Account,
+		public item?: Item
 	) { }
 }

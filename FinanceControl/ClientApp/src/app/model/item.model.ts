@@ -8,7 +8,7 @@ export class Item{
 		public name?: string,
 		public groupId?: number,
 		public kindId?: number,
-		public Groups?: Group[],
-		public Kind?: Kind[]
+		public group?: Group,
+		public kind?: Kind
 	) { }
 }

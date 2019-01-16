@@ -82,6 +82,15 @@ namespace FinanceControl
 
 			app.UseAuthentication();
 
+			// Check what it to do.... and why it works so
+			app.MapWhen(context => !context.Request.Path.StartsWithSegments("/Home"), builder =>
+				{
+					builder.UseMvc(routes =>
+					{
+						routes.MapSpaFallbackRoute("", new { controller = "Home", action = "Index" });
+					});
+				});
+
 			app.UseMvc(routes =>
 			{
 				routes.MapRoute(
@@ -89,6 +98,8 @@ namespace FinanceControl
 					template: "{controller=Home}/{action=Index}"
 				);
 			});
+
+			
 		}
 	}
 }

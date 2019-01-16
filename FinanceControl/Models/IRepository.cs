@@ -27,12 +27,11 @@ namespace FinanceControl.Models
 		Account GetSessionAccount();
 		void SetSessionAccount(Account currentAccount);
 		bool IsUserAuthenticated();
-
 		string GetSessionUserId();
 		void SetSessionUserId(string userId);
 		void RemoveSessionUserId();
 
-		// Account section
+		// Authentication section
 
 
 		// Group section
@@ -42,5 +41,15 @@ namespace FinanceControl.Models
 		void UpdateGroup(Group updatedGroup);
 		void DeleteGroup(long id);
 		Group GetGroupById(long id);
+
+		// Item section
+		IEnumerable<Item> GetItems(GroupType type);
+
+		// Transaction section
+		void CreateTransaction(Transaction newTransaction);
+		IEnumerable<Transaction> GetTransactions();
+
+		// Seed section
+		void AddDataForNewUser();
 	}
 }

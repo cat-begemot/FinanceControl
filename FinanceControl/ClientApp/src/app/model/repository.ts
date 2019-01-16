@@ -4,11 +4,15 @@ import { Currency } from "./currency.model";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { Group, GroupType } from './group.model';
+import { Item } from "./item.model";
+import { Transaction } from './transaction.model';
 
 const accountUrl: string = "api/accounts";
 const currencyUrl: string = "api/currencies";
 const loginUrl: string = "api/account";
 const groupsUrl: string = "api/groups";
+const itemsUrl: string = "api/items";
+const transactionsUrl: string = "api/transactions";
 
 @Injectable({
   providedIn: 'root'
@@ -130,5 +134,21 @@ export class Repository {
 
   public deleteGroup(id: number): Observable<any>{
     return this.http.delete<any>(`${groupsUrl}/${id}`);
+  }
+
+
+  // ITEM SECTION ===========================================================================================
+  public getItems(type: GroupType): Observable<Item[]>{
+    return this.http.get<Item[]>(itemsUrl + `/all/${type}`);
+  }
+
+
+  // TRANSACTION SECTION ===========================================================================================
+  public createTransaction(transaction: Transaction): Observable<any>{
+    return this.http.post<any>(transactionsUrl, transaction);
+  }
+
+  public getTransactions(): Observable<Transaction[]>{
+    return this.http.get<Transaction[]>(transactionsUrl);
   }
 }

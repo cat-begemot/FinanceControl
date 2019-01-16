@@ -1,3 +1,70 @@
-<p>
-  transactions-info works!
-</p>
+<div class="m-1">
+	<div class="row border-bottom mb-3 py-1" style="vertical-align: middle">
+		<div class="col-7">
+			<div class="dropdown">
+				<button class="btn btn-outline-light text-dark dropdown-toggle m-0 p-0" type="button" id="trans" data-toggle="dropdown"
+					aria-haspopup="true" aria-expanded="false">
+					<span class="font-weight-bold text-left" style="font-size: 18pt">Transactions</span>
+				</button>
+				<div class="dropdown-menu" aria-labelledby="trans">
+					<!-- Filter menu -->
+					<button class="dropdown-item p-1 pl-2" type="button">
+						<i class="fas fa-filter text-center fa-sm" style="width: 22px; font-size: 14pt"></i>
+						<span class="ml-2">Filters</span>
+					</button>
+					
+					<hr class="m-1">
+					
+					<!-- Transaction details info menu-->
+					<button class="dropdown-item p-1 pl-2" type="button" (click)="click_transactionInfo()">
+						<i class="fas fa-info text-center fa-sm" style="width: 22px; font-size: 14pt"></i>
+						<span class="ml-2 pr-2">{{textMenuDetailsInfo}}</span>
+					</button>
+				</div>
+			</div>
+		</div>
+
+
+		<div class="col text-right">
+			<button class="btn btn-sm btn-dark text-light m-0" routerLink="/transactions/add">
+				<i class="fas fa-plus-circle mr-1"></i>
+				New
+			</button>
+		</div>
+	</div>
+
+	<div *ngIf="showDetailsInfo" class="alert alert-dark p-1" role="alert" style="font-size: 0.9em">
+		<h5 class="alert-heading font-weight-bold my-0 py-0">Details info</h5>
+		<hr class="my-1 py-0">
+		<p class="my-0 py-0"><strong>Date: </strong>{{currentTransactionDateTime}}</p>
+		<p class="my-0 py-0">
+			<strong>Account: </strong>{{currentTransaction?.account?.accountName}}<strong> Balance: </strong>{{currentTransaction?.currencyAmount | number:"1.2-2"}} {{currentTransaction?.account?.currency?.code}}
+		</p>
+		<p class="my-0 py-0"><strong>Item: </strong>{{currentTransaction?.item?.name}}</p>
+		<p class="my-0 py-0">
+			<strong>Rate: </strong>{{currentTransaction?.rateToAccCurr | number:"1.4-4"}} <strong>In UAH: </strong>{{currentTransaction?.currencyAmount*currentTransaction?.rateToAccCurr | number:"1.2-2"}} UAH
+		</p>
+		<p class="my-0 py-0"><strong>Comment: </strong>{{currentTransaction?.comment?.commentText}}</p>
+	</div>
+
+
+	<table class="table table-sm table-bordered table-hover">
+			<tr class="bg-dark text-light">
+        <th class="text-center t_width">T</th>
+        <th>Item</th>
+        <th colspan="2" class="text-center">Amount</th>
+      </tr>
+			<tr *ngFor="let transaction of transactions" style="line-height: 20px">
+        <td class="text-center" routerLink="/transactions/edit/{{transaction.transactionId}}">
+					<i *ngIf="transaction.item?.group?.type==0" class="fas fa-truck-moving text-warning"></i>
+					<i *ngIf="transaction.item?.group?.type==1" class="fas fa-minus text-danger"></i>
+					<i *ngIf="transaction.item?.group?.type==2" class="fas fa-plus text-success"></i>
+				</td>
+        <td (click)="click_transaction(transaction.transactionId)">{{transaction.item.name}}</td>
+				<td class="text-right" (click)="click_transaction(transaction.transactionId)">{{transaction.currencyAmount | number:"1.2-2"}}</td>
+				<td class="text-left" (click)="click_transaction(transaction.transactionId)">
+					{{transaction.account?.currency?.code}}
+				</td>
+			</tr>
+		</table>
+	</div>

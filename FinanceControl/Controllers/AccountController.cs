@@ -82,7 +82,10 @@ namespace FinanceControl.Controllers
 			IdentityResult result = await userManager.CreateAsync(newUser, creds.Password);
 
 			if (result.Succeeded)
+			{
+				repository.AddDataForNewUser();
 				return true;
+			}
 			else
 				return false;
 		}
@@ -100,4 +103,6 @@ namespace FinanceControl.Controllers
 		public string Name { get; set; }
 		public string Password { get; set; }
 	}
+
+
 }

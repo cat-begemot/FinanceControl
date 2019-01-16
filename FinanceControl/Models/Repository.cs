@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 
 namespace FinanceControl.Models
@@ -356,6 +357,119 @@ namespace FinanceControl.Models
 		public Group GetGroupById(long id)
 		{
 			return context.Groups.Where(group => group.GroupId == id).FirstOrDefault();
+		}
+		#endregion
+
+		#region Items section
+		public IEnumerable<Item> GetItems(GroupType type)
+		{
+			IEnumerable<Item> items;
+			if (type==GroupType.None)
+			{
+				items = context.Items.Where(item => item.UserId == currentUserId);
+			}
+			else
+			{
+				items = context.Items.Where(item => item.UserId == currentUserId && item.Group.Type == type);
+			}
+
+			return items;
+		}
+		#endregion
+
+		#region Transactions section
+		public void CreateTransaction(Transaction newTransaction)
+		{
+			// defines type of operations
+			Account currentAccount = context.Accounts.Where(account => account.AccountId == newTransaction.AccountId).FirstOrDefault();
+			Item currentItem = context.Items.Where(item => item.ItemId == newTransaction.ItemId).FirstOrDefault();
+			GroupType transactionType = context.Groups.Where(group => group.GroupId == currentItem.GroupId).FirstOrDefault().Type;
+			EntityEntry<Transaction> createdTransaction=null;
+
+			newTransaction.UserId = currentUserId;
+
+			if (transactionType==GroupType.Account) // Movement (first deduct from account, then add to item with time difference in 1 second)
+			{
+				// Set account
+				currentAccount.Balance -= newTransaction.CurrencyAmount;
+				context.Accounts.Update(currentAccount);
+
+				// Configure first movement transaction
+				newTransaction.AccountBalance = currentAccount.Balance;
+				newTransaction.CurrencyAmount = 0-newTransaction.CurrencyAmount; // negative amount for deducted sums
+				createdTransaction=context.Transactions.Add(newTransaction);
+
+				// Create and configure second movement transaction // TODO: resolve question with currency exchange
+				Transaction helpTransaction = new Transaction();
+				helpTransaction.UserId = currentUserId;
+				helpTransaction.DateTime = newTransaction.DateTime.AddSeconds(1);
+				helpTransaction.AccountId = newTransaction.ItemId;
+				helpTransaction.ItemId = newTransaction.AccountId;
+				helpTransaction.CurrencyAmount = 0-newTransaction.CurrencyAmount; // positive amount for added sums
+				helpTransaction.RateToAccCurr = newTransaction.RateToAccCurr;
+				Account helpAccount = context.Accounts.Where(account => account.AccountName == currentItem.Name).FirstOrDefault();
+				helpAccount.Balance += helpTransaction.CurrencyAmount;
+				context.Accounts.Update(helpAccount);
+				helpTransaction.AccountBalance = helpAccount.Balance;
+				context.Transactions.Add(helpTransaction);
+			}
+			else if (transactionType == GroupType.Expense) // Expense
+			{
+				// Set account
+				currentAccount.Balance -= newTransaction.CurrencyAmount;
+				context.Accounts.Update(currentAccount);
+
+				// Configure first movement transaction
+				newTransaction.AccountBalance = currentAccount.Balance;
+				newTransaction.CurrencyAmount = 0 - newTransaction.CurrencyAmount; // negative amount for deducted sums
+				createdTransaction=context.Transactions.Add(newTransaction);
+			}
+			else if (transactionType == GroupType.Income) // Income
+			{
+				// Set account
+				currentAccount.Balance += newTransaction.CurrencyAmount;
+				context.Accounts.Update(currentAccount);
+
+				// Configure first movement transaction
+				newTransaction.AccountBalance = currentAccount.Balance;
+				newTransaction.CurrencyAmount = newTransaction.CurrencyAmount; // positive amount for deducted sums
+				createdTransaction=context.Transactions.Add(newTransaction);
+			}
+			context.SaveChanges();
+
+			// Write comment if it exists
+			if (newTransaction.Comment != null && createdTransaction!=null)
+			{
+				Comment newComment = new Comment();
+				newComment.UserId = currentUserId;
+				newComment.TransactionId = createdTransaction.Entity.TransactionId;
+				newComment.CommentText = newTransaction.Comment.CommentText;
+				context.Comments.Add(newComment);
+				context.SaveChanges();
+			}
+		}
+
+		public IEnumerable<Transaction> GetTransactions()
+		{
+			IEnumerable<Transaction> transactions = context.Transactions.Where(trans => trans.UserId == currentUserId)
+				.Include(trans => trans.Account).ThenInclude(account => account.Currency)
+				.Include(trans => trans.Item).ThenInclude(item => item.Group)
+				.Include(trans => trans.Comment);
+			
+			foreach(var trans in transactions)
+			{
+				trans.Account.Currency.Accounts = null;
+			}
+
+			return transactions;
+		}
+		#endregion
+
+		#region Seed section
+		// Seed database for new user convenience TODO: (static??)
+		public void AddDataForNewUser()
+		{
+	
 		}
 		#endregion
 	}
