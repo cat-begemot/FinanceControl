@@ -26,22 +26,6 @@ namespace FinanceControl
 		public void ConfigureServices(IServiceCollection services)
 		{
 			services.AddHttpContextAccessor();
-			
-			/*
-			// Add sessions support
-			services.AddDistributedSqlServerCache(options =>
-			{
-				options.ConnectionString=Configuration["ConnectionStrings:DefaultConnection"];
-				options.SchemaName = "dbo";
-				options.TableName = "Sessions";
-			});
-			services.AddSession(options =>
-			{
-				options.Cookie.Name = "FinanceControl.Session";
-				options.IdleTimeout = System.TimeSpan.FromDays(1);
-				options.Cookie.HttpOnly = false;
-			});
-			*/
 
 			// Setup connection strings
 			if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Production")
@@ -71,8 +55,6 @@ namespace FinanceControl
 			services.AddTransient<IRepository, Repository>();
 
 			// Identity configurations
-
-
 			services.AddDefaultIdentity<User>().AddEntityFrameworkStores<IdentityDataContext>();
 
 			services.Configure<IdentityOptions>(options =>
@@ -90,15 +72,12 @@ namespace FinanceControl
 				options.Cookie.HttpOnly = true;
 			});
 
-			//services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
-
 			services.AddMvc();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
 		public void Configure(IApplicationBuilder app, IHostingEnvironment env)
 		{
-			//app.UseSession();
 			app.UseStaticFiles();
 
 			app.UseAuthentication();

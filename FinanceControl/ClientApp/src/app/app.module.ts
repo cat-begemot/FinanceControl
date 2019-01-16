@@ -18,6 +18,8 @@ import { GroupsInfoComponent } from './items-info/groups-info/groups-info.compon
 import { GroupEditorComponent } from './items-info/groups-info/group-editor/group-editor.component';
 import { KindsInfoComponent } from './items-info/kinds-info/kinds-info.component';
 import { KindEditorComponent } from './items-info/kinds-info/kind-editor/kind-editor.component';
+import { TransactionsInfoComponent } from './transactions-info/transactions-info.component';
+import { TransactionEditComponent } from './transactions-info/transaction-edit/transaction-edit.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +35,9 @@ import { KindEditorComponent } from './items-info/kinds-info/kind-editor/kind-ed
     GroupsInfoComponent,
     GroupEditorComponent,
     KindsInfoComponent,
-    KindEditorComponent
+    KindEditorComponent,
+    TransactionsInfoComponent,
+    TransactionEditComponent
   ],
   imports: [
     BrowserModule,

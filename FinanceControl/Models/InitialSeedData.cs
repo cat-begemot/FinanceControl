@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Builder;
 
 namespace FinanceControl.Models
 {
-	public static class IdentitySeedData
+	public static class InitialSeedData
 	{
 		private const string userLogin = "user";
 		private const string userPassword = "user123";

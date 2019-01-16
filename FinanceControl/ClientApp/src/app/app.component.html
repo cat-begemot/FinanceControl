@@ -35,6 +35,13 @@
 					Groups
 				</a>
 			</li>
+
+			<li class="nav-item ml-2" [hidden]="!authService.authenticated" data-toggle="collapse" data-target=".navbar-collapse.show">
+				<a class="nav-link text-light" routerLink="/transactions">
+					<i class="fas fa-cash-register text-warning"></i>
+					Transactions
+				</a>
+			</li>
 			
 			<hr *ngIf="authService.authenticated" class="border-secondary m-0" />
 

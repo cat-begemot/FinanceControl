@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FinanceControl.Migrations
 {
     [DbContext(typeof(DbRepositoryContext))]
-    [Migration("20190112154531_FixFields")]
-    partial class FixFields
+    [Migration("20190116094839_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -49,7 +49,29 @@ namespace FinanceControl.Migrations
 
                     b.HasIndex("CurrencyId");
 
+                    b.HasIndex("ItemId");
+
                     b.ToTable("Accounts");
+                });
+
+            modelBuilder.Entity("FinanceControl.Models.Comment", b =>
+                {
+                    b.Property<long>("CommentId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CommentText");
+
+                    b.Property<long>("TransactionId");
+
+                    b.Property<long>("UserId");
+
+                    b.HasKey("CommentId");
+
+                    b.HasIndex("TransactionId")
+                        .IsUnique();
+
+                    b.ToTable("Comments");
                 });
 
             modelBuilder.Entity("FinanceControl.Models.Currency", b =>
@@ -77,8 +99,6 @@ namespace FinanceControl.Migrations
 
                     b.Property<string>("Comment");
 
-                    b.Property<long?>("ItemId");
-
                     b.Property<string>("Name");
 
                     b.Property<int>("Type");
@@ -86,8 +106,6 @@ namespace FinanceControl.Migrations
                     b.Property<long>("UserId");
 
                     b.HasKey("GroupId");
-
-                    b.HasIndex("ItemId");
 
                     b.ToTable("Groups");
                 });
@@ -121,17 +139,38 @@ namespace FinanceControl.Migrations
 
                     b.Property<long>("GroupId");
 
-                    b.Property<long?>("ItemId");
-
                     b.Property<long>("Name");
 
                     b.Property<long>("UserId");
 
                     b.HasKey("KindId");
 
-                    b.HasIndex("ItemId");
-
                     b.ToTable("Kinds");
+                });
+
+            modelBuilder.Entity("FinanceControl.Models.Transaction", b =>
+                {
+                    b.Property<long>("TransactionId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<decimal>("AccountBalance");
+
+                    b.Property<long>("AccountId");
+
+                    b.Property<decimal>("CurrencyAmount");
+
+                    b.Property<DateTime>("DateTime");
+
+                    b.Property<long>("ItemId");
+
+                    b.Property<decimal>("RateToAccCurr");
+
+                    b.Property<long>("UserId");
+
+                    b.HasKey("TransactionId");
+
+                    b.ToTable("Transactions");
                 });
 
             modelBuilder.Entity("FinanceControl.Models.Account", b =>
@@ -140,20 +179,19 @@ namespace FinanceControl.Migrations
                         .WithMany("Accounts")
                         .HasForeignKey("CurrencyId")
                         .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("FinanceControl.Models.Item", "Item")
+                        .WithMany()
+                        .HasForeignKey("ItemId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("FinanceControl.Models.Group", b =>
+            modelBuilder.Entity("FinanceControl.Models.Comment", b =>
                 {
-                    b.HasOne("FinanceControl.Models.Item")
-                        .WithMany("Groups")
-                        .HasForeignKey("ItemId");
-                });
-
-            modelBuilder.Entity("FinanceControl.Models.Kind", b =>
-                {
-                    b.HasOne("FinanceControl.Models.Item")
-                        .WithMany("Kinds")
-                        .HasForeignKey("ItemId");
+                    b.HasOne("FinanceControl.Models.Transaction")
+                        .WithOne("Comment")
+                        .HasForeignKey("FinanceControl.Models.Comment", "TransactionId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

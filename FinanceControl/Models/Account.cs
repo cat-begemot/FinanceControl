@@ -10,7 +10,7 @@ namespace FinanceControl.Models
 		// Table column
 		public long AccountId { get; set; }
 		public long UserId { get; set; }
-		public long ItemId { get; set; }
+		public long ItemId { get; set; } // FK
 		public string AccountName { get; set; }
 		public decimal StartAmount { get; set; }
 		public decimal Balance { get; set; }

@@ -8,6 +8,8 @@ import { AuthenticationComponent } from "./auth/authentication/authentication.co
 import { SignupComponent } from "./auth/signup/signup.component";
 import { GroupEditorComponent} from "./items-info/groups-info/group-editor/group-editor.component";
 import { GroupsInfoComponent } from "./items-info/groups-info/groups-info.component";
+import { TransactionsInfoComponent } from "./transactions-info/transactions-info.component";
+import { TransactionEditComponent } from "./transactions-info/transaction-edit/transaction-edit.component";
 
 const routes: Routes = [
   {path: '', redirectTo: '/accounts', pathMatch: 'full'},
@@ -22,7 +24,10 @@ const routes: Routes = [
   {path: 'currencies/edit/:id', component: CurrencyEditorComponent},
   {path: 'groups', component: GroupsInfoComponent},
   {path: 'groups/add', component: GroupEditorComponent},
-  {path: 'groups/edit/:id', component: GroupEditorComponent}
+  {path: 'groups/edit/:id', component: GroupEditorComponent},
+  {path: 'transactions', component: TransactionsInfoComponent},
+  {path: 'transactions/add', component: TransactionEditComponent},
+  {path: 'transactions/edit/:id', component: TransactionEditComponent}
 ];
 
 @NgModule({
