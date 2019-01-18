@@ -18,7 +18,7 @@ export class SignupComponent implements OnInit {
   constructor(
     private location: Location,
     private repository: Repository,
-    private authService: AuthenticationService,
+    public authService: AuthenticationService,
     private routerNav: Router
   ) { }
 
@@ -26,10 +26,12 @@ export class SignupComponent implements OnInit {
     this.signUpForm=new FormGroup({
       loginControl: new FormControl('', Validators.required),
       passwordControl: new FormControl('', Validators.required),
-      passwordConfirmationControl: new FormControl('', Validators.required)
+      passwordConfirmationControl: new FormControl('', Validators.required),
+      isSeedDataControl: new FormControl('')
     });
     this.errorLogin=false;
     this.errorPasswordConfirmation=false;
+    this.authService.isSeedData=true;
   }
 
   public isInvalid(control: AbstractControl): boolean{
@@ -53,22 +55,40 @@ export class SignupComponent implements OnInit {
     return this.signUpForm.get("passwordConfirmationControl");
   }
 
+  public get isSeedDataControl(): FormControl{
+    return this.signUpForm.get("isSeedDataControl") as FormControl;
+  }
+
   public click_Cancel():void{
     this.location.back();
+  }
+
+  public change_isSeedDataControl(): void{
+    this.authService.isSeedData=!this.authService.isSeedData;
   }
 
   // if return true - there was succesfully registration. Else - error (the name is already existed)
   public onSubmit(): void {
     this.authService.name=this.loginControl.value;
     this.authService.password=this.passwordControl.value;
+    
     this.authService.createUserProfile().subscribe(response=>{
+      if(response){
+        this.authService.isSuccessfullyCreated=true;
         this.authService.login().subscribe(response=>{
-          if(response){
-            this.routerNav.navigate(["/accounts"]);
-          } else{
-            // login is failed
+          if(response){ // if login is successfull
+            if(this.authService.isSeedData){
+              this.repository.seedData().subscribe(()=>{
+                this.routerNav.navigate(["/accounts"]);
+              });
+            } else {
+              this.routerNav.navigate(["/accounts"]);
+            }
+          } else{ // login is failed
+              
           }
         });
+      }
     });
   }
 

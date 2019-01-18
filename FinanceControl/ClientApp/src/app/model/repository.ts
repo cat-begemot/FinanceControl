@@ -107,8 +107,13 @@ export class Repository {
     return this.http.post(loginUrl + "/isNameExist" + "/" + name, {responseType: 'text'});
   }
 
-  public createUserProfile(name: string, password: string): Observable<any>{
-    return this.http.post<any>(loginUrl + "/createUserProfile", {name: name, password: password});
+  public createUserProfile(name: string, password: string): Observable<boolean>{
+    return this.http.post<boolean>(loginUrl + "/createUserProfile", {name: name, password: password});
+  }
+
+  // This method must be applied only after logining the user
+  public seedData(): Observable<any>{
+    return this.http.get(loginUrl + "/seedData");
   }
 
   // GROUP SECTION ===========================================================================================

@@ -7,8 +7,11 @@ import { Observable, of } from "rxjs";
   providedIn: 'root'
 })
 export class AuthenticationService {
+  // TODO: create ViewModel credentials class
   public name: string;
   public password: string;
+  public isSeedData: boolean;
+
   public callBackUrl: string;
   public authenticated: boolean;
   public isSuccessfullyCreated: boolean;
@@ -28,6 +31,7 @@ export class AuthenticationService {
     });
     
     this.isSuccessfullyCreated=false;
+    this.isSeedData=true; // by default application seeds the database with sample data
   }
 
   public login(): Observable<boolean>{
@@ -51,11 +55,14 @@ export class AuthenticationService {
 
   public createUserProfile(): Observable<boolean>{
     this.isSuccessfullyCreated=false;
+    
     let obs: Observable<any> = this.repository.createUserProfile(this.name, this.password);
 
+    /*
     obs.subscribe(response=>{
       this.isSuccessfullyCreated=true;
     });
+*/
 
     return obs;
   }

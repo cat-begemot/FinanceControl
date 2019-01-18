@@ -81,14 +81,22 @@ namespace FinanceControl.Controllers
 			User newUser = new User(creds.Name);
 			IdentityResult result = await userManager.CreateAsync(newUser, creds.Password);
 
+			
 			if (result.Succeeded)
 			{
-				repository.AddDataForNewUser();
 				return true;
 			}
 			else
 				return false;
+			
 		}
+
+		[HttpGet("seedData")]
+		public void SeedData()
+		{
+			repository.AddDataForNewUser();
+		}
+
 
 		[HttpGet("getCurrentUserName")]
 		public string GetCurrentUserName()
@@ -103,6 +111,4 @@ namespace FinanceControl.Controllers
 		public string Name { get; set; }
 		public string Password { get; set; }
 	}
-
-
 }
