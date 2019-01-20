@@ -24,7 +24,6 @@
 			</div>
 		</div>
 
-
 		<div class="col text-right">
 			<button class="btn btn-sm btn-dark text-light m-0" routerLink="/transactions/add">
 				<i class="fas fa-plus-circle mr-1"></i>
@@ -33,14 +32,41 @@
 		</div>
 	</div>
 
-	<div *ngIf="showDetailsInfo" class="alert alert-dark p-1" role="alert" style="font-size: 0.9em">
-		<h5 class="alert-heading font-weight-bold my-0 py-0">Details info</h5>
+	<div *ngIf="showDetailsInfo" class="alert alert-secondary p-1" role="alert" style="font-size: 0.9em">
+		<span class="alert-heading font-weight-bold my-0 py-0" style="font-size: 1.4em">Details info</span>
+		<i style="cursor: pointer" class="far fa-eye-slash mt-2 mr-1 p-0 text-secondary float-right align-baseline" (click)="click_closeDetails()"></i>
 		<hr class="my-1 py-0">
 		<p class="my-0 py-0"><strong>Date: </strong>{{currentTransactionDateTime}}</p>
+		
+
 		<p class="my-0 py-0">
-			<strong>Account: </strong>{{currentTransaction?.account?.accountName}}<strong> Balance: </strong>{{currentTransaction?.currencyAmount | number:"1.2-2"}} {{currentTransaction?.account?.currency?.code}}
+			<i style="cursor: pointer" class="far m-0 p-0" [class.fa-plus-square]="accountDetailCollapsed" [class.fa-minus-square]="!accountDetailCollapsed"
+				data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample" (click)="click_accountDetail()">
+					<span class="ml-1 font-weight-bold">Account: </span>{{currentTransaction?.account?.accountName}}
+			</i>
 		</p>
-		<p class="my-0 py-0"><strong>Item: </strong>{{currentTransaction?.item?.name}}</p>
+		<div class="collapse ml-4" id="collapseExample">
+			<span class="font-weight-bold">Balance: </span>{{currentTransaction?.accountBalance | number:"1.2-2"}} {{currentTransaction?.account?.currency?.code}}<br/>
+			<span class="font-weight-bold">Group: </span>{{currentTransaction?.account?.item?.group?.name}}Test group<br/>
+			<span class="font-weight-bold">Kind: </span>{{currentTransaction?.account?.item?.kind?.name}}Some test kind<br/>
+			<span class="font-weight-bold">Description: </span>{{currentTransaction?.account?.description}}<br/>
+			<hr class="my-1 py-0">
+		</div>
+
+		<p class="my-0 py-0">
+			<i style="cursor: pointer" class="far m-0 p-0" [class.fa-plus-square]="itemDetailCollapsed" [class.fa-minus-square]="!itemDetailCollapsed"
+				data-toggle="collapse" href="#collapseExample1" role="button" aria-expanded="false" aria-controls="collapseExample1" (click)="click_itemDetail()">
+					<span class="ml-1 font-weight-bold">Item: </span>{{currentTransaction?.item?.name}}
+			</i>
+		</p>
+		<div class="collapse ml-4" id="collapseExample1">
+			<span class="font-weight-bold">Group: </span>{{currentTransaction?.item?.group?.name}} <br/>
+			<span class="font-weight-bold">Kind: </span>{{currentTransaction?.item?.kind?.name}}Test kind<br/>
+			<hr class="my-1 py-0">
+		</div>
+		
+		
+	
 		<p class="my-0 py-0">
 			<strong>Rate: </strong>{{currentTransaction?.rateToAccCurr | number:"1.4-4"}} <strong>In UAH: </strong>{{currentTransaction?.currencyAmount*currentTransaction?.rateToAccCurr | number:"1.2-2"}} UAH
 		</p>
@@ -49,20 +75,19 @@
 
 
 	<table class="table table-sm table-bordered table-hover">
-			<tr class="bg-dark text-light">
-        <th class="text-center t_width">T</th>
-        <th>Item</th>
+			<tr class="bg-dark text-light" style="line-height: 25px">
+        <th colspan="2">Requester item</th>
         <th colspan="2" class="text-center">Amount</th>
       </tr>
 			<tr *ngFor="let transaction of transactions" style="line-height: 20px">
-        <td class="text-center" routerLink="/transactions/edit/{{transaction.transactionId}}">
+        <td class="text-center" routerLink="/transactions/edit/{{transaction.transactionId}}" style="max-width: 20px">
 					<i *ngIf="transaction.item?.group?.type==0" class="fas fa-truck-moving text-warning"></i>
 					<i *ngIf="transaction.item?.group?.type==1" class="fas fa-minus text-danger"></i>
 					<i *ngIf="transaction.item?.group?.type==2" class="fas fa-plus text-success"></i>
 				</td>
         <td (click)="click_transaction(transaction.transactionId)">{{transaction.item.name}}</td>
 				<td class="text-right" (click)="click_transaction(transaction.transactionId)">{{transaction.currencyAmount | number:"1.2-2"}}</td>
-				<td class="text-left" (click)="click_transaction(transaction.transactionId)">
+				<td class="text-left" (click)="click_transaction(transaction.transactionId)" style="max-width: 35px">
 					{{transaction.account?.currency?.code}}
 				</td>
 			</tr>

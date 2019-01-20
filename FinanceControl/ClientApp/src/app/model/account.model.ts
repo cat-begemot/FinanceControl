@@ -4,6 +4,7 @@ import { Item } from "./item.model";
 export class Account{
 	constructor(		
 		public accountId?: number,
+		public itemId?: number,
 		public accountName?: string,
 		public startAmount?: number,
 		public balance?: number,

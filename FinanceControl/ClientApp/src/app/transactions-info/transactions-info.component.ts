@@ -17,12 +17,29 @@ export class TransactionsInfoComponent implements OnInit {
   public currentTransaction: Transaction;
   public currentTransactionDateTime: string;
 
+  public accountDetailCollapsed: boolean;
+  public itemDetailCollapsed: boolean;
 
   constructor(
     private repository: Repository
   ) { }
 
+  public click_closeDetails(): void{
+    this.showDetailsInfo=!this.showDetailsInfo;
+  }
+
+  public click_accountDetail(): void{
+    this.accountDetailCollapsed=!this.accountDetailCollapsed;
+  }
+
+  public click_itemDetail(): void{
+    this.itemDetailCollapsed=!this.itemDetailCollapsed;
+  }
+
   ngOnInit() {
+    this.accountDetailCollapsed=true;
+    this.itemDetailCollapsed=true;
+    
     this.showDetailsInfo=false;
     this.textMenuDetailsInfo="Show details";
 

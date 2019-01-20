@@ -30,17 +30,18 @@ export class TransactionEditComponent implements OnInit {
   ngOnInit() {
     this.currentTransaction=new Transaction();
     this.currentTransaction.dateTime=new Date();
-        
+    
     // Form initialize
     this.transactionForm=new FormGroup({
-      typeControl: new FormControl(GroupType.Expense),
+      typeControl: new FormControl(GroupType.Expense, Validators.required),
       dateControl: new FormControl(this.getCurrentDateTime(this.currentTransaction.dateTime), Validators.required),
       accountControl: new FormControl('', Validators.required),
       itemControl: new FormControl('', Validators.required),
       commentControl: new FormControl(''),
-      amountControl: new FormControl(''),
+      amountControl: new FormControl('', Validators.required),
       currencyNameControl: new FormControl({value: '', disabled: true}),
-      rateControl: new FormControl(''),
+      rateControl: new FormControl('', Validators.required),
+      rateNameControl: new FormControl({value: '', disabled: true})
     });
     
     // load accounts
@@ -56,8 +57,6 @@ export class TransactionEditComponent implements OnInit {
 
     this.editMode=false;
     this.editorHeader="New transaction";
-    
-
   }
 
   // get DateTime string for setting input DateTime form control
@@ -67,8 +66,11 @@ export class TransactionEditComponent implements OnInit {
     let hours: string = dt.getHours().toString();
     let minutes: string = dt.getMinutes().toString();
     let seconds: string = dt.getSeconds().toString();
-  
-    return arrDateTime[0] + "T" + hours + ":" + minutes + ":" + seconds;  
+    
+    return arrDateTime[0] + "T" + 
+      (hours.length==1 ? "0" + hours : hours) + ":" + 
+      (minutes.length==1 ? "0" + minutes : minutes) + ":" +
+      (seconds.length==1 ? "0" + seconds : seconds);
   }
 
   public click_Cancel(): void{
@@ -99,9 +101,45 @@ export class TransactionEditComponent implements OnInit {
     });
   }
 
-  // set amount currency according account when account was elected
+  // change event for Account select
   public change_account(): void{
+    this.setRateControls();
+  }
+
+  // change event for Item select
+  public change_item(): void{
+    this.setRateControls();
+  }
+
+  // Set rate and disabled rate names fields according to elected type, account and item
+  private setRateControls(): void{
     this.currencyNameControl.setValue(this.accounts.find(account=>account.accountId==this.accountControl.value).currency.code);
+    if(this.typeControl.value==GroupType.Account){ // Set rate for movement
+      if(this.itemControl.dirty){
+        let itemId: number = this.accounts.find(account=>account.itemId==this.itemControl.value).itemId;
+        this.rateNameControl.setValue(this.currencyNameControl.value + "/" + this.accounts.find(account=>account.itemId==itemId).currency.code);
+      }
+    } else { // set rate for Income and Expense
+      this.rateNameControl.setValue(this.currencyNameControl.value + "/UAH");
+    }
+    // if Account and Item currency the same
+    if(this.rateNameControl.value!=""){
+      let accountCurrencyCode: string = (this.rateNameControl.value as string).slice(0,3);
+      let itemCurrencyCode: string = (this.rateNameControl.value as string).slice(4,7);      
+      if(accountCurrencyCode==itemCurrencyCode){
+        this.rateControl.setValue(1);
+      } else {
+        this.rateControl.setValue("");
+      }
+    }
+  }
+
+  // click event for Inverse button
+  public click_inverse(): void{
+    if(this.rateControl.value!="")
+    {
+      this.rateControl.setValue(1/this.rateControl.value);
+    }
   }
 
   // Get form controls
@@ -135,5 +173,9 @@ export class TransactionEditComponent implements OnInit {
 
   public get commentControl(): FormControl{
     return this.transactionForm.get("commentControl") as FormControl;
+  }
+
+  public get rateNameControl(): FormControl{
+    return this.transactionForm.get("rateNameControl") as FormControl;
   }
 }

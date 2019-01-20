@@ -13,9 +13,9 @@
 
   <form [formGroup]="transactionForm" (ngSubmit)="onSubmit()" autocomplete="off">
       <div class="form-group">
-        <h5>Type</h5>
+        <h5 class="pb-0 mb-0">Type</h5>
         <h6 class="pt-0 mt-0 text-secondary">(transaction type)</h6>
-        <select class="form-control" formControlName="typeControl" (change)="change_type()">
+        <select class="form-control" formControlName="typeControl" (change)="change_type()" required>
           <option value="1">Expense</option>
           <option value="2">Income</option>
           <option value="0">Movement</option>
@@ -24,7 +24,7 @@
     
     <div class="form-group">
       <h5>Date and time</h5>
-      <input type="datetime-local" class="form-control" formControlName="dateControl" />
+      <input type="datetime-local" class="form-control" formControlName="dateControl" required />
     </div>
 
     <div class="form-group">
@@ -37,9 +37,30 @@
     <!-- 1) Need filter of items 2) Need add and edit item features here -->
     <div class="form-group">
       <h5>Item</h5>
-      <select class="form-control" formControlName="itemControl" required>
+      <select class="form-control" formControlName="itemControl" required (change)="change_item()">
         <option *ngFor="let item of items" [value]="item.itemId">{{item.name}}</option>
       </select>
+    </div>
+
+    <div class="form-group">
+      <h5>Amount</h5>
+      <div class="input-group">
+        <input type="text" class="form-control" formControlName="amountControl" required />
+        <input type="text" class="form-control input-group-append ml-1" formControlName="currencyNameControl"
+          style="max-width: 60px;" />
+      </div>
+    </div>
+
+    <!-- Add hidden Destination amount filed, when Movement was elected -->
+    <div class="form-group">
+      <h5 class="pb-0 mb-0">Rate</h5>
+      <h6 class="pt-0 mt-0 text-secondary">(rate to accounting currency)</h6>
+      <div class="input-group">
+        <input type="text" class="form-control" formControlName="rateControl" required />
+        <input type="text" class="form-control input-group-append ml-1" formControlName="rateNameControl"
+          style="max-width: 100px;" />
+        <button type="button" class="btn btn-dark text-light input-group-append ml-1" (click)="click_inverse()">Inverse</button>
+      </div>
     </div>
 
     <div class="form-group">
@@ -47,21 +68,6 @@
       <input type="text" class="form-control" formControlName="commentControl" />
     </div>
 
-    <div class="form-group">
-      <h5>Amount</h5>
-      <div class="input-group">
-        <input type="text" class="form-control" formControlName="amountControl" />
-        <input type="text" class="form-control input-group-append ml-1" formControlName="currencyNameControl" value="UAH"
-          style="max-width: 60px;" />
-      </div>
-    </div>
-
-    <!-- Add hidden Destination amount filed, when Movement was elected -->
-    <div class="form-group">
-      <h5>Rate</h5>
-      <h6 class="pt-0 mt-0 text-secondary">(rate to accounting currency)</h6>
-      <input type="text" class="form-control" formControlName="rateControl" />
-    </div>
 
     <div class="form-row">
       <div *ngIf="!editMode" class="col">

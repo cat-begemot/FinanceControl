@@ -416,8 +416,8 @@ namespace FinanceControl.Models
 			else if (transactionType == GroupType.Expense) // Expense
 			{
 				// Set account
-				currentAccount.Balance -= newTransaction.CurrencyAmount;
-				context.Accounts.Update(currentAccount);
+					currentAccount.Balance -= newTransaction.CurrencyAmount;
+					context.Accounts.Update(currentAccount);
 
 				// Configure first movement transaction
 				newTransaction.AccountBalance = currentAccount.Balance;
@@ -525,7 +525,7 @@ namespace FinanceControl.Models
 				new Account() {AccountName="VDC Privat *8381",
 					Item = new Item(){ GroupId=context.Groups.Where(group=>group.Name=="Текущие счета").FirstOrDefault().GroupId },
 					CurrencyId = context.Currencies.Where(currency=>currency.Code=="UAH").FirstOrDefault().CurrencyId,
-					StartAmount =0, Balance=0, Sequence=0, ActiveAccount=true, Description="Виртуальная карта ПрвиатБанка"},
+					StartAmount =0, Balance=0, Sequence=0, ActiveAccount=true, Description="Виртуальная карта ПриватБанка"},
 				new Account() {AccountName="BA: myFriend [UAH]",
 					Item = new Item(){ GroupId=context.Groups.Where(group=>group.Name=="Балансовые счета").FirstOrDefault().GroupId },
 					CurrencyId = context.Currencies.Where(currency=>currency.Code=="UAH").FirstOrDefault().CurrencyId,
