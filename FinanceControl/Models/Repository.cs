@@ -378,76 +378,216 @@ namespace FinanceControl.Models
 		#endregion
 
 		#region Transactions section
-		public void CreateTransaction(Transaction newTransaction)
+		public void CreateTransaction(Transaction transaction)
 		{
-			// defines type of operations
-			Account currentAccount = context.Accounts.Where(account => account.AccountId == newTransaction.AccountId).FirstOrDefault();
-			Item currentItem = context.Items.Where(item => item.ItemId == newTransaction.ItemId).FirstOrDefault();
-			GroupType transactionType = context.Groups.Where(group => group.GroupId == currentItem.GroupId).FirstOrDefault().Type;
-			EntityEntry<Transaction> createdTransaction=null;
+			// find Account and Item instance for transaction
+			Account account = context.Accounts.Where(acc => acc.AccountId == transaction.AccountId).FirstOrDefault();
+			Currency currency = context.Currencies.Where(cur => cur.CurrencyId == account.CurrencyId).FirstOrDefault();
+			Item item = context.Items.Where(it => it.ItemId == transaction.ItemId).FirstOrDefault();
+			Group group = context.Groups.Where(gr => gr.GroupId == item.GroupId).FirstOrDefault();
 
-			newTransaction.UserId = currentUserId;
+			EntityEntry<Transaction> createdTransaction = null;
 
-			if (transactionType==GroupType.Account) // Movement (first deduct from account, then add to item with time difference in 1 second)
+			// common assignings
+			transaction.UserId = currentUserId;
+
+			// define what type of operation we're handling now
+			if (item.Group.Type == GroupType.Account) // Movement
 			{
-				// Set account
-				currentAccount.Balance -= newTransaction.CurrencyAmount;
-				context.Accounts.Update(currentAccount);
+				// first record
 
-				// Configure first movement transaction
-				newTransaction.AccountBalance = currentAccount.Balance;
-				newTransaction.CurrencyAmount = 0-newTransaction.CurrencyAmount; // negative amount for deducted sums
-				createdTransaction=context.Transactions.Add(newTransaction);
+				// if backdated transactions
+				IQueryable<Transaction> transactions = context.Transactions
+					.Where(t => t.AccountId == transaction.AccountId && t.DateTime > transaction.DateTime)
+					.OrderBy(t => t.DateTime);
+				decimal nextCurrencyAmount; // CurrencyAmount value in the foloowing transaction
+				decimal nextAccountBalance; // AccountBalance value in the foloowing transaction
+				if (transactions.Count() > 0)
+				{
+					nextCurrencyAmount = transactions.First().CurrencyAmount;
+					nextAccountBalance = transactions.First().AccountBalance;
+					foreach (var trans in transactions)
+					{
 
-				// Create and configure second movement transaction // TODO: resolve question with currency exchange
-				Transaction helpTransaction = new Transaction();
-				helpTransaction.UserId = currentUserId;
-				helpTransaction.DateTime = newTransaction.DateTime.AddSeconds(1);
-				helpTransaction.AccountId = newTransaction.ItemId;
-				helpTransaction.ItemId = newTransaction.AccountId;
-				helpTransaction.CurrencyAmount = 0-newTransaction.CurrencyAmount; // positive amount for added sums
-				helpTransaction.RateToAccCurr = newTransaction.RateToAccCurr;
-				Account helpAccount = context.Accounts.Where(account => account.AccountName == currentItem.Name).FirstOrDefault();
-				helpAccount.Balance += helpTransaction.CurrencyAmount;
-				context.Accounts.Update(helpAccount);
-				helpTransaction.AccountBalance = helpAccount.Balance;
-				context.Transactions.Add(helpTransaction);
+						trans.AccountBalance -= transaction.CurrencyAmount;
+					}
+					context.Transactions.UpdateRange(transactions);
+					transaction.AccountBalance = nextAccountBalance - nextCurrencyAmount - transaction.CurrencyAmount;
+				}
+				else
+				{
+					transaction.AccountBalance = account.Balance - transaction.CurrencyAmount;
+				}
+
+				// change account
+				account.Balance -= transaction.CurrencyAmount;
+				context.Accounts.Update(account);
+				//change transaction
+				transaction.CurrencyAmount = 0 - transaction.CurrencyAmount; // negative value for first record
+				decimal tempRateToAccCurr = transaction.RateToAccCurr;
+				if (account.Currency.Code == "UAH")
+				{
+					transaction.RateToAccCurr = 1;
+				}
+				createdTransaction=context.Transactions.Add(transaction);
+
+				// second record
+				// specific assignings
+				Account account2 = context.Accounts.Where(acc => acc.ItemId == item.ItemId).FirstOrDefault();
+				Currency currency2 = context.Currencies.Where(cur => cur.CurrencyId == account2.CurrencyId).FirstOrDefault();
+				Item item2 = context.Items.Where(it => it.ItemId == account.ItemId).FirstOrDefault();
+				Group group2 = context.Groups.Where(gr => gr.GroupId == item2.GroupId).FirstOrDefault();
+
+				// change transaction
+				Transaction transaction2 = new Transaction();
+				transaction2.UserId = transaction.UserId;
+				transaction2.DateTime = transaction.DateTime.AddSeconds(1);
+				transaction2.AccountId = account2.AccountId;
+				transaction2.ItemId = item2.ItemId;
+
+				if (currency2.Code == "UAH")
+				{
+					transaction2.RateToAccCurr = 1;
+					if (currency.Code=="UAH") // 1st==UAH, 2sd==UAH
+					{
+						transaction2.CurrencyAmount = 0-transaction.CurrencyAmount; // positive value for second record
+
+					}
+					else // 1st!=UAH, 2sd==UAH
+					{
+						transaction2.CurrencyAmount = (0 - transaction.CurrencyAmount)* tempRateToAccCurr; // positive value for second record
+					}
+				}
+				else 
+				{
+					if (currency.Code=="UAH") // 1st=UAH, 2sd!=UAH
+					{
+						transaction2.RateToAccCurr = tempRateToAccCurr;
+						transaction2.CurrencyAmount = (0 - transaction.CurrencyAmount) * transaction2.RateToAccCurr; // positive value for second record
+					}
+					else // 1st!=UAH, 2sd!=UAH
+					{
+						transaction2.RateToAccCurr = 1 / tempRateToAccCurr;
+						transaction2.CurrencyAmount = (0 - transaction.CurrencyAmount) * transaction2.RateToAccCurr; // positive value for second record
+					}
+				}
+
+				// if backdated transactions
+				IQueryable<Transaction> transactions2 = context.Transactions
+					.Where(t => t.AccountId == transaction2.AccountId && t.DateTime > transaction2.DateTime)
+					.OrderBy(t => t.DateTime);
+				decimal nextCurrencyAmount2; // CurrencyAmount value in the foloowing transaction
+				decimal nextAccountBalance2; // AccountBalance value in the foloowing transaction
+				if (transactions2.Count() > 0)
+				{
+					nextCurrencyAmount2 = transactions2.First().CurrencyAmount;
+					nextAccountBalance2 = transactions2.First().AccountBalance;
+					foreach (var trans in transactions2)
+					{
+
+						trans.AccountBalance += transaction2.CurrencyAmount;
+					}
+					context.Transactions.UpdateRange(transactions2);
+					transaction2.AccountBalance = nextAccountBalance2 - nextCurrencyAmount2 + transaction2.CurrencyAmount;
+				}
+				else
+				{
+					transaction2.AccountBalance = account2.Balance + transaction2.CurrencyAmount;
+				}
+
+				// change account
+				account2.Balance += transaction2.CurrencyAmount;
+				context.Accounts.Update(account2);
+
+				context.Transactions.Add(transaction2);
 			}
-			else if (transactionType == GroupType.Expense) // Expense
+			else if(item.Group.Type==GroupType.Expense) // Expense
 			{
-				// Set account
-					currentAccount.Balance -= newTransaction.CurrencyAmount;
-					context.Accounts.Update(currentAccount);
+				// if backdated transactions
+				IQueryable<Transaction> transactions = context.Transactions
+					.Where(t => t.AccountId == transaction.AccountId && t.DateTime > transaction.DateTime)
+					.OrderBy(t => t.DateTime);
+				decimal nextCurrencyAmount; // CurrencyAmount value in the foloowing transaction
+				decimal nextAccountBalance; // AccountBalance value in the foloowing transaction
+				if (transactions.Count() > 0)
+				{
+					nextCurrencyAmount = transactions.First().CurrencyAmount;
+					nextAccountBalance = transactions.First().AccountBalance;
+					foreach (var trans in transactions)
+					{
 
-				// Configure first movement transaction
-				newTransaction.AccountBalance = currentAccount.Balance;
-				newTransaction.CurrencyAmount = 0 - newTransaction.CurrencyAmount; // negative amount for deducted sums
-				createdTransaction=context.Transactions.Add(newTransaction);
+						trans.AccountBalance -= transaction.CurrencyAmount;
+					}
+					context.Transactions.UpdateRange(transactions);
+					transaction.AccountBalance = nextAccountBalance - nextCurrencyAmount - transaction.CurrencyAmount;
+				}
+				else
+				{
+					transaction.AccountBalance = account.Balance - transaction.CurrencyAmount;
+				}
+
+				// change account
+				account.Balance -= transaction.CurrencyAmount;
+				context.Accounts.Update(account);
+				//change transaction
+				transaction.CurrencyAmount = 0 - transaction.CurrencyAmount; // negative value for first record
+				if (account.Currency.Code == "UAH")
+				{
+					transaction.RateToAccCurr = 1;
+				}
+				context.Transactions.Add(transaction);
 			}
-			else if (transactionType == GroupType.Income) // Income
+			else if(item.Group.Type==GroupType.Income) // Income
 			{
-				// Set account
-				currentAccount.Balance += newTransaction.CurrencyAmount;
-				context.Accounts.Update(currentAccount);
+				// if backdated transactions
+				IQueryable<Transaction> transactions = context.Transactions
+					.Where(t => t.AccountId == transaction.AccountId && t.DateTime > transaction.DateTime)
+					.OrderBy(t => t.DateTime);
+				decimal nextCurrencyAmount; // CurrencyAmount value in the foloowing transaction
+				decimal nextAccountBalance; // AccountBalance value in the foloowing transaction
+				if (transactions.Count()>0)
+				{
+					nextCurrencyAmount = transactions.First().CurrencyAmount;
+					nextAccountBalance = transactions.First().AccountBalance;
+					foreach (var trans in transactions)
+					{
+						
+						trans.AccountBalance += transaction.CurrencyAmount;
+					}
+					context.Transactions.UpdateRange(transactions);
+					transaction.AccountBalance = nextAccountBalance - nextCurrencyAmount + transaction.CurrencyAmount;
+				}
+				else
+				{
+					transaction.AccountBalance = account.Balance + transaction.CurrencyAmount;
+				}
 
-				// Configure first movement transaction
-				newTransaction.AccountBalance = currentAccount.Balance;
-				newTransaction.CurrencyAmount = newTransaction.CurrencyAmount; // positive amount for deducted sums
-				createdTransaction=context.Transactions.Add(newTransaction);
+				// change account
+				account.Balance += transaction.CurrencyAmount;
+				context.Accounts.Update(account);
+
+				//change transaction
+				if (account.Currency.Code == "UAH")
+				{
+					transaction.RateToAccCurr = 1;
+				}
+				context.Transactions.Add(transaction);
 			}
+
 			context.SaveChanges();
 
 			// Write comment if it exists
-			if (newTransaction.Comment != null && createdTransaction!=null)
+			if (transaction.Comment != null && createdTransaction != null)
 			{
 				Comment newComment = new Comment();
 				newComment.UserId = currentUserId;
 				newComment.TransactionId = createdTransaction.Entity.TransactionId;
-				newComment.CommentText = newTransaction.Comment.CommentText;
+				newComment.CommentText = transaction.Comment.CommentText;
 				context.Comments.Add(newComment);
 				context.SaveChanges();
 			}
 		}
+
 
 		public IEnumerable<Transaction> GetTransactions()
 		{
@@ -518,11 +658,11 @@ namespace FinanceControl.Models
 					Item = new Item(){ GroupId=context.Groups.Where(group=>group.Name=="Наличные деньги").FirstOrDefault().GroupId },
 					CurrencyId = context.Currencies.Where(currency=>currency.Code=="USD").FirstOrDefault().CurrencyId,
 					StartAmount =0, Balance=0, Sequence=0, ActiveAccount=true, Description="Деньги, хранимые дома в долларах"},
-				new Account() {AccountName="DC Privat *2425",
+				new Account() {AccountName="DC: Privat *2425",
 					Item = new Item(){ GroupId=context.Groups.Where(group=>group.Name=="Текущие счета").FirstOrDefault().GroupId },
 					CurrencyId = context.Currencies.Where(currency=>currency.Code=="UAH").FirstOrDefault().CurrencyId,
 					StartAmount =0, Balance=0, Sequence=0, ActiveAccount=true, Description="Дебетовая карта ПриватБанка"},
-				new Account() {AccountName="VDC Privat *8381",
+				new Account() {AccountName="VDC: Privat *8381",
 					Item = new Item(){ GroupId=context.Groups.Where(group=>group.Name=="Текущие счета").FirstOrDefault().GroupId },
 					CurrencyId = context.Currencies.Where(currency=>currency.Code=="UAH").FirstOrDefault().CurrencyId,
 					StartAmount =0, Balance=0, Sequence=0, ActiveAccount=true, Description="Виртуальная карта ПриватБанка"},
@@ -543,7 +683,9 @@ namespace FinanceControl.Models
 				new Item(){Name="Продукты домой", UserId=currentUserId, GroupId=context.Groups.Where(group=>group.Name=="Food").FirstOrDefault().GroupId },
 				new Item(){Name="Продукты на работу", UserId=currentUserId, GroupId=context.Groups.Where(group=>group.Name=="Food").FirstOrDefault().GroupId },
 				new Item(){Name="Маршрутка", UserId=currentUserId, GroupId=context.Groups.Where(group=>group.Name=="Move").FirstOrDefault().GroupId },
-				new Item(){Name="Зарплата", UserId=currentUserId, GroupId=context.Groups.Where(group=>group.Name=="Wage").FirstOrDefault().GroupId }
+				new Item(){Name="Такси", UserId=currentUserId, GroupId=context.Groups.Where(group=>group.Name=="Move").FirstOrDefault().GroupId },
+				new Item(){Name="Зарплата", UserId=currentUserId, GroupId=context.Groups.Where(group=>group.Name=="Wage").FirstOrDefault().GroupId },
+				new Item(){Name="Подарок", UserId=currentUserId, GroupId=context.Groups.Where(group=>group.Name=="Other").FirstOrDefault().GroupId }
 			};
 			context.Items.AddRange(items);
 			context.SaveChanges();

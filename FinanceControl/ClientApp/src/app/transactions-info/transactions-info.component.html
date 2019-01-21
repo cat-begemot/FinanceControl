@@ -80,12 +80,15 @@
         <th colspan="2" class="text-center">Amount</th>
       </tr>
 			<tr *ngFor="let transaction of transactions" style="line-height: 20px">
-        <td class="text-center" routerLink="/transactions/edit/{{transaction.transactionId}}" style="max-width: 20px">
+        <td class="text-center" routerLink="/transactions/edit/{{transaction.transactionId}}" style="max-width: 25px">
 					<i *ngIf="transaction.item?.group?.type==0" class="fas fa-truck-moving text-warning"></i>
 					<i *ngIf="transaction.item?.group?.type==1" class="fas fa-minus text-danger"></i>
 					<i *ngIf="transaction.item?.group?.type==2" class="fas fa-plus text-success"></i>
 				</td>
-        <td (click)="click_transaction(transaction.transactionId)">{{transaction.item.name}}</td>
+        <td (click)="click_transaction(transaction.transactionId)">
+					<span *ngIf="transaction.item?.group?.type!=0">{{transaction.item.name}}</span>
+					<span *ngIf="transaction.item?.group?.type==0">{{transaction.account.accountName}}</span>
+				</td>
 				<td class="text-right" (click)="click_transaction(transaction.transactionId)">{{transaction.currencyAmount | number:"1.2-2"}}</td>
 				<td class="text-left" (click)="click_transaction(transaction.transactionId)" style="max-width: 35px">
 					{{transaction.account?.currency?.code}}

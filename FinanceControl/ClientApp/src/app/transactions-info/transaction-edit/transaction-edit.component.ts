@@ -79,6 +79,7 @@ export class TransactionEditComponent implements OnInit {
 
   public onSubmit(): void{
     this.currentTransaction.transactionId=0;
+    this.currentTransaction.dateTime=this.dateControl.value;
     this.currentTransaction.accountId=this.accountControl.value;
     this.currentTransaction.itemId=this.itemControl.value;
     this.currentTransaction.currencyAmount=this.amountControl.value;
@@ -125,7 +126,7 @@ export class TransactionEditComponent implements OnInit {
     // if Account and Item currency the same
     if(this.rateNameControl.value!=""){
       let accountCurrencyCode: string = (this.rateNameControl.value as string).slice(0,3);
-      let itemCurrencyCode: string = (this.rateNameControl.value as string).slice(4,7);      
+      let itemCurrencyCode: string = (this.rateNameControl.value as string).slice(4,7);
       if(accountCurrencyCode==itemCurrencyCode){
         this.rateControl.setValue(1);
       } else {

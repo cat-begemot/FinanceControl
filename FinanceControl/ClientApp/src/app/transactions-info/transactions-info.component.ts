@@ -26,6 +26,8 @@ export class TransactionsInfoComponent implements OnInit {
 
   public click_closeDetails(): void{
     this.showDetailsInfo=!this.showDetailsInfo;
+    this.accountDetailCollapsed=true;
+    this.itemDetailCollapsed=true;
   }
 
   public click_accountDetail(): void{
