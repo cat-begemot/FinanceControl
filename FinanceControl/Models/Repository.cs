@@ -380,6 +380,8 @@ namespace FinanceControl.Models
 		#region Transactions section
 		public void CreateTransaction(Transaction transaction)
 		{
+			// There is possibility to move procedures for backdate transactions in separate private submethod
+			
 			// find Account and Item instance for transaction
 			Account account = context.Accounts.Where(acc => acc.AccountId == transaction.AccountId).FirstOrDefault();
 			Currency currency = context.Currencies.Where(cur => cur.CurrencyId == account.CurrencyId).FirstOrDefault();
@@ -594,7 +596,8 @@ namespace FinanceControl.Models
 			IEnumerable<Transaction> transactions = context.Transactions.Where(trans => trans.UserId == currentUserId)
 				.Include(trans => trans.Account).ThenInclude(account => account.Currency)
 				.Include(trans => trans.Item).ThenInclude(item => item.Group)
-				.Include(trans => trans.Comment);
+				.Include(trans => trans.Comment)
+				.OrderByDescending(trans => trans.DateTime);
 			
 			foreach(var trans in transactions)
 			{
@@ -603,6 +606,19 @@ namespace FinanceControl.Models
 
 			return transactions;
 		}
+
+		public Transaction GetTransactionById(long id)
+		{
+			Transaction transaction = context.Transactions.Where(trans => trans.TransactionId == id)
+				.Include(trans => trans.Account).ThenInclude(account => account.Currency)
+				.Include(trans => trans.Item).ThenInclude(item => item.Group)
+				.Include(trans => trans.Comment).FirstOrDefault();
+
+			transaction.Account.Currency.Accounts = null;
+
+			return transaction;
+		}
+
 		#endregion
 
 		#region Seed section

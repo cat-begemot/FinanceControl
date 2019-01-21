@@ -156,4 +156,8 @@ export class Repository {
   public getTransactions(): Observable<Transaction[]>{
     return this.http.get<Transaction[]>(transactionsUrl);
   }
+
+  public getTransactionById(id: number): Observable<Transaction>{
+    return this.http.get<Transaction>(transactionsUrl + `/${id}`);
+  }
 }

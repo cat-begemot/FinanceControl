@@ -48,6 +48,7 @@ namespace FinanceControl.Models
 		// Transaction section
 		void CreateTransaction(Transaction newTransaction);
 		IEnumerable<Transaction> GetTransactions();
+		Transaction GetTransactionById(long id);
 
 		// Seed section
 		void AddDataForNewUser();

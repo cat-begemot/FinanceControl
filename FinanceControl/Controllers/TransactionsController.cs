@@ -29,5 +29,11 @@ namespace FinanceControl.Controllers
 		{
 			return repository.GetTransactions();
 		}
+
+		[HttpGet("{id}")]
+		public Transaction GetTransactionById([FromRoute] long id)
+		{
+			return repository.GetTransactionById(id);
+		}
 	}
 }

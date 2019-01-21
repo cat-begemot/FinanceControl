@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Location, DatePipe } from "@angular/common";
+import { Location } from "@angular/common";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { Transaction } from "../../model/transaction.model";
 import { Repository } from "../../model/repository";
@@ -7,6 +7,7 @@ import { Account } from "../../model/account.model";
 import { Item } from "../../model/item.model";
 import { GroupType } from "../../model/group.model";
 import { Comment } from 'src/app/model/comment.model';
+import { ActivatedRoute } from "@angular/router";
 
 @Component({
   selector: 'app-transaction-edit',
@@ -24,7 +25,8 @@ export class TransactionEditComponent implements OnInit {
 
   constructor(
     private location: Location,
-    private repository: Repository
+    private repository: Repository,
+    private router: ActivatedRoute
   ) { }
 
   ngOnInit() {
@@ -44,7 +46,7 @@ export class TransactionEditComponent implements OnInit {
       rateNameControl: new FormControl({value: '', disabled: true})
     });
     
-    // load accounts
+    // load accounts // TODO: create app-status pull of all array instances?
     this.repository.getActiveAccounts(0).subscribe(response=>{
       this.accounts=response;
     });
@@ -54,9 +56,50 @@ export class TransactionEditComponent implements OnInit {
       this.items=response;
     });
     
+    this.check_editMode();   
+  }
 
-    this.editMode=false;
-    this.editorHeader="New transaction";
+  // check whether is create new or edit exist transaction mode
+  public check_editMode(): void{
+    let id=+this.router.snapshot.paramMap.get("id");
+    if(id==0){ // Create new transaction
+      this.editMode=false;
+      this.editorHeader="New transaction";
+    } else { // Edit exists transaction
+      this.editMode=true;
+      this.editorHeader="Edit transaction";
+      // get transaction from database and fill form
+      this.repository.getTransactionById(id).subscribe(transaction=>{
+        this.currentTransaction=transaction;
+        let gt: GroupType=transaction.item.group.type;  
+        if(gt==GroupType.Expense)
+          this.typeControl.setValue(gt);
+        else if(gt==GroupType.Income)
+          this.typeControl.setValue(gt);
+        else(gt==GroupType.Account)
+          this.typeControl.setValue(gt);
+        
+        this.typeControl.disable();
+        this.change_type();
+
+        this.dateControl.setValue(transaction.dateTime);
+        this.accountControl.setValue(transaction.accountId);
+        this.itemControl.setValue(transaction.itemId);
+        this.amountControl.setValue(transaction.currencyAmount);
+        this.rateControl.setValue(transaction.rateToAccCurr);
+
+        if(transaction.comment!=null && transaction.comment!=undefined)
+          this.commentControl.setValue(transaction.comment.commentText);
+        
+        this.currencyNameControl.setValue(this.currentTransaction.account.currency.code);
+        if(gt!=GroupType.Account){
+          this.rateNameControl.setValue(this.currencyNameControl.value + "/UAH");
+        } else{
+          let itemId: number = this.accounts.find(account=>account.itemId==this.itemControl.value).itemId;
+          this.rateNameControl.setValue(this.currencyNameControl.value + "/" + this.accounts.find(account=>account.itemId==itemId).currency.code);
+        }
+      });
+    }
   }
 
   // get DateTime string for setting input DateTime form control
@@ -78,21 +121,23 @@ export class TransactionEditComponent implements OnInit {
   }
 
   public onSubmit(): void{
-    this.currentTransaction.transactionId=0;
-    this.currentTransaction.dateTime=this.dateControl.value;
-    this.currentTransaction.accountId=this.accountControl.value;
-    this.currentTransaction.itemId=this.itemControl.value;
-    this.currentTransaction.currencyAmount=this.amountControl.value;
-    this.currentTransaction.rateToAccCurr=this.rateControl.value;
-    
-    if(this.commentControl.value!=""){ // if user enter a comment
-      this.currentTransaction.comment=new Comment();
-      this.currentTransaction.comment.commentText=this.commentControl.value;
-    }
+    if(this.editMode==false){ // create new transaction
+      this.currentTransaction.transactionId=0;
+      this.currentTransaction.dateTime=this.dateControl.value;
+      this.currentTransaction.accountId=this.accountControl.value;
+      this.currentTransaction.itemId=this.itemControl.value;
+      this.currentTransaction.currencyAmount=this.amountControl.value;
+      this.currentTransaction.rateToAccCurr=this.rateControl.value;
+      
+      if(this.commentControl.value!=""){ // if user enter a comment
+        this.currentTransaction.comment=new Comment();
+        this.currentTransaction.comment.commentText=this.commentControl.value;
+      }
 
-    this.repository.createTransaction(this.currentTransaction).subscribe(()=>{
-      this.location.back();
-    });
+      this.repository.createTransaction(this.currentTransaction).subscribe(()=>{
+        this.location.back();
+      });
+    }
   }
 
   // filter items when type select was changed
@@ -123,7 +168,7 @@ export class TransactionEditComponent implements OnInit {
     } else { // set rate for Income and Expense
       this.rateNameControl.setValue(this.currencyNameControl.value + "/UAH");
     }
-    // if Account and Item currency the same
+    // if Account and Item currency the same, set rate as 1.0000
     if(this.rateNameControl.value!=""){
       let accountCurrencyCode: string = (this.rateNameControl.value as string).slice(0,3);
       let itemCurrencyCode: string = (this.rateNameControl.value as string).slice(4,7);

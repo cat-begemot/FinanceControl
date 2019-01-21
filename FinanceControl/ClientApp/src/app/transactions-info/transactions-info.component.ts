@@ -53,6 +53,16 @@ export class TransactionsInfoComponent implements OnInit {
 
   }
 
+  // It defines directiron of flowing money when it occurs movement transaction
+  public isDeduct(currencyAmount: number): boolean{
+    let sign: number=Math.sign(currencyAmount);
+    if(sign==-1){
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   public click_transaction(transactionId: number): void{
     this.currentTransaction=this.transactions.find(trans=>trans.transactionId==transactionId);
     this.currentTransactionDateTime=this.getCurrentDateTime(this.currentTransaction.dateTime);

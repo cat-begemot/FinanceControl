@@ -81,7 +81,8 @@
       </tr>
 			<tr *ngFor="let transaction of transactions" style="line-height: 20px">
         <td class="text-center" routerLink="/transactions/edit/{{transaction.transactionId}}" style="max-width: 25px">
-					<i *ngIf="transaction.item?.group?.type==0" class="fas fa-truck-moving text-warning"></i>
+					<i *ngIf="transaction.item?.group?.type==0" class="fas text-warning"
+						[class.fa-plane-departure]="isDeduct(transaction.currencyAmount)" [class.fa-plane-arrival]="!isDeduct(transaction.currencyAmount)"></i>
 					<i *ngIf="transaction.item?.group?.type==1" class="fas fa-minus text-danger"></i>
 					<i *ngIf="transaction.item?.group?.type==2" class="fas fa-plus text-success"></i>
 				</td>
