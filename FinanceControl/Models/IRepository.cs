@@ -46,11 +46,12 @@ namespace FinanceControl.Models
 		IEnumerable<Item> GetItems(GroupType type);
 
 		// Transaction section
-		void CreateTransaction(Transaction newTransaction);
+		IEnumerable<long> CreateTransaction(Transaction newTransaction);
 		IEnumerable<Transaction> GetTransactions();
 		Transaction GetTransactionById(long id);
 
 		// Seed section
 		void AddDataForNewUser();
+		void SeedDataForTesting();
 	}
 }

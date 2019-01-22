@@ -21,6 +21,21 @@ namespace FinanceControl.Models
 		private SignInManager<User> signInManager;
 		private long currentUserId;
 
+
+		#region Constructor for xUnit tests
+		/// <summary>
+		/// For xUnit tests only. It sets currentUserId=0
+		/// </summary>
+		/// <param name="ctx"></param>
+		public Repository(DbRepositoryContext ctx)
+		{
+			context = ctx;
+			currentUserId = 10;
+		}
+		#endregion
+
+		// IHttpContextAccessor, UserManager<T> and SignInManager<T> using in constructor only
+		// with purpose to set currentUserId
 		public Repository(DbRepositoryContext ctx, IHttpContextAccessor httpContAcc, 
 			UserManager<User> userMgr, SignInManager<User> signInMgr)
 		{
@@ -378,11 +393,13 @@ namespace FinanceControl.Models
 		#endregion
 
 		#region Transactions section
-		public void CreateTransaction(Transaction transaction)
+		public IEnumerable<long> CreateTransaction(Transaction transaction)
 		{
 			// There is possibility to move procedures for backdate transactions in separate private submethod
-			
+
 			// find Account and Item instance for transaction
+			List<long> transactionIdList = new List<long>();
+
 			Account account = context.Accounts.Where(acc => acc.AccountId == transaction.AccountId).FirstOrDefault();
 			Currency currency = context.Currencies.Where(cur => cur.CurrencyId == account.CurrencyId).FirstOrDefault();
 			Item item = context.Items.Where(it => it.ItemId == transaction.ItemId).FirstOrDefault();
@@ -394,7 +411,7 @@ namespace FinanceControl.Models
 			transaction.UserId = currentUserId;
 
 			// define what type of operation we're handling now
-			if (item.Group.Type == GroupType.Account) // Movement
+			if (item.Group.Type == GroupType.Account) // MOVEMENT
 			{
 				// first record
 
@@ -432,6 +449,7 @@ namespace FinanceControl.Models
 					transaction.RateToAccCurr = 1;
 				}
 				createdTransaction=context.Transactions.Add(transaction);
+				transactionIdList.Add(createdTransaction.Entity.TransactionId);
 
 				// second record
 				// specific assignings
@@ -457,20 +475,19 @@ namespace FinanceControl.Models
 					}
 					else // 1st!=UAH, 2sd==UAH
 					{
-						transaction2.CurrencyAmount = (0 - transaction.CurrencyAmount)* tempRateToAccCurr; // positive value for second record
+						transaction2.CurrencyAmount = (0 - transaction.CurrencyAmount) * tempRateToAccCurr; // positive value for second record
 					}
 				}
 				else 
 				{
+					transaction2.RateToAccCurr = 1 / tempRateToAccCurr;
 					if (currency.Code=="UAH") // 1st=UAH, 2sd!=UAH
 					{
-						transaction2.RateToAccCurr = tempRateToAccCurr;
-						transaction2.CurrencyAmount = (0 - transaction.CurrencyAmount) * transaction2.RateToAccCurr; // positive value for second record
+						transaction2.CurrencyAmount = (0 - transaction.CurrencyAmount) * tempRateToAccCurr; // positive value for second record
 					}
 					else // 1st!=UAH, 2sd!=UAH
 					{
-						transaction2.RateToAccCurr = 1 / tempRateToAccCurr;
-						transaction2.CurrencyAmount = (0 - transaction.CurrencyAmount) * transaction2.RateToAccCurr; // positive value for second record
+						transaction2.CurrencyAmount = (0 - transaction.CurrencyAmount) * tempRateToAccCurr; // positive value for second record
 					}
 				}
 
@@ -501,7 +518,7 @@ namespace FinanceControl.Models
 				account2.Balance += transaction2.CurrencyAmount;
 				context.Accounts.Update(account2);
 
-				context.Transactions.Add(transaction2);
+				transactionIdList.Add(context.Transactions.Add(transaction2).Entity.TransactionId);
 			}
 			else if(item.Group.Type==GroupType.Expense) // Expense
 			{
@@ -537,7 +554,7 @@ namespace FinanceControl.Models
 				{
 					transaction.RateToAccCurr = 1;
 				}
-				context.Transactions.Add(transaction);
+				transactionIdList.Add(context.Transactions.Add(transaction).Entity.TransactionId);
 			}
 			else if(item.Group.Type==GroupType.Income) // Income
 			{
@@ -573,21 +590,12 @@ namespace FinanceControl.Models
 				{
 					transaction.RateToAccCurr = 1;
 				}
-				context.Transactions.Add(transaction);
+				transactionIdList.Add(context.Transactions.Add(transaction).Entity.TransactionId);
 			}
 
 			context.SaveChanges();
 
-			// Write comment if it exists
-			if (transaction.Comment != null && createdTransaction != null)
-			{
-				Comment newComment = new Comment();
-				newComment.UserId = currentUserId;
-				newComment.TransactionId = createdTransaction.Entity.TransactionId;
-				newComment.CommentText = transaction.Comment.CommentText;
-				context.Comments.Add(newComment);
-				context.SaveChanges();
-			}
+			return transactionIdList;
 		}
 
 
@@ -666,6 +674,94 @@ namespace FinanceControl.Models
 					Item = new Item(){ GroupId=context.Groups.Where(group=>group.Name=="Наличные деньги").FirstOrDefault().GroupId },
 					CurrencyId = context.Currencies.Where(currency=>currency.Code=="UAH").FirstOrDefault().CurrencyId,
 					StartAmount =0, Balance=0, Sequence=0, ActiveAccount=true, Description="Деньги, хранимые дома в гривне"},
+				new Account() {AccountName="Wallet [UAH]",
+					Item = new Item(){ GroupId=context.Groups.Where(group=>group.Name=="Наличные деньги").FirstOrDefault().GroupId },
+					CurrencyId = context.Currencies.Where(currency=>currency.Code=="UAH").FirstOrDefault().CurrencyId,
+					StartAmount =0, Balance=0, Sequence=0, ActiveAccount=true, Description="Деньги в кошельке"},
+				new Account() {AccountName="Safe [USD]",
+					Item = new Item(){ GroupId=context.Groups.Where(group=>group.Name=="Наличные деньги").FirstOrDefault().GroupId },
+					CurrencyId = context.Currencies.Where(currency=>currency.Code=="USD").FirstOrDefault().CurrencyId,
+					StartAmount =0, Balance=0, Sequence=0, ActiveAccount=true, Description="Деньги, хранимые дома в долларах"},
+				new Account() {AccountName="DC: Privat *2425",
+					Item = new Item(){ GroupId=context.Groups.Where(group=>group.Name=="Текущие счета").FirstOrDefault().GroupId },
+					CurrencyId = context.Currencies.Where(currency=>currency.Code=="UAH").FirstOrDefault().CurrencyId,
+					StartAmount =0, Balance=0, Sequence=0, ActiveAccount=true, Description="Дебетовая карта ПриватБанка"},
+				new Account() {AccountName="VDC: Privat *8381",
+					Item = new Item(){ GroupId=context.Groups.Where(group=>group.Name=="Текущие счета").FirstOrDefault().GroupId },
+					CurrencyId = context.Currencies.Where(currency=>currency.Code=="UAH").FirstOrDefault().CurrencyId,
+					StartAmount =0, Balance=0, Sequence=0, ActiveAccount=true, Description="Виртуальная карта ПриватБанка"},
+				new Account() {AccountName="BA: myFriend [UAH]",
+					Item = new Item(){ GroupId=context.Groups.Where(group=>group.Name=="Балансовые счета").FirstOrDefault().GroupId },
+					CurrencyId = context.Currencies.Where(currency=>currency.Code=="UAH").FirstOrDefault().CurrencyId,
+					StartAmount =0, Balance=0, Sequence=0, ActiveAccount=true, Description="Долг или кредитование с конкретным человеком"}
+			};
+			foreach (var account in accounts)
+				CreateAccount(account);
+
+			//TODO: add kind too
+
+			// TODO: add through repository method
+			// Add items: incomes and expenses samples
+			Item[] items = new Item[]
+			{
+				new Item(){Name="Продукты домой", UserId=currentUserId, GroupId=context.Groups.Where(group=>group.Name=="Food").FirstOrDefault().GroupId },
+				new Item(){Name="Продукты на работу", UserId=currentUserId, GroupId=context.Groups.Where(group=>group.Name=="Food").FirstOrDefault().GroupId },
+				new Item(){Name="Маршрутка", UserId=currentUserId, GroupId=context.Groups.Where(group=>group.Name=="Move").FirstOrDefault().GroupId },
+				new Item(){Name="Такси", UserId=currentUserId, GroupId=context.Groups.Where(group=>group.Name=="Move").FirstOrDefault().GroupId },
+				new Item(){Name="Зарплата", UserId=currentUserId, GroupId=context.Groups.Where(group=>group.Name=="Wage").FirstOrDefault().GroupId },
+				new Item(){Name="Подарок", UserId=currentUserId, GroupId=context.Groups.Where(group=>group.Name=="Other").FirstOrDefault().GroupId }
+			};
+			context.Items.AddRange(items);
+			context.SaveChanges();
+		}
+
+		public void SeedDataForTesting()
+		{
+			// Add groups
+			Group[] groups = new Group[]
+			{
+				new Group(){ Type=GroupType.Account, Name="Наличные деньги", Comment=""},
+				new Group(){ Type=GroupType.Account, Name="Текущие счета", Comment="Расчетные счета в банке, дебетовые карты"},
+				new Group(){ Type=GroupType.Account, Name="Депозиты", Comment="Депозитные счета в банке"},
+				new Group(){ Type=GroupType.Account, Name="Балансовые счета", Comment="Отображение долгов или кредитования"},
+				new Group(){ Type=GroupType.Account, Name="Брокерские счета", Comment=""},
+				new Group(){ Type=GroupType.Account, Name="Сетевые счета", Comment="Электронные деньги"},
+				new Group(){ Type=GroupType.Expense, Name="Food", Comment="Продукты"},
+				new Group(){ Type=GroupType.Expense, Name="Move", Comment="Расходы на общественные или личный транспорт"},
+				new Group(){ Type=GroupType.Expense, Name="Home", Comment="Расходы по дому"},
+				new Group(){ Type=GroupType.Expense, Name="Body", Comment="Личные расходы: одежда, косметика, уход, акксессуары"},
+				new Group(){ Type=GroupType.Expense, Name="Rest", Comment="Путешествия, отдых, подарки и т.д."},
+				new Group(){ Type=GroupType.Income, Name="Wage", Comment="Зарплата на наемной работе"},
+				new Group(){ Type=GroupType.Income, Name="Other", Comment="Другие источники дохода"},
+				new Group(){ Type=GroupType.Income, Name="Deposit", Comment="Доходы с банковских депозитов"},
+				new Group(){ Type=GroupType.Income, Name="Exchange", Comment="Инвестиционные доходы"},
+			};
+			foreach (var group in groups)
+				CreateGroup(group);
+
+
+			// Add currencies
+			Currency[] currencies = new Currency[]
+			{
+				new Currency(){Code="UAH", Description="Украинская гривна"},
+				new Currency(){Code="USD", Description="Доллар США"},
+				new Currency(){Code="EUR", Description="Евро ЕС"},
+				new Currency(){Code="RUB", Description="Российский рубль"},
+			};
+			foreach (var currency in currencies)
+				CreateCurrency(currency);
+
+			// Add accounts
+			Account[] accounts = new Account[]
+			{
+				new Account() {AccountName="Safe [UAH]",
+					Item = new Item(){ GroupId=context.Groups.Where(group=>group.Name=="Наличные деньги").FirstOrDefault().GroupId },
+					CurrencyId = context.Currencies.Where(currency=>currency.Code=="UAH").FirstOrDefault().CurrencyId,
+					StartAmount =0, Balance=0, Sequence=0, ActiveAccount=true, Description="Деньги, хранимые дома в гривне"},
+				new Account() {AccountName="Safe [EUR]",
+					Item = new Item(){ GroupId=context.Groups.Where(group=>group.Name=="Наличные деньги").FirstOrDefault().GroupId },
+					CurrencyId = context.Currencies.Where(currency=>currency.Code=="EUR").FirstOrDefault().CurrencyId,
+					StartAmount =0, Balance=0, Sequence=0, ActiveAccount=true, Description="Деньги, хранимые дома в евро"},
 				new Account() {AccountName="Wallet [UAH]",
 					Item = new Item(){ GroupId=context.Groups.Where(group=>group.Name=="Наличные деньги").FirstOrDefault().GroupId },
 					CurrencyId = context.Currencies.Where(currency=>currency.Code=="UAH").FirstOrDefault().CurrencyId,
