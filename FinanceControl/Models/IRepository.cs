@@ -49,6 +49,7 @@ namespace FinanceControl.Models
 		IEnumerable<long> CreateTransaction(Transaction newTransaction);
 		IEnumerable<Transaction> GetTransactions();
 		Transaction GetTransactionById(long id);
+		void DeleteTransaction(long id);
 
 		// Seed section
 		void AddDataForNewUser();

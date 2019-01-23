@@ -21,22 +21,23 @@ namespace FinanceControl.Models
 		private SignInManager<User> signInManager;
 		private long currentUserId;
 
-
+		/*
 		#region Constructor for xUnit tests
 		/// <summary>
 		/// For xUnit tests only. It sets currentUserId=0
 		/// </summary>
 		/// <param name="ctx"></param>
-		public Repository(DbRepositoryContext ctx)
+		public Repository(DbRepositoryContext ctx, long userId=10)
 		{
 			context = ctx;
-			currentUserId = 10;
+			currentUserId = userId;
 		}
 		#endregion
+		*/
 
 		// IHttpContextAccessor, UserManager<T> and SignInManager<T> using in constructor only
 		// with purpose to set currentUserId
-		public Repository(DbRepositoryContext ctx, IHttpContextAccessor httpContAcc, 
+		public Repository(DbRepositoryContext ctx, IHttpContextAccessor httpContAcc,
 			UserManager<User> userMgr, SignInManager<User> signInMgr)
 		{
 			context = ctx;
@@ -47,7 +48,7 @@ namespace FinanceControl.Models
 			// set currentUserId value
 			string currentUserName = httpContextAccessor.HttpContext.User.Identity.Name;
 			User currentUser = userManager.Users.Where(user => user.UserName == currentUserName).FirstOrDefault();
-			if(currentUser!=null)
+			if (currentUser != null)
 			{
 				currentUserId = currentUser.UserId;
 			}
@@ -85,7 +86,7 @@ namespace FinanceControl.Models
 			Account accountById = context.Accounts
 				.Where(account => account.AccountId == id)
 				.Include(account => account.Currency)
-				.Include(account=>account.Item)
+				.Include(account => account.Item)
 				.FirstOrDefault();
 
 			accountById.Currency.Accounts = null;
@@ -100,15 +101,15 @@ namespace FinanceControl.Models
 		/// 0 - returns all active accounts. In other cases returns active accounts with appropriate currency
 		/// </param>
 		/// <returns></returns>
-		public IEnumerable<Account> GetActiveAccount(long currencyId=0)
+		public IEnumerable<Account> GetActiveAccount(long currencyId = 0)
 		{
 			IQueryable<Account> activeAccounts = context.Accounts
 				.Where(account => account.UserId == currentUserId && account.ActiveAccount == true)
 				.Include(account => account.Currency);
 
 			if (currencyId != 0)
-				activeAccounts = activeAccounts.Where(account => account.UserId ==currentUserId && account.CurrencyId == currencyId);
-			
+				activeAccounts = activeAccounts.Where(account => account.UserId == currentUserId && account.CurrencyId == currencyId);
+
 			foreach (var account in activeAccounts)
 				account.Currency.Accounts = null;
 
@@ -122,7 +123,7 @@ namespace FinanceControl.Models
 		/// 0 - returns all hidden accounts. In other cases returns hidden accounts with appropriate currency
 		/// </param>
 		/// <returns></returns>
-		public IEnumerable<Account> GetInactiveAccount(long currencyId=0)
+		public IEnumerable<Account> GetInactiveAccount(long currencyId = 0)
 		{
 			IQueryable<Account> inactiveAccounts = context.Accounts
 				.Where(account => account.UserId == currentUserId && account.ActiveAccount == false)
@@ -154,7 +155,7 @@ namespace FinanceControl.Models
 		public void UpdateAccount(Account updatedAccount)
 		{
 			Item updatedItem = context.Items.Where(item => item.ItemId == updatedAccount.ItemId).FirstOrDefault();
-			if(updatedItem!=null)
+			if (updatedItem != null)
 			{
 				updatedItem.Name = updatedAccount.AccountName;
 				updatedItem.GroupId = updatedAccount.Item.GroupId;
@@ -187,20 +188,20 @@ namespace FinanceControl.Models
 
 			if (method == "none")
 			{
-				currenciesList = context.Currencies.Where(currency=>currency.UserId==currentUserId);
+				currenciesList = context.Currencies.Where(currency => currency.UserId == currentUserId);
 			}
-			else if(method=="active" || method=="hidden")
+			else if (method == "active" || method == "hidden")
 			{
-				bool isActive=false;
+				bool isActive = false;
 				if (method == "active")
 					isActive = true;
 				else if (method == "hidden")
 					isActive = false;
 
 				IQueryable<Account> accountsCurrList = context.Accounts
-					.Where(acc => acc.UserId==currentUserId && acc.ActiveAccount == isActive)
+					.Where(acc => acc.UserId == currentUserId && acc.ActiveAccount == isActive)
 					.Include(acc => acc.Currency);
-				
+
 
 				List<string> curList = new List<string>();
 
@@ -263,7 +264,7 @@ namespace FinanceControl.Models
 
 		public void UpdateCurrency(Currency updatedCurrency)
 		{
-			if(updatedCurrency.CurrencyId!=0)
+			if (updatedCurrency.CurrencyId != 0)
 			{
 				updatedCurrency.Accounts = null;
 				context.Currencies.Update(updatedCurrency);
@@ -276,7 +277,7 @@ namespace FinanceControl.Models
 			Currency currency = context.Currencies.Where(curr => curr.CurrencyId == id)
 				.FirstOrDefault();
 
-			if(currency!=null)
+			if (currency != null)
 			{
 				context.Remove(currency);
 				context.SaveChanges();
@@ -362,7 +363,7 @@ namespace FinanceControl.Models
 		public void DeleteGroup(long id)
 		{
 			Group tempGroup = context.Groups.Where(group => group.GroupId == id).FirstOrDefault();
-			if(tempGroup!=null)
+			if (tempGroup != null)
 			{
 				context.Groups.Remove(tempGroup);
 				context.SaveChanges();
@@ -379,7 +380,7 @@ namespace FinanceControl.Models
 		public IEnumerable<Item> GetItems(GroupType type)
 		{
 			IEnumerable<Item> items;
-			if (type==GroupType.None)
+			if (type == GroupType.None)
 			{
 				items = context.Items.Where(item => item.UserId == currentUserId);
 			}
@@ -417,7 +418,7 @@ namespace FinanceControl.Models
 
 				// if backdated transactions
 				IQueryable<Transaction> transactions = context.Transactions
-					.Where(t => t.AccountId == transaction.AccountId && t.DateTime > transaction.DateTime)
+					.Where(t => t.UserId==currentUserId && t.AccountId == transaction.AccountId && t.DateTime > transaction.DateTime)
 					.OrderBy(t => t.DateTime);
 				decimal nextCurrencyAmount; // CurrencyAmount value in the foloowing transaction
 				decimal nextAccountBalance; // AccountBalance value in the foloowing transaction
@@ -448,7 +449,7 @@ namespace FinanceControl.Models
 				{
 					transaction.RateToAccCurr = 1;
 				}
-				createdTransaction=context.Transactions.Add(transaction);
+				createdTransaction = context.Transactions.Add(transaction);
 				transactionIdList.Add(createdTransaction.Entity.TransactionId);
 
 				// second record
@@ -468,20 +469,19 @@ namespace FinanceControl.Models
 				if (currency2.Code == "UAH")
 				{
 					transaction2.RateToAccCurr = 1;
-					if (currency.Code=="UAH") // 1st==UAH, 2sd==UAH
+					if (currency.Code == "UAH") // 1st==UAH, 2sd==UAH
 					{
-						transaction2.CurrencyAmount = 0-transaction.CurrencyAmount; // positive value for second record
-
+						transaction2.CurrencyAmount = 0 - transaction.CurrencyAmount; // positive value for second record
 					}
 					else // 1st!=UAH, 2sd==UAH
 					{
 						transaction2.CurrencyAmount = (0 - transaction.CurrencyAmount) * tempRateToAccCurr; // positive value for second record
 					}
 				}
-				else 
+				else
 				{
 					transaction2.RateToAccCurr = 1 / tempRateToAccCurr;
-					if (currency.Code=="UAH") // 1st=UAH, 2sd!=UAH
+					if (currency.Code == "UAH") // 1st=UAH, 2sd!=UAH
 					{
 						transaction2.CurrencyAmount = (0 - transaction.CurrencyAmount) * tempRateToAccCurr; // positive value for second record
 					}
@@ -493,7 +493,7 @@ namespace FinanceControl.Models
 
 				// if backdated transactions
 				IQueryable<Transaction> transactions2 = context.Transactions
-					.Where(t => t.AccountId == transaction2.AccountId && t.DateTime > transaction2.DateTime)
+					.Where(t => t.UserId == currentUserId && t.AccountId == transaction2.AccountId && t.DateTime > transaction2.DateTime)
 					.OrderBy(t => t.DateTime);
 				decimal nextCurrencyAmount2; // CurrencyAmount value in the foloowing transaction
 				decimal nextAccountBalance2; // AccountBalance value in the foloowing transaction
@@ -520,11 +520,11 @@ namespace FinanceControl.Models
 
 				transactionIdList.Add(context.Transactions.Add(transaction2).Entity.TransactionId);
 			}
-			else if(item.Group.Type==GroupType.Expense) // Expense
+			else if (item.Group.Type == GroupType.Expense) // Expense
 			{
 				// if backdated transactions
 				IQueryable<Transaction> transactions = context.Transactions
-					.Where(t => t.AccountId == transaction.AccountId && t.DateTime > transaction.DateTime)
+					.Where(t => t.UserId == currentUserId && t.AccountId == transaction.AccountId && t.DateTime > transaction.DateTime)
 					.OrderBy(t => t.DateTime);
 				decimal nextCurrencyAmount; // CurrencyAmount value in the foloowing transaction
 				decimal nextAccountBalance; // AccountBalance value in the foloowing transaction
@@ -556,21 +556,21 @@ namespace FinanceControl.Models
 				}
 				transactionIdList.Add(context.Transactions.Add(transaction).Entity.TransactionId);
 			}
-			else if(item.Group.Type==GroupType.Income) // Income
+			else if (item.Group.Type == GroupType.Income) // Income
 			{
 				// if backdated transactions
 				IQueryable<Transaction> transactions = context.Transactions
-					.Where(t => t.AccountId == transaction.AccountId && t.DateTime > transaction.DateTime)
+					.Where(t => t.UserId == currentUserId && t.AccountId == transaction.AccountId && t.DateTime > transaction.DateTime)
 					.OrderBy(t => t.DateTime);
-				decimal nextCurrencyAmount; // CurrencyAmount value in the foloowing transaction
-				decimal nextAccountBalance; // AccountBalance value in the foloowing transaction
-				if (transactions.Count()>0)
+				decimal nextCurrencyAmount; // CurrencyAmount value in the following transaction
+				decimal nextAccountBalance; // AccountBalance value in the following transaction
+				if (transactions.Count() > 0)
 				{
 					nextCurrencyAmount = transactions.First().CurrencyAmount;
 					nextAccountBalance = transactions.First().AccountBalance;
 					foreach (var trans in transactions)
 					{
-						
+
 						trans.AccountBalance += transaction.CurrencyAmount;
 					}
 					context.Transactions.UpdateRange(transactions);
@@ -598,22 +598,26 @@ namespace FinanceControl.Models
 			return transactionIdList;
 		}
 
-
+		/// <summary>
+		/// Get all transactions
+		/// </summary>
+		/// <returns></returns>
 		public IEnumerable<Transaction> GetTransactions()
 		{
-			IEnumerable<Transaction> transactions = context.Transactions.Where(trans => trans.UserId == currentUserId)
+			IQueryable<Transaction> transactions = context.Transactions.Where(trans => trans.UserId == currentUserId)
 				.Include(trans => trans.Account).ThenInclude(account => account.Currency)
 				.Include(trans => trans.Item).ThenInclude(item => item.Group)
 				.Include(trans => trans.Comment)
 				.OrderByDescending(trans => trans.DateTime);
-			
-			foreach(var trans in transactions)
+
+			foreach (var trans in transactions)
 			{
 				trans.Account.Currency.Accounts = null;
 			}
 
 			return transactions;
 		}
+
 
 		public Transaction GetTransactionById(long id)
 		{
@@ -625,6 +629,98 @@ namespace FinanceControl.Models
 			transaction.Account.Currency.Accounts = null;
 
 			return transaction;
+		}
+
+		/// <summary>
+		/// Delete income or expense transaction by id or set of Movement transactions by Id of one from the set
+		/// </summary>
+		/// <param name="id"></param>
+		/// <returns></returns>
+		public void DeleteTransaction(long id)
+		{
+			Transaction transaction = context.Transactions.Where(tr => tr.TransactionId == id)
+				.Include(tr=>tr.Item).ThenInclude(item=>item.Group)
+				.FirstOrDefault();
+			IQueryable<Transaction> subsequentTransaction = context.Transactions
+				.Where(tr => tr.UserId == currentUserId && tr.AccountId == transaction.AccountId && tr.DateTime > transaction.DateTime);
+
+			if(transaction!=null) // if requested transaction exists
+			{
+				if(transaction.Item.Group.Type==GroupType.Account) // Movement (to delete both transactions)
+				{
+					// Restore balances of two accounts
+					ChangeAccountBalance(transaction.AccountId, -transaction.CurrencyAmount);
+					ChangeAccountBalance(context.Accounts.Where(acc => acc.ItemId == transaction.ItemId).FirstOrDefault().AccountId, transaction.CurrencyAmount);
+
+					// seek out second (or first) transaction of set
+					DateTime datetime2;
+					if (transaction.CurrencyAmount < 0)
+					{
+						datetime2 = transaction.DateTime.AddSeconds(1); // the next transaction should had been created in 1 second later
+					}
+					else
+					{
+						datetime2 = transaction.DateTime.AddSeconds(-1); // the previous transaction should had been created in 1 second earlier
+					}
+
+					Transaction transaction2 = context.Transactions.Where(tr => tr.UserId == currentUserId && tr.DateTime == datetime2).FirstOrDefault();
+
+					if (subsequentTransaction.Count() > 0) // if non-last transaction to be deleted
+					{
+						foreach (var trans in subsequentTransaction)
+						{
+							trans.AccountBalance += -transaction.CurrencyAmount;
+						}
+						context.Transactions.UpdateRange(subsequentTransaction);
+					}
+
+					IQueryable<Transaction> subsequentTransaction2 = context.Transactions
+						.Where(tr => tr.UserId == currentUserId && tr.AccountId == transaction2.AccountId && tr.DateTime > transaction2.DateTime)
+						.OrderBy(tr => tr.DateTime);
+					if (subsequentTransaction2.Count() > 0) // if non-last transaction to be deleted
+					{
+						foreach (var trans in subsequentTransaction2)
+						{
+							trans.AccountBalance += -transaction2.CurrencyAmount;
+						}
+						context.Transactions.UpdateRange(subsequentTransaction2);
+					}
+
+
+
+					context.Transactions.RemoveRange(new Transaction[] { transaction, transaction2 });
+				}
+				else if(transaction.Item.Group.Type==GroupType.Income || transaction.Item.Group.Type == GroupType.Expense) // Income or Expense
+				{
+					ChangeAccountBalance(transaction.AccountId, -transaction.CurrencyAmount);
+
+					if (subsequentTransaction.Count() > 0) // if non-last transaction to be deleted
+					{
+						foreach (Transaction trans in subsequentTransaction)
+						{
+							trans.AccountBalance += -transaction.CurrencyAmount;
+						}
+
+						context.Transactions.UpdateRange(subsequentTransaction.ToArray());
+					}
+					context.Transactions.Remove(transaction);
+				}
+
+				context.SaveChanges();
+			}
+		}
+
+		/// <summary>
+		/// Helper method for DeleteTransaction(..) for changing account Balance state
+		/// </summary>
+		/// <param name="accountId"></param>
+		/// <param name="amount"></param>
+		/// <returns></returns>
+		private void ChangeAccountBalance(long accountId, decimal amount)
+		{
+			Account account = context.Accounts.Where(acc => acc.AccountId == accountId).FirstOrDefault();
+			account.Balance += amount;
+			context.Accounts.Update(account);
 		}
 
 		#endregion

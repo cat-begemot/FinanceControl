@@ -188,6 +188,14 @@ export class TransactionEditComponent implements OnInit {
     }
   }
 
+  // delete income or expense transaction, or movement set of transaction
+  public click_deleteTransaction(): void {
+    this.repository.deleteTransaction(this.currentTransaction.transactionId).subscribe(()=>
+    {
+      this.location.back();
+    });
+  }
+
   // Get form controls
   public get dateControl(): FormControl{
     return this.transactionForm.get("dateControl") as FormControl;

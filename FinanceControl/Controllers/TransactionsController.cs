@@ -35,5 +35,11 @@ namespace FinanceControl.Controllers
 		{
 			return repository.GetTransactionById(id);
 		}
+
+		[HttpDelete("{id}")]
+		public void DeleteTransaction([FromRoute] long id)
+		{
+			repository.DeleteTransaction(id);
+		}
 	}
 }

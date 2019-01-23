@@ -160,4 +160,8 @@ export class Repository {
   public getTransactionById(id: number): Observable<Transaction>{
     return this.http.get<Transaction>(transactionsUrl + `/${id}`);
   }
+
+  public deleteTransaction(id: number): Observable<any>{
+    return this.http.delete<any>(transactionsUrl + `/${id}`);
+  }
 }

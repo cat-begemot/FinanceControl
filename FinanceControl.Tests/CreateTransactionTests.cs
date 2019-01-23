@@ -10,13 +10,13 @@ using System.Diagnostics;
 
 namespace FinanceControl.Tests
 {
-	public class RepositoryTests
+	public class CreateTransactionTests
 	{
 		private DbRepositoryContext context;
 		private IRepository repository;
 		private DbContextOptions<DbRepositoryContext> options;
 
-		public RepositoryTests()
+		public CreateTransactionTests()
 		{
 			options = new DbContextOptionsBuilder<DbRepositoryContext>()
 				.UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
@@ -26,6 +26,8 @@ namespace FinanceControl.Tests
 			repository = new Repository(context);
 			repository.SeedDataForTesting();
 		}
+
+		#region CreateTransaction(Transaction transaction)
 
 		#region Expense section
 		/// <summary>
@@ -694,13 +696,13 @@ namespace FinanceControl.Tests
 			Assert.Equal(resultTransaction1_2.ItemId, account1Item.ItemId);
 			// Check CurrencyAmount column for both transactions
 			Assert.Equal(-200, resultTransaction1_1.CurrencyAmount);
-			Assert.Equal(200*0.2M, resultTransaction1_2.CurrencyAmount);
+			Assert.Equal(200 * 0.2M, resultTransaction1_2.CurrencyAmount);
 			// Check RateToAccCurr column for both transactions
 			Assert.Equal(1, resultTransaction1_1.RateToAccCurr);
-			Assert.Equal(1/0.2M, resultTransaction1_2.RateToAccCurr);
+			Assert.Equal(1 / 0.2M, resultTransaction1_2.RateToAccCurr);
 			// Check AccountBalance column for both transactions
 			Assert.Equal(-500, resultTransaction1_1.AccountBalance);
-			Assert.Equal(500*0.2M, resultTransaction1_2.AccountBalance);
+			Assert.Equal(500 * 0.2M, resultTransaction1_2.AccountBalance);
 
 			// Check second transaction
 			Assert.Equal(2, result2.Count());
@@ -713,17 +715,17 @@ namespace FinanceControl.Tests
 			Assert.Equal(resultTransaction2_2.ItemId, account1Item.ItemId);
 			// Check CurrencyAmount column for both transactions
 			Assert.Equal(-300, resultTransaction2_1.CurrencyAmount);
-			Assert.Equal(300*0.2M, resultTransaction2_2.CurrencyAmount);
+			Assert.Equal(300 * 0.2M, resultTransaction2_2.CurrencyAmount);
 			// Check RateToAccCurr column for both transactions
 			Assert.Equal(1, resultTransaction2_1.RateToAccCurr);
-			Assert.Equal(1/0.2M, resultTransaction2_2.RateToAccCurr);
+			Assert.Equal(1 / 0.2M, resultTransaction2_2.RateToAccCurr);
 			// Check AccountBalance column for both transactions
 			Assert.Equal(-300, resultTransaction2_1.AccountBalance);
-			Assert.Equal(300*0.2M, resultTransaction2_2.AccountBalance);
+			Assert.Equal(300 * 0.2M, resultTransaction2_2.AccountBalance);
 
 			// Check Balance column in Account
 			Assert.Equal(-500, resultAccount1.Balance);
-			Assert.Equal(500*0.2M, resultItem1Account.Balance);
+			Assert.Equal(500 * 0.2M, resultItem1Account.Balance);
 		}
 
 		/// <summary>
@@ -893,7 +895,7 @@ namespace FinanceControl.Tests
 			Assert.Equal(200 * 0.5M, resultTransaction1_2.CurrencyAmount);
 			// Check RateToAccCurr column for both transactions
 			Assert.Equal(0.5M, resultTransaction1_1.RateToAccCurr);
-			Assert.Equal(1/0.5M, resultTransaction1_2.RateToAccCurr);
+			Assert.Equal(1 / 0.5M, resultTransaction1_2.RateToAccCurr);
 			// Check AccountBalance column for both transactions
 			Assert.Equal(-500, resultTransaction1_1.AccountBalance);
 			Assert.Equal(500 * 0.5M, resultTransaction1_2.AccountBalance);
@@ -912,7 +914,7 @@ namespace FinanceControl.Tests
 			Assert.Equal(300 * 0.5M, resultTransaction2_2.CurrencyAmount);
 			// Check RateToAccCurr column for both transactions
 			Assert.Equal(0.5M, resultTransaction2_1.RateToAccCurr);
-			Assert.Equal(1/0.5M, resultTransaction2_2.RateToAccCurr);
+			Assert.Equal(1 / 0.5M, resultTransaction2_2.RateToAccCurr);
 			// Check AccountBalance column for both transactions
 			Assert.Equal(-300, resultTransaction2_1.AccountBalance);
 			Assert.Equal(300 * 0.5M, resultTransaction2_2.AccountBalance);
@@ -925,5 +927,6 @@ namespace FinanceControl.Tests
 
 		#endregion
 
+		#endregion
 	}
 }
