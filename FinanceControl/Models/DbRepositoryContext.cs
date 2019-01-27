@@ -18,7 +18,6 @@ namespace FinanceControl.Models
 		public DbSet<Currency> Currencies { get; set; }
 		public DbSet<Item> Items { get; set; }
 		public DbSet<Group> Groups { get; set; }
-		public DbSet<Kind> Kinds { get; set; }
 		public DbSet<Transaction> Transactions { get; set; }
 		public DbSet<Comment> Comments { get; set; }
 

@@ -12,7 +12,6 @@ namespace FinanceControl.Models
 		public string Name { get; set; }
 	
 		public long GroupId { get; set; } // FK
-		public long KindId { get; set; } // FK
 
 		public Group Group { get; set; } // NP
 	}

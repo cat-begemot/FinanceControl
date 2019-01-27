@@ -1,5 +1,4 @@
 import { Group } from "./group.model";
-import { Kind } from "./kind.model";
 
 export class Item{
 	constructor(
@@ -7,8 +6,6 @@ export class Item{
 		public userId?: number,
 		public name?: string,
 		public groupId?: number,
-		public kindId?: number,
 		public group?: Group,
-		public kind?: Kind
 	) { }
 }

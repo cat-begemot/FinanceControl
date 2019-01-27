@@ -166,7 +166,6 @@ export class Repository {
   }
 
   public updateTransaction(updatedTransaction: Transaction): Observable<any>{
-    console.log(JSON.stringify(updatedTransaction)); // Details about sent transaction to API of backend
     return this.http.put<any>(transactionsUrl, updatedTransaction);
   }
 
