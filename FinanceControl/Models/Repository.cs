@@ -21,7 +21,9 @@ namespace FinanceControl.Models
 		private SignInManager<User> signInManager;
 		private long currentUserId;
 
+		
 		/*
+		// Try to use if #debug to void compile this patch of code in development mode (this needs only for Unit test running)
 		#region Constructor for xUnit tests
 		/// <summary>
 		/// For xUnit tests only. It sets currentUserId=0
@@ -398,6 +400,8 @@ namespace FinanceControl.Models
 		{
 			// There is possibility to move procedures for backdate transactions in separate private submethod
 
+			transaction.TransactionId = 0;
+
 			// find Account and Item instance for transaction
 			List<long> transactionIdList = new List<long>();
 
@@ -631,6 +635,27 @@ namespace FinanceControl.Models
 			return transaction;
 		}
 
+
+		/// <summary>
+		/// So movement set consists of 2 transactions, this method return Id of first transaction of set
+		/// despite regardless of which of the Id set was transferred to the method
+		/// </summary>
+		/// <param name="id"></param>
+		/// <returns></returns>
+		public long GetFirstMovementTransaction(long id)
+		{
+			Transaction transaction = context.Transactions.Where(tr => tr.TransactionId == id)
+				.Include(tr => tr.Item).ThenInclude(it => it.Group)
+				.FirstOrDefault();
+			if (transaction.Item.Group.Type != GroupType.Account || transaction==null)
+				return 0; // transaction type isn't movement
+			if (transaction.CurrencyAmount < 0)
+				return id; // id links on first transaction of movement set
+			else
+				return context.Transactions.Where(tr => tr.UserId == currentUserId && tr.DateTime == transaction.DateTime.AddSeconds(-1))
+					.FirstOrDefault().TransactionId; // returns first transaction of movement set
+		}
+
 		/// <summary>
 		/// Delete income or expense transaction by id or set of Movement transactions by Id of one from the set
 		/// </summary>
@@ -722,6 +747,16 @@ namespace FinanceControl.Models
 			account.Balance += amount;
 			context.Accounts.Update(account);
 		}
+
+
+		public void UpdateTransaction(Transaction updatedTransaction)
+		{
+			Transaction oldTransaction = context.Transactions.Where(tr => tr.TransactionId == updatedTransaction.TransactionId)
+				.FirstOrDefault();
+			DeleteTransaction(oldTransaction.TransactionId);
+			CreateTransaction(updatedTransaction);
+		}
+
 
 		#endregion
 

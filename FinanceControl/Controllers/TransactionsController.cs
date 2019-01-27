@@ -41,5 +41,17 @@ namespace FinanceControl.Controllers
 		{
 			repository.DeleteTransaction(id);
 		}
+
+		[HttpPut]
+		public void UpdatedTransaction([FromBody] Transaction updatedTransaction)
+		{
+			repository.UpdateTransaction(updatedTransaction);
+		}
+
+		[HttpGet("getMovementFirstId/{id}")]
+		public long GetFirstMovementTransaction([FromRoute] long id)
+		{
+			return repository.GetFirstMovementTransaction(id);
+		}
 	}
 }

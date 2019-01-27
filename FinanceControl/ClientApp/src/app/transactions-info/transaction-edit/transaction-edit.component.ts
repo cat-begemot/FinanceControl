@@ -71,6 +71,7 @@ export class TransactionEditComponent implements OnInit {
       // get transaction from database and fill form
       this.repository.getTransactionById(id).subscribe(transaction=>{
         this.currentTransaction=transaction;
+        this.currentTransaction.currencyAmount=Math.abs(this.currentTransaction.currencyAmount);
         let gt: GroupType=transaction.item.group.type;  
         if(gt==GroupType.Expense)
           this.typeControl.setValue(gt);
@@ -121,20 +122,28 @@ export class TransactionEditComponent implements OnInit {
   }
 
   public onSubmit(): void{
+    this.currentTransaction.dateTime=this.dateControl.value;
+    this.currentTransaction.accountId=this.accountControl.value;
+    this.currentTransaction.itemId=this.itemControl.value;
+    this.currentTransaction.currencyAmount=this.amountControl.value;
+    this.currentTransaction.rateToAccCurr=this.rateControl.value;
+    
+    if(this.commentControl.value!=""){ // if user enter a comment
+      this.currentTransaction.comment=new Comment();
+      this.currentTransaction.comment.commentText=this.commentControl.value;
+    }
+
     if(this.editMode==false){ // create new transaction
       this.currentTransaction.transactionId=0;
-      this.currentTransaction.dateTime=this.dateControl.value;
-      this.currentTransaction.accountId=this.accountControl.value;
-      this.currentTransaction.itemId=this.itemControl.value;
-      this.currentTransaction.currencyAmount=this.amountControl.value;
-      this.currentTransaction.rateToAccCurr=this.rateControl.value;
-      
-      if(this.commentControl.value!=""){ // if user enter a comment
-        this.currentTransaction.comment=new Comment();
-        this.currentTransaction.comment.commentText=this.commentControl.value;
-      }
 
       this.repository.createTransaction(this.currentTransaction).subscribe(()=>{
+        this.location.back();
+      });
+    } else { // update transaction
+      this.currentTransaction.item=null;
+      this.currentTransaction.account=null;
+      
+      this.repository.updateTransaction(this.currentTransaction).subscribe(()=>{
         this.location.back();
       });
     }

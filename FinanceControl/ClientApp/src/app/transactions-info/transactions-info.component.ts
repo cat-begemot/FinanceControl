@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Transaction } from "../model/transaction.model";
 import { Repository } from "../model/repository";
 import { GroupType } from "../model/group.model";
+import { Route, Router } from "@angular/router";
 
 @Component({
   selector: 'app-transactions-info',
@@ -21,7 +22,8 @@ export class TransactionsInfoComponent implements OnInit {
   public itemDetailCollapsed: boolean;
 
   constructor(
-    private repository: Repository
+    private repository: Repository,
+    private routeNav: Router
   ) { }
 
   public click_closeDetails(): void{
@@ -51,6 +53,18 @@ export class TransactionsInfoComponent implements OnInit {
       this.currentTransactionDateTime=this.getCurrentDateTime(this.currentTransaction.dateTime);
     });
 
+  }
+
+  public click_editTransaction(id: number): void{
+    this.repository.getFirstMovementTransaction(id).subscribe(response=>
+      {
+        if(response!=0)
+        {
+          id=response;
+        }
+        this.routeNav.navigate(["/transactions/edit/", id]);
+      });
+    //"/transactions/edit/{{transaction.transactionId}}"
   }
 
   // It defines directiron of flowing money when it occurs movement transaction

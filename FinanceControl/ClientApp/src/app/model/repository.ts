@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Account } from './account.model';
 import { Currency } from "./currency.model";
 import { HttpClient } from "@angular/common/http";
-import { Observable } from "rxjs";
+import { Observable, of } from "rxjs";
 import { Group, GroupType } from './group.model';
 import { Item } from "./item.model";
 import { Transaction } from './transaction.model';
@@ -163,5 +163,14 @@ export class Repository {
 
   public deleteTransaction(id: number): Observable<any>{
     return this.http.delete<any>(transactionsUrl + `/${id}`);
+  }
+
+  public updateTransaction(updatedTransaction: Transaction): Observable<any>{
+    console.log(JSON.stringify(updatedTransaction)); // Details about sent transaction to API of backend
+    return this.http.put<any>(transactionsUrl, updatedTransaction);
+  }
+
+  public getFirstMovementTransaction(id: number): Observable<number>{
+    return this.http.get<number>(transactionsUrl + `/getMovementFirstId/${id}`);
   }
 }
