@@ -338,7 +338,7 @@ namespace FinanceControl.Models
 
 		public bool IsGroupNameExists(string name)
 		{
-			Group tempGroup = context.Groups.Where(group => group.UserId == currentUserId && group.Name == name).FirstOrDefault();
+			Group tempGroup = context.Groups.Where(group => group.UserId == currentUserId && group.Name.ToUpper() == name.ToUpper()).FirstOrDefault();
 			if (tempGroup != null)
 				return true;
 			return false;
@@ -381,7 +381,7 @@ namespace FinanceControl.Models
 		#region Items section
 		public IEnumerable<Item> GetItems(GroupType type)
 		{
-			IEnumerable<Item> items;
+			IQueryable<Item> items;
 			if (type == GroupType.None)
 			{
 				items = context.Items.Where(item => item.UserId == currentUserId);
@@ -392,6 +392,66 @@ namespace FinanceControl.Models
 			}
 
 			return items;
+		}
+
+		public IEnumerable<Item> GetIncomeExpenseItems()
+		{
+			IQueryable<Item> items = context.Items
+				.Where(item => item.UserId == currentUserId && (item.Group.Type == GroupType.Expense || item.Group.Type == GroupType.Income))
+				.Include(item => item.Group);
+
+			return items;
+		}
+
+		public bool IsItemNameExists(string name)
+		{
+			Item item = context.Items.Where(i => i.UserId == currentUserId && i.Name.ToUpper() == name.ToUpper()).FirstOrDefault();
+			return item != null ? true : false;
+		}
+
+
+		public void CreateItem(Item newItem)
+		{
+			if(newItem!=null)
+			{
+				newItem.ItemId = 0;
+				newItem.UserId = currentUserId;
+				context.Items.Add(newItem);
+				context.SaveChanges();
+			}
+		}
+
+		public void UpdateItem(Item updatedItem)
+		{
+			if(updatedItem!=null)
+			{
+				if(updatedItem.ItemId>0)
+				{
+					updatedItem.Group = null;
+					context.Items.Update(updatedItem);
+					context.SaveChanges();
+				}
+			}
+		}
+
+		public void DeleteItem(long id)
+		{
+			if(id>0)
+			{
+				Item delItem = context.Items.Where(item => item.ItemId == id).FirstOrDefault();
+				if(delItem!=null)
+				{
+					context.Items.Remove(delItem);
+					context.SaveChanges();
+				}
+			}
+		}
+
+		public Item GetItemById(long id)
+		{
+			return context.Items.Where(items => items.ItemId == id)
+				.Include(item=>item.Group)
+				.FirstOrDefault();
 		}
 		#endregion
 
@@ -934,15 +994,5 @@ namespace FinanceControl.Models
 			context.SaveChanges();
 		}
 		#endregion
-	}
-
-	// Temporary session table description
-	public class Sessions
-	{
-		public string Id { get; set; }
-		public IEnumerable<char> Value { get; set; }
-		public DateTime ExpiresAtTime { get; set; }
-		public long SlidingExpirationInSeconds { get; set; }
-		public DateTime AbsoluteExpiration { get; set; }
 	}
 }

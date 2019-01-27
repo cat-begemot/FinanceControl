@@ -44,6 +44,12 @@ namespace FinanceControl.Models
 
 		// Item section
 		IEnumerable<Item> GetItems(GroupType type);
+		IEnumerable<Item> GetIncomeExpenseItems();
+		bool IsItemNameExists(string name);
+		void CreateItem(Item newItem);
+		void UpdateItem(Item updatedItem);
+		void DeleteItem(long id);
+		Item GetItemById(long id);
 
 		// Transaction section
 		IEnumerable<long> CreateTransaction(Transaction newTransaction);

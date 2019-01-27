@@ -147,6 +147,29 @@ export class Repository {
     return this.http.get<Item[]>(itemsUrl + `/all/${type}`);
   }
 
+  public getIncomeExpenseItems(): Observable<Item[]>{
+    return this.http.get<Item[]>(itemsUrl + "/getIncomeExpense");
+  }
+
+  public isItemNameExists(item: Item): Observable<boolean>{
+    return this.http.post<boolean>(itemsUrl + "/isNameExists", item);
+  }
+
+  public createItem(newItem: Item): Observable<any>{
+    return this.http.post<any>(itemsUrl, newItem);
+  }
+
+  public getItemById(id: number): Observable<Item>{
+    return this.http.get<Item>(itemsUrl + `/${id}`);
+  }
+
+  public deleteItem(id: number): Observable<any>{
+    return this.http.delete<any>(itemsUrl + `/${id}`);
+  }
+
+  public updateItem(updatedItem: Item): Observable<any>{
+    return this.http.put<any>(itemsUrl, updatedItem);
+  }
 
   // TRANSACTION SECTION ===========================================================================================
   public createTransaction(transaction: Transaction): Observable<any>{

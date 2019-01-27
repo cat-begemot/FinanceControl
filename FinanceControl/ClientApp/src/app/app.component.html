@@ -20,6 +20,13 @@
 					<i class="fas fa-list-ul text-warning"></i>
 					Accounts
 				</a>
+			</li>
+			
+			<li class="nav-item active ml-2" [hidden]="!authService.authenticated" data-toggle="collapse" data-target=".navbar-collapse.show">
+				<a class="nav-link text-light" routerLink="/items">
+					<i class="far fa-list-alt text-warning"></i>
+					Items
+				</a>
       </li>
 			
 			<li class="nav-item ml-2" [hidden]="!authService.authenticated" data-toggle="collapse" data-target=".navbar-collapse.show">
