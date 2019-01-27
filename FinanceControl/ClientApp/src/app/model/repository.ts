@@ -147,6 +147,14 @@ export class Repository {
     return this.http.get<Item[]>(itemsUrl + `/all/${type}`);
   }
 
+  public getIncomeExpenseItems(): Observable<Item[]>{
+    return this.http.get<Item[]>(itemsUrl + "/getIncomeExpense");
+  }
+
+  public isItemNameExists(item: Item): Observable<boolean>{
+    return this.http.post<boolean>(itemsUrl + "/isNameExists", item);
+  }
+
 
   // TRANSACTION SECTION ===========================================================================================
   public createTransaction(transaction: Transaction): Observable<any>{

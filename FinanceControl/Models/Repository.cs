@@ -338,7 +338,7 @@ namespace FinanceControl.Models
 
 		public bool IsGroupNameExists(string name)
 		{
-			Group tempGroup = context.Groups.Where(group => group.UserId == currentUserId && group.Name == name).FirstOrDefault();
+			Group tempGroup = context.Groups.Where(group => group.UserId == currentUserId && group.Name.ToUpper() == name.ToUpper()).FirstOrDefault();
 			if (tempGroup != null)
 				return true;
 			return false;
@@ -381,7 +381,7 @@ namespace FinanceControl.Models
 		#region Items section
 		public IEnumerable<Item> GetItems(GroupType type)
 		{
-			IEnumerable<Item> items;
+			IQueryable<Item> items;
 			if (type == GroupType.None)
 			{
 				items = context.Items.Where(item => item.UserId == currentUserId);
@@ -393,6 +393,22 @@ namespace FinanceControl.Models
 
 			return items;
 		}
+
+		public IEnumerable<Item> GetIncomeExpenseItems()
+		{
+			IQueryable<Item> items = context.Items
+				.Where(item => item.UserId == currentUserId && (item.Group.Type == GroupType.Expense || item.Group.Type == GroupType.Income))
+				.Include(item => item.Group);
+
+			return items;
+		}
+
+		public bool IsItemNameExists(string name)
+		{
+			Item item = context.Items.Where(i => i.UserId == currentUserId && i.Name.ToUpper() == name.ToUpper()).FirstOrDefault();
+			return item != null ? true : false;
+		}
+
 		#endregion
 
 		#region Transactions section

@@ -1,3 +1,28 @@
-<p>
-  items-info works!
-</p>
+<div class="m-1">
+	<div class="row border-bottom mb-3 py-1" style="vertical-align: middle">
+		<div class="col-7" style="transform: translateY(-3px);">
+			<span class="font-weight-bold" style="font-size: 18pt;">Items</span>	
+		</div>
+		<div class="col text-right">
+			<button class="btn btn-sm btn-dark text-light" routerLink="/items/add">
+				<i class="fas fa-plus-circle mr-1"></i>
+				New
+			</button>
+		</div>
+	</div>
+
+	<table class="table table-sm table-bordered table-hover">
+			<tr class="bg-dark text-light" style="line-height: 25px">
+        <th colspan="2">Name</th>
+        <th>Group</th>
+      </tr>
+			<tr *ngFor="let item of items" style="line-height: 20px">
+        <td class="text-center" style="max-width: 25px">
+					<i *ngIf="item?.group?.type==1" class="fas fa-minus text-danger"></i>
+					<i *ngIf="item?.group?.type==2" class="fas fa-plus text-success"></i>
+				</td>
+        <td>{{item.name}}</td>
+				<td>{{item?.group.name}}</td>
+			</tr>
+		</table>
+	</div>

@@ -23,5 +23,17 @@ namespace FinanceControl.Controllers
 		{
 			return repository.GetItems(type);
 		}
+
+		[HttpGet("getIncomeExpense")]
+		public IEnumerable<Item> GetIncomeExpenseItems()
+		{
+			return repository.GetIncomeExpenseItems();
+		}
+
+		[HttpPost("isNameExists")]
+		public bool IsItemNameExists([FromBody] Item item)
+		{
+			return repository.IsItemNameExists(item.Name);
+		}
 	}
 }
