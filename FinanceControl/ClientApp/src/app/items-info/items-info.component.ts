@@ -23,7 +23,7 @@ export class ItemsInfoComponent implements OnInit {
     });
   }
 
-  public dblclick_item(id: number): void{
+  public click_item(id: number): void{
     this.router.navigate(["/items/edit/", id]);
   }
 

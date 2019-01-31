@@ -16,8 +16,8 @@
         <th colspan="2">Name</th>
         <th>Group</th>
       </tr>
-			<tr *ngFor="let item of items" style="line-height: 20px" (dblclick)="dblclick_item(item.itemId)">
-        <td class="text-center" style="max-width: 25px">
+			<tr *ngFor="let item of items" style="line-height: 20px">
+        <td class="text-center" style="max-width: 25px" (click)="click_item(item.itemId)">
 					<i *ngIf="item?.group?.type==1" class="fas fa-minus text-danger"></i>
 					<i *ngIf="item?.group?.type==2" class="fas fa-plus text-success"></i>
 				</td>
