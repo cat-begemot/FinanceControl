@@ -1,4 +1,6 @@
-﻿using System;
+﻿//#define UnitTest
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -21,9 +23,8 @@ namespace FinanceControl.Models
 		private SignInManager<User> signInManager;
 		private long currentUserId;
 
-		
-		/*
-		// Try to use if #debug to void compile this patch of code in development mode (this needs only for Unit test running)
+
+#if UnitTest
 		#region Constructor for xUnit tests
 		/// <summary>
 		/// For xUnit tests only. It sets currentUserId=0
@@ -34,8 +35,8 @@ namespace FinanceControl.Models
 			context = ctx;
 			currentUserId = userId;
 		}
-		#endregion
-		*/
+#endregion
+#endif   
 
 		// IHttpContextAccessor, UserManager<T> and SignInManager<T> using in constructor only
 		// with purpose to set currentUserId
@@ -56,7 +57,7 @@ namespace FinanceControl.Models
 			}
 		}
 
-		#region Accounts
+#region Accounts
 		/// <summary>
 		/// Create account
 		/// </summary>
@@ -170,9 +171,9 @@ namespace FinanceControl.Models
 
 			context.SaveChanges();
 		}
-		#endregion
+#endregion
 
-		#region Currencies
+#region Currencies
 
 		// Get only currencies which is being in defined type of account
 		/// <summary>
@@ -285,9 +286,9 @@ namespace FinanceControl.Models
 				context.SaveChanges();
 			}
 		}
-		#endregion // Currency section
+#endregion // Currency section
 
-		#region Session section
+#region Session section
 		public Account GetSessionAccount()
 		{
 			string value = httpContextAccessor.HttpContext.Session.GetString("currentAccount");
@@ -326,9 +327,9 @@ namespace FinanceControl.Models
 		{
 			return httpContextAccessor.HttpContext.User.Identity.IsAuthenticated;
 		}
-		#endregion // Session section
+#endregion // Session section
 
-		#region Group section
+#region Group section
 		public void CreateGroup(Group newGroup)
 		{
 			newGroup.UserId = currentUserId;
@@ -376,9 +377,9 @@ namespace FinanceControl.Models
 		{
 			return context.Groups.Where(group => group.GroupId == id).FirstOrDefault();
 		}
-		#endregion
+#endregion
 
-		#region Items section
+#region Items section
 		public IEnumerable<Item> GetItems(GroupType type)
 		{
 			IQueryable<Item> items;
@@ -453,9 +454,9 @@ namespace FinanceControl.Models
 				.Include(item=>item.Group)
 				.FirstOrDefault();
 		}
-		#endregion
+#endregion
 
-		#region Transactions section
+#region Transactions section
 		public IEnumerable<long> CreateTransaction(Transaction transaction)
 		{
 			// There is possibility to move procedures for backdate transactions in separate private submethod
@@ -733,10 +734,7 @@ namespace FinanceControl.Models
 			{
 				if(transaction.Item.Group.Type==GroupType.Account) // Movement (to delete both transactions)
 				{
-					// Restore balances of two accounts
-					ChangeAccountBalance(transaction.AccountId, -transaction.CurrencyAmount);
-					ChangeAccountBalance(context.Accounts.Where(acc => acc.ItemId == transaction.ItemId).FirstOrDefault().AccountId, transaction.CurrencyAmount);
-
+					
 					// seek out second (or first) transaction of set
 					DateTime datetime2;
 					if (transaction.CurrencyAmount < 0)
@@ -745,10 +743,13 @@ namespace FinanceControl.Models
 					}
 					else
 					{
-						datetime2 = transaction.DateTime.AddSeconds(-1); // the previous transaction should had been created in 1 second earlier
+						datetime2 = transaction.DateTime.AddSeconds(-1); // the previous transaction should had been created in 1 second earlier						
 					}
 
 					Transaction transaction2 = context.Transactions.Where(tr => tr.UserId == currentUserId && tr.DateTime == datetime2).FirstOrDefault();
+					// Restore appropriate accounts
+					ChangeAccountBalance(transaction.AccountId, -transaction.CurrencyAmount);
+					ChangeAccountBalance(context.Accounts.Where(acc => acc.ItemId == transaction.ItemId).FirstOrDefault().AccountId, -transaction2.CurrencyAmount);
 
 					if (subsequentTransaction.Count() > 0) // if non-last transaction to be deleted
 					{
@@ -756,6 +757,7 @@ namespace FinanceControl.Models
 						{
 							trans.AccountBalance += -transaction.CurrencyAmount;
 						}
+
 						context.Transactions.UpdateRange(subsequentTransaction);
 					}
 
@@ -770,8 +772,6 @@ namespace FinanceControl.Models
 						}
 						context.Transactions.UpdateRange(subsequentTransaction2);
 					}
-
-
 
 					context.Transactions.RemoveRange(new Transaction[] { transaction, transaction2 });
 				}
@@ -818,9 +818,9 @@ namespace FinanceControl.Models
 		}
 
 
-		#endregion
+#endregion
 
-		#region Seed section
+#region Seed section
 		// Seed database for new user convenience TODO: (static??)
 		public void AddDataForNewUser()
 		{
@@ -993,6 +993,6 @@ namespace FinanceControl.Models
 			context.Items.AddRange(items);
 			context.SaveChanges();
 		}
-		#endregion
+#endregion
 	}
 }

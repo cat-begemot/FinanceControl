@@ -23,15 +23,15 @@ export class SignupComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.authService.isSeedData=true;
     this.signUpForm=new FormGroup({
       loginControl: new FormControl('', Validators.required),
       passwordControl: new FormControl('', Validators.required),
       passwordConfirmationControl: new FormControl('', Validators.required),
-      isSeedDataControl: new FormControl('')
+      isSeedDataControl: new FormControl(this.authService.isSeedData)
     });
     this.errorLogin=false;
     this.errorPasswordConfirmation=false;
-    this.authService.isSeedData=true;
   }
 
   public isInvalid(control: AbstractControl): boolean{

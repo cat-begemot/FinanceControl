@@ -176,10 +176,10 @@ namespace FinanceControl.Tests
 		}
 
 		/// <summary>
-		/// Add movement transaction and then delete it (pass first Id) and check the result
+		/// Add movement transaction and then delete it (pass first Id) and check the result (for UAHxUAH)
 		/// </summary>
 		[Fact]
-		public void CanDeleteLastMovementTransactionFirstId()
+		public void CanDeleteLastMovementTransactionFirstIdUAHxUAH()
 		{
 			// Arrange
 			Account account1 = context.Accounts.Where(acc => acc.AccountName == "Safe [UAH]").FirstOrDefault();
@@ -195,7 +195,7 @@ namespace FinanceControl.Tests
 
 			// Act
 			IEnumerable<long> result1 = repository.CreateTransaction(transaction1);
-			repository.DeleteTransaction(result1.FirstOrDefault()); // Passed first transactionId from mpvement set #1
+			repository.DeleteTransaction(result1.FirstOrDefault()); // Passed first transactionId from movement set #1
 
 			Account resultAccount1 = context.Accounts.Where(acc => acc.AccountName == "Safe [UAH]").FirstOrDefault();
 			Account resultAccount2 = context.Accounts.Where(acc => acc.ItemId == item1.ItemId).FirstOrDefault();
@@ -209,10 +209,10 @@ namespace FinanceControl.Tests
 		}
 
 		/// <summary>
-		/// Add movement transaction and then delete it (pass second Id) and check the result
+		/// Add movement transaction and then delete it (pass second Id) and check the result (for UAHxUAH)
 		/// </summary>
 		[Fact]
-		public void CanDeleteLastMovementTransactionSecondId()
+		public void CanDeleteLastMovementTransactionSecondIdUAHxUAH()
 		{
 			// Arrange
 			Account account1 = context.Accounts.Where(acc => acc.AccountName == "Safe [UAH]").FirstOrDefault();
@@ -228,7 +228,7 @@ namespace FinanceControl.Tests
 
 			// Act
 			IEnumerable<long> result1 = repository.CreateTransaction(transaction1);
-			repository.DeleteTransaction(result1.LastOrDefault()); // Passed second transactionId from mpvement set #1
+			repository.DeleteTransaction(result1.LastOrDefault()); // Passed second transactionId from movement set #1
 
 			Account resultAccount1 = context.Accounts.Where(acc => acc.AccountName == "Safe [UAH]").FirstOrDefault();
 			Account resultAccount2 = context.Accounts.Where(acc => acc.ItemId == item1.ItemId).FirstOrDefault();
@@ -240,6 +240,205 @@ namespace FinanceControl.Tests
 			Assert.Equal(0, resultAccount1.Balance);
 			Assert.Equal(0, resultAccount2.Balance);
 		}
+
+		/// <summary>
+		/// Add movement transaction and then delete it (pass first Id) and check the result (for USDxUAH)
+		/// </summary>
+		[Fact]
+		public void CanDeleteLastMovementTransactionFirstIdUSDxUAH()
+		{
+			// Arrange
+			Account account1 = context.Accounts.Where(acc => acc.AccountName == "Safe [USD]").FirstOrDefault();
+			Item item1 = context.Items.Where(it => it.Name == "Wallet [UAH]").FirstOrDefault();
+			Transaction transaction1 = new Transaction()
+			{
+				DateTime = new DateTime(2019, 01, 22, 12, 00, 00),
+				AccountId = account1.AccountId,
+				ItemId = item1.ItemId,
+				CurrencyAmount = 200,
+				RateToAccCurr = 20
+			};
+
+			// Act
+			IEnumerable<long> result1 = repository.CreateTransaction(transaction1);
+			repository.DeleteTransaction(result1.FirstOrDefault()); // Passed first transactionId from movement set #1
+
+			Account resultAccount1 = context.Accounts.Where(acc => acc.AccountName == "Safe [USD]").FirstOrDefault();
+			Account resultAccount2 = context.Accounts.Where(acc => acc.ItemId == item1.ItemId).FirstOrDefault();
+
+			// Assert
+			// there isn't any transaction
+			Assert.Equal(0, context.Transactions.Count());
+			// check account balance state before and after deleting transaction
+			Assert.Equal(0, resultAccount1.Balance);
+			Assert.Equal(0, resultAccount2.Balance);
+		}
+
+		/// <summary>
+		/// Add movement transaction and then delete it (pass second Id) and check the result (for USDxUAH)
+		/// </summary>
+		[Fact]
+		public void CanDeleteLastMovementTransactionSecondIdUSDxUAH()
+		{
+			// Arrange
+			Account account1 = context.Accounts.Where(acc => acc.AccountName == "Safe [USD]").FirstOrDefault();
+			Item item1 = context.Items.Where(it => it.Name == "Wallet [UAH]").FirstOrDefault();
+			Transaction transaction1 = new Transaction()
+			{
+				DateTime = new DateTime(2019, 01, 22, 12, 00, 00),
+				AccountId = account1.AccountId,
+				ItemId = item1.ItemId,
+				CurrencyAmount = 200,
+				RateToAccCurr = 20
+			};
+
+			// Act
+			IEnumerable<long> result1 = repository.CreateTransaction(transaction1);
+			repository.DeleteTransaction(result1.LastOrDefault()); // Passed second transactionId from movement set #1
+
+			Account resultAccount1 = context.Accounts.Where(acc => acc.AccountName == "Safe [USD]").FirstOrDefault();
+			Account resultAccount2 = context.Accounts.Where(acc => acc.ItemId == item1.ItemId).FirstOrDefault();
+
+			// Assert
+			// there isn't any transaction
+			Assert.Equal(0, context.Transactions.Count());
+			// check account balance state before and after deleting transaction
+			Assert.Equal(0, resultAccount1.Balance);
+			Assert.Equal(0, resultAccount2.Balance);
+		}
+
+		/// <summary>
+		/// Add movement transaction and then delete it (pass first Id) and check the result (for UAHxUSD)
+		/// </summary>
+		[Fact]
+		public void CanDeleteLastMovementTransactionFirstIdUAHxUSD()
+		{
+			// Arrange
+			Account account1 = context.Accounts.Where(acc => acc.AccountName == "Wallet [UAH]").FirstOrDefault();
+			Item item1 = context.Items.Where(it => it.Name == "Safe [USD]").FirstOrDefault();
+			Transaction transaction1 = new Transaction()
+			{
+				DateTime = new DateTime(2019, 01, 22, 12, 00, 00),
+				AccountId = account1.AccountId,
+				ItemId = item1.ItemId,
+				CurrencyAmount = 200,
+				RateToAccCurr = 0.05M
+			};
+
+			// Act
+			IEnumerable<long> result1 = repository.CreateTransaction(transaction1);
+			repository.DeleteTransaction(result1.FirstOrDefault()); // Passed first transactionId from movement set #1
+
+			Account resultAccount1 = context.Accounts.Where(acc => acc.AccountName == "Wallet [UAH]").FirstOrDefault();
+			Account resultAccount2 = context.Accounts.Where(acc => acc.ItemId == item1.ItemId).FirstOrDefault();
+
+			// Assert
+			// there isn't any transaction
+			Assert.Equal(0, context.Transactions.Count());
+			// check account balance state before and after deleting transaction
+			Assert.Equal(0, resultAccount1.Balance);
+			Assert.Equal(0, resultAccount2.Balance);
+		}
+
+		/// <summary>
+		/// Add movement transaction and then delete it (pass second Id) and check the result (for UAHxUSD)
+		/// </summary>
+		[Fact]
+		public void CanDeleteLastMovementTransactionSecondIdUAHxUSD()
+		{
+			// Arrange
+			Account account1 = context.Accounts.Where(acc => acc.AccountName == "Wallet [UAH]").FirstOrDefault();
+			Item item1 = context.Items.Where(it => it.Name == "Safe [USD]").FirstOrDefault();
+			Transaction transaction1 = new Transaction()
+			{
+				DateTime = new DateTime(2019, 01, 22, 12, 00, 00),
+				AccountId = account1.AccountId,
+				ItemId = item1.ItemId,
+				CurrencyAmount = 200,
+				RateToAccCurr = 0.05M
+			};
+
+			// Act
+			IEnumerable<long> result1 = repository.CreateTransaction(transaction1);
+			repository.DeleteTransaction(result1.LastOrDefault()); // Passed second transactionId from movement set #1
+
+			Account resultAccount1 = context.Accounts.Where(acc => acc.AccountName == "Wallet [UAH]").FirstOrDefault();
+			Account resultAccount2 = context.Accounts.Where(acc => acc.ItemId == item1.ItemId).FirstOrDefault();
+
+			// Assert
+			// there isn't any transaction
+			Assert.Equal(0, context.Transactions.Count());
+			// check account balance state before and after deleting transaction
+			Assert.Equal(0, resultAccount1.Balance);
+			Assert.Equal(0, resultAccount2.Balance);
+		}
+
+		/// <summary>
+		/// Add movement transaction and then delete it (pass first Id) and check the result (for EURxUSD)
+		/// </summary>
+		[Fact]
+		public void CanDeleteLastMovementTransactionFirstIdEURxUSD()
+		{
+			// Arrange
+			Account account1 = context.Accounts.Where(acc => acc.AccountName == "Safe [EUR]").FirstOrDefault();
+			Item item1 = context.Items.Where(it => it.Name == "Safe [USD]").FirstOrDefault();
+			Transaction transaction1 = new Transaction()
+			{
+				DateTime = new DateTime(2019, 01, 22, 12, 00, 00),
+				AccountId = account1.AccountId,
+				ItemId = item1.ItemId,
+				CurrencyAmount = 200,
+				RateToAccCurr = 2
+			};
+
+			// Act
+			IEnumerable<long> result1 = repository.CreateTransaction(transaction1);
+			repository.DeleteTransaction(result1.FirstOrDefault()); // Passed first transactionId from movement set #1
+
+			Account resultAccount1 = context.Accounts.Where(acc => acc.AccountName == "Safe [EUR]").FirstOrDefault();
+			Account resultAccount2 = context.Accounts.Where(acc => acc.ItemId == item1.ItemId).FirstOrDefault();
+
+			// Assert
+			// there isn't any transaction
+			Assert.Equal(0, context.Transactions.Count());
+			// check account balance state before and after deleting transaction
+			Assert.Equal(0, resultAccount1.Balance);
+			Assert.Equal(0, resultAccount2.Balance);
+		}
+
+		/// <summary>
+		/// Add movement transaction and then delete it (pass second Id) and check the result (for EURxUSD)
+		/// </summary>
+		[Fact]
+		public void CanDeleteLastMovementTransactionSecondIdEURxUSD()
+		{
+			// Arrange
+			Account account1 = context.Accounts.Where(acc => acc.AccountName == "Safe [EUR]").FirstOrDefault();
+			Item item1 = context.Items.Where(it => it.Name == "Safe [USD]").FirstOrDefault();
+			Transaction transaction1 = new Transaction()
+			{
+				DateTime = new DateTime(2019, 01, 22, 12, 00, 00),
+				AccountId = account1.AccountId,
+				ItemId = item1.ItemId,
+				CurrencyAmount = 200,
+				RateToAccCurr = 2
+			};
+
+			// Act
+			IEnumerable<long> result1 = repository.CreateTransaction(transaction1);
+			repository.DeleteTransaction(result1.LastOrDefault()); // Passed second transactionId from movement set #1
+
+			Account resultAccount1 = context.Accounts.Where(acc => acc.AccountName == "Safe [EUR]").FirstOrDefault();
+			Account resultAccount2 = context.Accounts.Where(acc => acc.ItemId == item1.ItemId).FirstOrDefault();
+
+			// Assert
+			// there isn't any transaction
+			Assert.Equal(0, context.Transactions.Count());
+			// check account balance state before and after deleting transaction
+			Assert.Equal(0, resultAccount1.Balance);
+			Assert.Equal(0, resultAccount2.Balance);
+		}
+
 
 		/// <summary>
 		/// Add movement transaction #1, add backdated transaction #2 and then delete #2 (passed first Id) and check the result

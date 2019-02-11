@@ -38,10 +38,10 @@
         </div>
     </div>
     
-    <div class="custom-control custom-checkbox mb-2">
-      <input type="checkbox" class="custom-control-input" id="isSeedDataControl" formControlName="isSeedDataControl" [attr.checked]="authService.isSeedData ? 'checked' : null"
-        (click)="change_isSeedDataControl()" />
-      <label class="custom-control-label" for="isSeedDataControl"> Seed the database with sample data</label>
+    <div class="custom-control custom-switch mb-2">
+      <input type="checkbox" class="custom-control-input" id="isSeedDataControl" formControlName="isSeedDataControl" 
+        (click)="change_isSeedDataControl()" [attr.checked]="authService.isSeedData ? 'checked' : null" />
+      <label class="custom-control-label" for="isSeedDataControl"> Fill the database with initial data (recommended)</label>
     </div>
 
     <button type="submit" class="btn btn-dark text-light" [disabled]="signUpForm.invalid || errorLogin || errorPasswordConfirmation">
