@@ -1,3 +1,4 @@
+
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark p-1">
 	<a class="navbar-brand p-0" style="transform: translateY(-3px)">
 		<i class="far fa-hand-point-right text-light fa-lg" style="transform: translateY(-2px)"></i>	
@@ -7,10 +8,10 @@
 	<button class="navbar-toggler p-1" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" 
 		aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"
 		style="transform: translateY(-2px)">
-    	<span class="navbar-toggler-icon"></span>
-  </button>
+			<span class="navbar-toggler-icon"></span>
+	</button>
 
-  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+	<div class="collapse navbar-collapse" id="navbarSupportedContent">
 		<hr class="border-secondary m-0 p-0 mt-2" />
 
 		<ul class="navbar-nav mr-auto mt-2" style="transform: translateY(-3px)">
@@ -27,7 +28,7 @@
 					<i class="far fa-list-alt text-warning"></i>
 					Items
 				</a>
-      </li>
+			</li>
 			
 			<li class="nav-item ml-2" [hidden]="!authService.authenticated" data-toggle="collapse" data-target=".navbar-collapse.show">
 				<a class="nav-link text-light" routerLink="/currencies">
@@ -89,7 +90,9 @@
 				</a>
 		</li>
 		</ul>
-  </div>
+	</div>
 </nav>
 
-<router-outlet></router-outlet>
+	<div class="container-fluid p-0 screen-width">
+	<router-outlet></router-outlet>
+</div>
