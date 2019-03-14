@@ -1,9 +1,9 @@
-<div class="m-1">
-	<div class="row border-bottom mb-3 py-1">
-		<div class="col-7">
-			<h4>Accounts</h4>
+<div class="container-fluid m-1">
+	<div class="row border-bottom mb-3">
+		<div class="col-7 p-0">
+				<span class="font-weight-bold" style="font-size: 18pt;">Accounts</span>
 		</div>
-		<div class="col text-right">
+		<div class="col text-right p-0">
 			<button class="btn btn-sm btn-dark text-light" routerLink="/accounts/add">
 				<i class="fas fa-plus-circle mr-1"></i>
 				New
@@ -11,47 +11,48 @@
 		</div>
 	</div>
 
-	<table style="line-height: 20px">
-		<tr>
-			<td style="width: 20px">
-				<div class="custom-control custom-switch mb-1">
-					<input type="checkbox" class="custom-control-input" id="accountsType" [attr.checked]="appStatus.activeAccountsMode ? 'checked' : null"
-						(click)="change_accountsType()"/>
-					<label class="custom-control-label totalActive" for="accountsType"></label>
-				</div>
-			</td>
-			<td style="transform: translateY(-3px)">
-				{{accountsStatusInfo?.infoString}}
-			</td>
-		</tr>
-		<tr *ngIf="!appStatus.activeAccountsMode">
-			<td colspan="2" style="font-size: 0.9rem; transform: translateY(-3px); color: rgb(130,0,0)">
-				(these ones do not take part in the accounting)
-			</td>
-		</tr>
-	</table>
+	<div class="row">
+		<table style="line-height: 20px">
+			<tr>
+				<td style="width: 20px">
+					<div class="custom-control custom-switch mb-1">
+						<input type="checkbox" class="custom-control-input" id="accountsType" [attr.checked]="appStatus.activeAccountsMode ? 'checked' : null"
+							(click)="change_accountsType()"/>
+						<label class="custom-control-label totalActive" for="accountsType"></label>
+					</div>
+				</td>
+				<td style="transform: translateY(-3px)">
+					{{accountsStatusInfo?.infoString}}
+				</td>
+			</tr>
+			<tr *ngIf="!appStatus.activeAccountsMode">
+				<td colspan="2" style="font-size: 0.9rem; transform: translateY(-3px); color: rgb(130,0,0)">
+					(these ones do not take part in the accounting)
+				</td>
+			</tr>
+		</table>
 
-	<table class="table table-sm table-bordered">
-		<tr class="bg-dark text-light">
-			<th class="align-middle" style="font-size: 1.1em; font-weight: 600;">Account name</th>
-			<th class="text-right align-middle" style="font-size: 1.1em; font-weight: 600;">Balance</th>
-			<th style="width: 70px; font-weight: 600;">
-				<select class="custom-select custom-select-sm font-weight-bold" [formControl]="selectCurrency"
-					style="height: 30px; transform: translateY(0px); font-size: 10pt; width: 80px;" (change)="change_SelectCurrency()">
-						<option value="ALL">ALL</option>
-						<option *ngFor="let currency of currencies" [value]="currency.currencyId">{{currency.code}}</option>
-				</select>
-			</th>
-		</tr>
-		
-		<tr *ngFor="let account of accounts">
-			<td>
-					<a routerLink="/accounts/edit/{{account.accountId}}"
-					class="text-dark">{{account.accountName}}</a>
-			</td>
-			<td class="text-right">{{account.balance | number:'1.2-2'}}</td>
-			<td class="text-left" style="transform: translateX(3px)">{{account.currency.code}}</td>
-		</tr>
-	</table>
-
+		<table class="table table-sm table-bordered">
+			<tr class="bg-dark text-light">
+				<th class="align-middle" style="font-size: 1.1em; font-weight: 600;">Account name</th>
+				<th class="text-right align-middle" style="font-size: 1.1em; font-weight: 600;">Balance</th>
+				<th style="width: 70px; font-weight: 600;">
+					<select class="custom-select custom-select-sm font-weight-bold" [formControl]="selectCurrency"
+						style="height: 30px; transform: translateY(0px); font-size: 10pt; width: 80px;" (change)="change_SelectCurrency()">
+							<option value="ALL">ALL</option>
+							<option *ngFor="let currency of currencies" [value]="currency.currencyId">{{currency.code}}</option>
+					</select>
+				</th>
+			</tr>
+			
+			<tr *ngFor="let account of accounts">
+				<td>
+						<a routerLink="/accounts/edit/{{account.accountId}}"
+						class="text-dark">{{account.accountName}}</a>
+				</td>
+				<td class="text-right">{{account.balance | number:'1.2-2'}}</td>
+				<td class="text-left" style="transform: translateX(3px)">{{account.currency.code}}</td>
+			</tr>
+		</table>
+	</div>
 </div>

@@ -1,5 +1,4 @@
-
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark p-1">
+<nav class="navbar navbar-expand-md navbar-dark bg-dark p-1 border-bottom border-secondary">
 	<a class="navbar-brand p-0" style="transform: translateY(-3px)">
 		<i class="far fa-hand-point-right text-light fa-lg" style="transform: translateY(-2px)"></i>	
 		<span class="text-light ml-3" style="font-size: 30px">Finances</span>
@@ -14,7 +13,7 @@
 	<div class="collapse navbar-collapse" id="navbarSupportedContent">
 		<hr class="border-secondary m-0 p-0 mt-2" />
 
-		<ul class="navbar-nav mr-auto mt-2" style="transform: translateY(-3px)">
+		<ul class="navbar-nav mr-auto mt-2 hide-top-menu" style="transform: translateY(-3px)">
 			
 			<li class="nav-item active ml-2" [hidden]="!authService.authenticated" data-toggle="collapse" data-target=".navbar-collapse.show">
 				<a class="nav-link text-light" routerLink="/accounts">
@@ -88,11 +87,101 @@
 					<i class="fas fa-sign-in-alt text-warning"></i>
 					Log in
 				</a>
-		</li>
+			</li>
 		</ul>
 	</div>
 </nav>
 
-	<div class="container-fluid p-0 screen-width">
-	<router-outlet></router-outlet>
+<div class="container-fluid m-0 p-0">
+	<div class="row">
+		<div class="col hide-left-menu" style="max-width: 230px">
+				<nav class="navbar navbar-dark bg-dark">
+					<ul class="navbar-nav mr-auto mt-2">
+						
+						<li class="nav-item active ml-2" [hidden]="!authService.authenticated" data-toggle="collapse" data-target=".navbar-collapse.show">
+							<a class="nav-link text-light" routerLink="/accounts">
+								<i class="fas fa-list-ul text-warning"></i>
+								Accounts
+							</a>
+						</li>
+						
+						<li class="nav-item active ml-2" [hidden]="!authService.authenticated" data-toggle="collapse" data-target=".navbar-collapse.show">
+							<a class="nav-link text-light" routerLink="/items">
+								<i class="far fa-list-alt text-warning"></i>
+								Items
+							</a>
+						</li>
+						
+						<li class="nav-item ml-2" [hidden]="!authService.authenticated" data-toggle="collapse" data-target=".navbar-collapse.show">
+							<a class="nav-link text-light" routerLink="/currencies">
+								<i class="far fa-credit-card text-warning"></i>
+								Currencies
+							</a>
+						</li>
+			
+						<li class="nav-item ml-2" [hidden]="!authService.authenticated" data-toggle="collapse" data-target=".navbar-collapse.show">
+							<a class="nav-link text-light" routerLink="/groups">
+								<i class="fas fa-layer-group text-warning"></i>
+								Groups
+							</a>
+						</li>
+			
+						<li class="nav-item ml-2" [hidden]="!authService.authenticated" data-toggle="collapse" data-target=".navbar-collapse.show">
+							<a class="nav-link text-light" routerLink="/transactions">
+								<i class="fas fa-cash-register text-warning"></i>
+								Transactions
+							</a>
+						</li>
+						
+						<hr *ngIf="authService.authenticated" class="border-secondary m-0" />
+			
+						<li class="nav-item ml-2" data-toggle="collapse" data-target=".navbar-collapse.show">
+								<a class="nav-link text-light">
+									<i class="fas fa-info-circle text-light"></i>
+									What's new?
+								</a>
+						</li>
+						
+						<li class="nav-item ml-2" data-toggle="collapse" data-target=".navbar-collapse.show">
+							<a class="nav-link text-light">
+								<i class="far fa-question-circle text-light"></i>
+								Help
+							</a>
+						</li>
+						
+						<li class="nav-item ml-2" [hidden]="!authService.authenticated" data-toggle="collapse" data-target=".navbar-collapse.show">
+							<a class="nav-link text-light">
+								<i class="fas fa-cogs text-light"></i>
+								Profile settings
+							</a>
+						</li>
+						
+						<hr class="border-secondary m-0" />
+						
+						<li class="ml-2" [hidden]="!authService.authenticated" (click)="click_Logout()" data-toggle="collapse" data-target=".navbar-collapse.show">
+								<a class="nav-link text-light" routerLink="/login">
+									<i class="fas fa-sign-out-alt text-danger"></i>
+									Log out
+								</a>
+						</li>
+						
+						<li class="ml-2" [hidden]="authService.authenticated">
+							<a class="nav-link text-light" routerLink="/login">
+								<i class="fas fa-sign-in-alt text-warning"></i>
+								Log in
+							</a>
+						</li>
+					</ul>
+				</nav>
+		</div>
+		<div class="col mt-2 screen-width" style="padding-right: 22px">
+			<router-outlet></router-outlet>
+		</div>
+	</div>
 </div>
+
+
+
+
+
+

@@ -2,15 +2,24 @@ i{
 	width: 22px;
 }
 
-@media(min-width: 576px) /* For mobiles */
+@media(min-width: 576px) /* “If [device width] is greater than or equal to 576px, then do {…}”*/
 {
 	.screen-width{
-		width: 100%;
+		max-width: 768px;
 	}
 }
 @media(min-width: 768px) /* For wide screens */
 {
 	.screen-width{
-		width: 700px;
+		max-width: 768px;
+	}
+	.hide-top-menu{
+		display: none;
+	}
+}
+@media(max-width: 768px)
+{
+	.hide-left-menu{
+		display: none;
 	}
 }
