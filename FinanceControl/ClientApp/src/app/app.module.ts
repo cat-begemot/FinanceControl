@@ -19,6 +19,7 @@ import { GroupEditorComponent } from './items-info/groups-info/group-editor/grou
 import { TransactionsInfoComponent } from './transactions-info/transactions-info.component';
 import { TransactionEditComponent } from './transactions-info/transaction-edit/transaction-edit.component';
 import { NewsComponent } from './news/news.component';
+import { HelperComponent } from './helper/helper.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { NewsComponent } from './news/news.component';
     GroupEditorComponent,
     TransactionsInfoComponent,
     TransactionEditComponent,
-    NewsComponent
+    NewsComponent,
+    HelperComponent
   ],
   imports: [
     BrowserModule,

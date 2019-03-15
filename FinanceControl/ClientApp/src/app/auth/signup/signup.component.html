@@ -1,52 +1,64 @@
-<div class="m-1">
-  <div class="row border-bottom mb-3 py-1">
-    <div class="col-7">
-      <h4>Create profile</h4>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col screen-width mb-5" style="min-width: 300px"> <!-- Sign up component -->
+      <div class="m-1">
+          <div class="row border-bottom mb-3 py-1">
+            <div class="col-7">
+              <h4>Create profile</h4>
+            </div>
+            <div class="col text-right">
+              <button type="button" class="btn btn-sm btn-dark text-light" (click)="click_Cancel()">
+                <i class="fas fa-times mr-1"></i>
+                Cancel
+              </button>
+            </div>
+          </div>
+        
+          <form [formGroup]="signUpForm" (ngSubmit)="onSubmit()" autocomplete="off">
+            <div class="form-group">
+              <h5>Login</h5>
+              <input type="text" class="form-control" placeholder="Login" formControlName="loginControl" required 
+                [class.is-invalid]="isInvalid(loginControl) || errorLogin" (change)="change_checkLogin()" [class.ng-invalid]="errorLogin" />
+              <div *ngIf="isInvalid(loginControl)" class="text-danger">
+                Login is required
+              </div>
+              <div *ngIf="errorLogin" class="text-danger">
+                This login is already existed. Please enter a new one
+              </div>
+            </div>
+        
+            <div class="form-group">
+              <h5>Password</h5>
+              <input type="password" class="form-control" formControlName="passwordControl" required />
+            </div>
+        
+            <div class="form-group">
+              <h5>Confirm password</h5>
+              <input type="password" class="form-control" formControlName="passwordConfirmationControl" required
+                (change)="change_pswConfirm()" [class.ng-invalid]="errorPasswordConfirmation" [class.is-invalid]="errorPasswordConfirmation"/>
+                <div *ngIf="errorPasswordConfirmation" class="text-danger">
+                  Password confirmation doesn't match the initial one
+                </div>
+            </div>
+            
+            <div class="custom-control custom-switch mb-2">
+              <input type="checkbox" class="custom-control-input" id="isSeedDataControl" formControlName="isSeedDataControl" 
+                (click)="change_isSeedDataControl()" [attr.checked]="authService.isSeedData ? 'checked' : null" />
+              <label class="custom-control-label" for="isSeedDataControl"> Fill the database with initial data (recommended)</label>
+            </div>
+        
+            <button type="submit" class="btn btn-dark text-light" [disabled]="signUpForm.invalid || errorLogin || errorPasswordConfirmation">
+              <i class="fas fa-plus-circle mr-1"></i>
+              Create
+            </button>
+          </form>
+      </div>
     </div>
-    <div class="col text-right">
-      <button type="button" class="btn btn-sm btn-dark text-light" (click)="click_Cancel()">
-        <i class="fas fa-times mr-1"></i>
-        Cancel
-      </button>
+
+    <div class="col"> <!-- Helper -->
+      <app-helper></app-helper>
     </div>
   </div>
-
-  <form [formGroup]="signUpForm" (ngSubmit)="onSubmit()" autocomplete="off">
-    <div class="form-group">
-      <h5>Login</h5>
-      <input type="text" class="form-control" placeholder="Login" formControlName="loginControl" required 
-        [class.is-invalid]="isInvalid(loginControl) || errorLogin" (change)="change_checkLogin()" [class.ng-invalid]="errorLogin" />
-      <div *ngIf="isInvalid(loginControl)" class="text-danger">
-        Login is required
-      </div>
-      <div *ngIf="errorLogin" class="text-danger">
-        This login is already existed. Please enter a new one
-      </div>
-    </div>
-
-    <div class="form-group">
-      <h5>Password</h5>
-      <input type="password" class="form-control" formControlName="passwordControl" required />
-    </div>
-
-    <div class="form-group">
-      <h5>Confirm password</h5>
-      <input type="password" class="form-control" formControlName="passwordConfirmationControl" required
-        (change)="change_pswConfirm()" [class.ng-invalid]="errorPasswordConfirmation" [class.is-invalid]="errorPasswordConfirmation"/>
-        <div *ngIf="errorPasswordConfirmation" class="text-danger">
-          Password confirmation doesn't match the initial one
-        </div>
-    </div>
-    
-    <div class="custom-control custom-switch mb-2">
-      <input type="checkbox" class="custom-control-input" id="isSeedDataControl" formControlName="isSeedDataControl" 
-        (click)="change_isSeedDataControl()" [attr.checked]="authService.isSeedData ? 'checked' : null" />
-      <label class="custom-control-label" for="isSeedDataControl"> Fill the database with initial data (recommended)</label>
-    </div>
-
-    <button type="submit" class="btn btn-dark text-light" [disabled]="signUpForm.invalid || errorLogin || errorPasswordConfirmation">
-      <i class="fas fa-plus-circle mr-1"></i>
-      Create
-    </button>
-  </form>
 </div>
+
+

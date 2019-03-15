@@ -1,6 +1,6 @@
-<div class="container-fluid m-1">
+<div class="container-fluid">
   <div class="row">
-    <div class="col screen-width mb-5 mr-3" style="min-width: 300px"> <!-- Login component -->
+    <div class="col screen-width mb-5" style="min-width: 300px"> <!-- Login component -->
       <div class="row border-bottom mb-3 py-1">
         <div class="col-7">
           <h4>Sign in</h4>
@@ -47,52 +47,8 @@
       </form>
     </div>
 
-
-    <div class="col"  style="min-width: 300px"> <!-- Information -->
-      <h4 class="mb-3">Q&A:</h4>
-      
-      <div class="card mb-2" style="cursor: pointer">
-        <div class="card-header p-0" id="q_whatisit">
-          <a class="font-weight-bold py-2 pl-1" style="display: inline-block; width: 100%" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-            Что здесь?
-          </a>
-        </div>
-    
-        <div id="collapseOne" class="collapse" aria-labelledby="q_whatisit" data-parent="#q_whatisit">
-          <div class="card-body text-justify p-1">
-            На этой странице Вы можете авторизироваться для доступа к своему аккаунту.
-            <br>
-            Учетная запись необходима для авторизации и аутентификации Вас как пользователя сервиса.
-          </div>
-        </div>
-      </div>
-
-      <div class="card mb-2" style="cursor: pointer">
-        <div class="card-header p-0" id="q_registration">
-          <a class="font-weight-bold py-2 pl-1" style="display: inline-block; width: 100%" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-            Как зарегистрироваться?
-          </a>
-        </div>
-    
-        <div id="collapseTwo" class="collapse" aria-labelledby="q_registration" data-parent="#q_registration">
-          <div class="card-body  text-justify p-1">
-              Если у Вас нет учетной записи, нажмите на кнопку <i class="fas fa-user-plus mr-1"></i><b> Registration</b> и следуйте дальнейшим инструкциям.
-          </div>
-        </div>
-      </div>
-
-      <div class="card mb-2" style="cursor: pointer">
-        <div class="card-header p-0" id="q_login">
-          <a class="font-weight-bold py-2 pl-1"  style="display: inline-block; width: 100%" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-            Как получить доступ к своему аккаунту?
-          </a>
-        </div>
-    
-        <div id="collapseThree" class="collapse" aria-labelledby="q_login" data-parent="#q_login">
-          <div class="card-body  text-justify p-1">
-            Введите свой логин и пароль в соответствующие поля и нажмите кнопку <i class="fas fa-sign-in-alt mr-1"></i><b> Log in</b>
-          </div>
-        </div>
-      </div>
+    <div class="col"> <!-- Helper -->
+      <app-helper></app-helper>
+    </div>
   </div>
 </div>
