@@ -12,12 +12,14 @@ import { TransactionsInfoComponent } from "./transactions-info/transactions-info
 import { TransactionEditComponent } from "./transactions-info/transaction-edit/transaction-edit.component";
 import { ItemsInfoComponent } from "./items-info/items-info.component";
 import { ItemEditorComponent } from "./items-info/item-editor/item-editor.component";
+import { NewsComponent } from "./news/news.component";
 
 const routes: Routes = [
   {path: '', redirectTo: '/accounts', pathMatch: 'full'},
   
   {path: 'login', component: AuthenticationComponent},
   {path: 'signup', component: SignupComponent},
+  {path: 'news', component: NewsComponent},
 
   {path: 'accounts', component: AccountInfoComponent},
   {path: 'accounts/add', component: AccountEditorComponent},
