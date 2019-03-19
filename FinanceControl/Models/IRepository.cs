@@ -62,5 +62,8 @@ namespace FinanceControl.Models
 		// Seed section
 		void AddDataForNewUser();
 		void SeedDataForTesting();
+
+		// Helpers section
+		IEnumerable<Helper> GetHelpersByTarget(Target tagret);
 	}
 }

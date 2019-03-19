@@ -1,5 +1,6 @@
 export class Helper{
 	constructor(
+		public helperId?: number,
 		public target?: Target,
 		public question?: string,
 		public answer?: string
@@ -8,5 +9,10 @@ export class Helper{
 
 export enum Target{
 	Signin,
-	Signup
+	Signup,
+	Accounts,
+	Transactions,
+	Items,
+	Currencies,
+	Groups
 }

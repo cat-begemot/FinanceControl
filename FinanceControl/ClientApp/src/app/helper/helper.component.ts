@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { Helper, Target } from "../model/helper.model";
+import { Repository } from "../model/repository";
 
 @Component({
   selector: 'app-helper',
@@ -7,20 +8,44 @@ import { Helper, Target } from "../model/helper.model";
   styleUrls: ['./helper.component.css']
 })
 export class HelperComponent implements OnInit {
+  @Input()
+  id: number;
+  
   public helpers: Helper[];
-
-  constructor() { }
+  
+  constructor(
+    public repository: Repository
+  ) { }
 
   ngOnInit() {
-    this.helpers=[
-      new Helper(Target.Signin, "Что здесь?", "На этой странице Вы можете авторизироваться для доступа к своему аккаунту.<br>Учетная запись необходима для авторизации и аутентификации Вас как пользователя сервиса."),
-      new Helper(Target.Signin, "Как зарегистрироваться?", "Если у Вас нет учетной записи, нажмите на кнопку <i class=\"fas fa-user-plus mr-1\"></i><b>Registration</b> и следуйте дальнейшим инструкциям."),
-      new Helper(Target.Signin, "Как получить доступ к своему аккаунту?", "Введите свой логин и пароль в соответствующие поля и нажмите кнопку <i class=\"fas fa-sign-in-alt mr-1\"></i><b>Log in</b>")
-      
-      //this.helpers[0]=new Helper(Target.Signin, "", "")
-    ];
+    let target: Target;
+    if(this.id==0){
+      target=Target.Signin
+    }
+    else if(this.id==1){
+      target=Target.Signup;
+    }
+    else if(this.id==2){
+      target=Target.Accounts;
+    }
+    else if(this.id==3){
+      target=Target.Transactions;
+    }
+    else if(this.id==4){
+      target=Target.Items;
+    }
+    else if(this.id==5){
+      target=Target.Currencies;
+    }
+    else if(this.id==6){
+      target=Target.Groups;
+    }
 
-    
+    this.repository.getHelpersByTarget(target).subscribe(res=>
+      {
+        this.helpers=res;
+      });
+
   }
 
 }

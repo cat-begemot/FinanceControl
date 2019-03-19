@@ -6,6 +6,7 @@ import { Observable, of } from "rxjs";
 import { Group, GroupType } from './group.model';
 import { Item } from "./item.model";
 import { Transaction } from './transaction.model';
+import { Helper } from './helper.model';
 
 const accountUrl: string = "api/accounts";
 const currencyUrl: string = "api/currencies";
@@ -13,6 +14,7 @@ const loginUrl: string = "api/account";
 const groupsUrl: string = "api/groups";
 const itemsUrl: string = "api/items";
 const transactionsUrl: string = "api/transactions";
+const helpersUrl: string = "api/helpers";
 
 @Injectable({
   providedIn: 'root'
@@ -194,5 +196,10 @@ export class Repository {
 
   public getFirstMovementTransaction(id: number): Observable<number>{
     return this.http.get<number>(transactionsUrl + `/getMovementFirstId/${id}`);
+  }
+
+  // HELPERS SECTION ===========================================================================================
+  public getHelpersByTarget(target: number): Observable<Helper[]>{
+    return this.http.get<Helper[]>(helpersUrl + `/${target}`);
   }
 }

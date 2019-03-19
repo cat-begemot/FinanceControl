@@ -1,39 +1,47 @@
-<div class="m-1">
-	<div class="row border-bottom mb-3 py-1" style="vertical-align: middle">
-		<div class="col-7">
-			<button class="btn btn-sm btn-dark text-light mr-1">
-				<i class="fas fa-cogs text-ligth"></i>
-			</button>
-			<span class="font-weight-bold" style="font-size: 18pt">Groups</span>	
-		</div>
-		<div class="col text-right">
-			<button class="btn btn-sm btn-dark text-light" routerLink="/groups/add">
-				<i class="fas fa-plus-circle mr-1"></i>
-				New
-			</button>
-		</div>
-	</div>
+<div class="container-fluid">
+	<div class="row">
+		<div class="col" style="min-width: 320px">
+			<div class="row border-bottom mb-3 py-1" style="vertical-align: middle">
+				<div class="col-7">
+					<button class="btn btn-sm btn-dark text-light mr-1">
+						<i class="fas fa-cogs text-ligth"></i>
+					</button>
+					<span class="font-weight-bold" style="font-size: 18pt">Groups</span>	
+				</div>
+				<div class="col text-right">
+					<button class="btn btn-sm btn-dark text-light" routerLink="/groups/add">
+						<i class="fas fa-plus-circle mr-1"></i>
+						New
+					</button>
+				</div>
+			</div>
 
-	<table class="table table-sm table-bordered">
-			<tr class="bg-dark text-light">
-        <th style="font-size: 1.1em; font-weight: 600;">
-          Group name
-          <i *ngIf="nameSortAcs" class="fas fa-sort-alpha-up fa-lg float-right" style="transform: translateY(5px); cursor: pointer;" (click)="click_nameSort()"></i>
-          <i *ngIf="!nameSortAcs" class="fas fa-sort-alpha-down fa-lg float-right" style="transform: translateY(5px); cursor: pointer;" (click)="click_nameSort()"></i>
-        </th>
-        <th style="font-size: 1.1em; font-weight: 600;">
-          Type
-          <i *ngIf="typeSortAcs" class="fas fa-sort-alpha-up fa-lg float-right" style="transform: translateY(5px); cursor: pointer;" (click)="click_typeSort()"></i>
-          <i *ngIf="!typeSortAcs" class="fas fa-sort-alpha-down fa-lg float-right" style="transform: translateY(5px); cursor: pointer;" (click)="click_typeSort()"></i>
-        </th>
-      </tr>
-			<tr *ngFor="let group of groups">
-				<td class="text-left">
-          <a class="text-dark" routerLink="/groups/edit/{{group.groupId}}">{{group.name}}</a>
-        </td>
-        <td>
-            <span>{{getTypeValue(group.type)}}</span>
-        </td>
-			</tr>
-		</table>
+			<table class="table table-sm table-bordered">
+				<tr class="bg-dark text-light">
+					<th style="font-size: 1.1em; font-weight: 600;">
+						Group name
+						<i *ngIf="nameSortAcs" class="fas fa-sort-alpha-up fa-lg float-right" style="transform: translateY(5px); cursor: pointer;" (click)="click_nameSort()"></i>
+						<i *ngIf="!nameSortAcs" class="fas fa-sort-alpha-down fa-lg float-right" style="transform: translateY(5px); cursor: pointer;" (click)="click_nameSort()"></i>
+					</th>
+					<th style="font-size: 1.1em; font-weight: 600;">
+						Type
+						<i *ngIf="typeSortAcs" class="fas fa-sort-alpha-up fa-lg float-right" style="transform: translateY(5px); cursor: pointer;" (click)="click_typeSort()"></i>
+						<i *ngIf="!typeSortAcs" class="fas fa-sort-alpha-down fa-lg float-right" style="transform: translateY(5px); cursor: pointer;" (click)="click_typeSort()"></i>
+					</th>
+				</tr>
+				<tr *ngFor="let group of groups">
+					<td class="text-left">
+						<a class="text-dark" routerLink="/groups/edit/{{group.groupId}}">{{group.name}}</a>
+					</td>
+					<td>
+							<span>{{getTypeValue(group.type)}}</span>
+					</td>
+				</tr>
+			</table>
+		</div>
+
+		<div class="col"> <!-- Helper -->
+      <app-helper [id]="6"></app-helper>
+    </div>
 	</div>
+</div>

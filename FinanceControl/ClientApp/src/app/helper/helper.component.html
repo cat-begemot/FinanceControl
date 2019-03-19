@@ -1,13 +1,14 @@
-<div style="min-width: 300px">
+<div *ngIf="helpers?.length>0" style="min-width: 300px">
   <h4 class="mb-3">Q&A:</h4>
 
   <div *ngFor="let helper of helpers" class="card mb-2" style="cursor: pointer">
     <div class="card-header p-0" id="q_whatisit">
-      <a [innerHTML]="helper.question" class="font-weight-bold py-2 pl-1" style="display: inline-block; width: 100%" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne"></a>
+      <a [innerHTML]="helper.question" class="font-weight-bold py-1 pl-1" style="display: inline-block; width: 100%" data-toggle="collapse" [attr.data-target]="'#id' + helper.helperId" aria-expanded="false" aria-controls="collapseOne"></a>
     </div>
 
-    <div id="collapseOne" class="collapse" aria-labelledby="q_whatisit" data-parent="#q_whatisit">
+    <div [attr.id]="'id' + helper.helperId" class="collapse" aria-labelledby="q_whatisit" data-parent="#q_whatisit">
       <div [innerHTML]="helper.answer" class="card-body text-justify p-1"></div>
     </div>
   </div>
+
 </div>

@@ -57,7 +57,7 @@ namespace FinanceControl.Models
 			}
 		}
 
-#region Accounts
+		#region Accounts
 		/// <summary>
 		/// Create account
 		/// </summary>
@@ -173,7 +173,7 @@ namespace FinanceControl.Models
 		}
 #endregion
 
-#region Currencies
+		#region Currencies
 
 		// Get only currencies which is being in defined type of account
 		/// <summary>
@@ -288,7 +288,7 @@ namespace FinanceControl.Models
 		}
 #endregion // Currency section
 
-#region Session section
+		#region Session section
 		public Account GetSessionAccount()
 		{
 			string value = httpContextAccessor.HttpContext.Session.GetString("currentAccount");
@@ -329,7 +329,7 @@ namespace FinanceControl.Models
 		}
 #endregion // Session section
 
-#region Group section
+		#region Group section
 		public void CreateGroup(Group newGroup)
 		{
 			newGroup.UserId = currentUserId;
@@ -379,7 +379,7 @@ namespace FinanceControl.Models
 		}
 #endregion
 
-#region Items section
+		#region Items section
 		public IEnumerable<Item> GetItems(GroupType type)
 		{
 			IQueryable<Item> items;
@@ -456,7 +456,7 @@ namespace FinanceControl.Models
 		}
 #endregion
 
-#region Transactions section
+		#region Transactions section
 		public IEnumerable<long> CreateTransaction(Transaction transaction)
 		{
 			// There is possibility to move procedures for backdate transactions in separate private submethod
@@ -820,7 +820,7 @@ namespace FinanceControl.Models
 
 #endregion
 
-#region Seed section
+		#region Seed section
 		// Seed database for new user convenience TODO: (static??)
 		public void AddDataForNewUser()
 		{
@@ -993,6 +993,13 @@ namespace FinanceControl.Models
 			context.Items.AddRange(items);
 			context.SaveChanges();
 		}
-#endregion
+		#endregion
+
+		#region Helpers section
+		public IEnumerable<Helper> GetHelpersByTarget(Target target)
+		{
+			return context.Helpers.Where(helper => helper.Target == target);
+		}
+		#endregion
 	}
 }

@@ -20,6 +20,15 @@ namespace FinanceControl.Models
 		public DbSet<Group> Groups { get; set; }
 		public DbSet<Transaction> Transactions { get; set; }
 		public DbSet<Comment> Comments { get; set; }
+		public DbSet<Helper> Helpers { get; set; }
 
+
+		protected override void OnModelCreating(ModelBuilder modelBuilder)
+		{
+			modelBuilder.Entity<Helper>().ToTable(name: "Helpers", schema: "help");
+			modelBuilder.Entity<Helper>()
+				.HasKey(col => col.HelperId)
+				.HasName("PK_Helpers");
+		}
 	}
 }
