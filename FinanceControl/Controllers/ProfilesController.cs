@@ -7,21 +7,24 @@ using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using FinanceControl.Models;
+using FinanceControl.Models.Repo;
 
 namespace FinanceControl.Controllers
 {
 	[Route("api/account")]
-	public class AccountController : Controller
+	public class ProfilesController : Controller
 	{
 		private UserManager<User> userManager;
 		private SignInManager<User> signInManager;
 		private IRepository repository;
+		private IDbSeedRepository dbSeedRepo;
 
-		public AccountController(UserManager<User> userMgr, SignInManager<User> signInMgr, IRepository repo)
+		public ProfilesController(UserManager<User> userMgr, SignInManager<User> signInMgr, IRepository repo, IDbSeedRepository seedRepo)
 		{
 			userManager = userMgr;
 			signInManager = signInMgr;
 			repository = repo;
+			dbSeedRepo = seedRepo;
 		}
 
 		/// <summary>
@@ -94,7 +97,7 @@ namespace FinanceControl.Controllers
 		[HttpGet("seedData")]
 		public void SeedData()
 		{
-			repository.AddDataForNewUser();
+			dbSeedRepo.AddDataForNewUser();
 		}
 
 

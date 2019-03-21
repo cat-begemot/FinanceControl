@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using FinanceControl.Models;
+using FinanceControl.Models.Repo;
 
 namespace FinanceControl.Controllers
 {
@@ -12,23 +13,23 @@ namespace FinanceControl.Controllers
 	[Route("api/groups")]
 	public class GroupsController : Controller
 	{
-		IRepository repository;
+		IGroupsRepository repository;
 
-		public GroupsController(IRepository repo)
+		public GroupsController(IGroupsRepository repo)
 		{
 			repository = repo;
 		}
 
 		[HttpPost]
-		public void CreateGroup([FromBody] Group newGroup)
+		public void Create([FromBody] Group newGroup)
 		{
-			repository.CreateGroup(newGroup);
+			repository.Create(newGroup);
 		}
 
 		[HttpGet("isGroupNameExists/{name}")]
-		public bool IsGroupNameExists([FromRoute] string name)
+		public bool NameExists([FromRoute] string name)
 		{
-			return repository.IsGroupNameExists(name);
+			return repository.NameExists(name);
 		}
 
 		/// <summary>
@@ -36,27 +37,27 @@ namespace FinanceControl.Controllers
 		/// </summary>
 		/// <returns></returns>
 		[HttpGet("all/{type}")]
-		public IEnumerable<Group> GetAllGroups([FromRoute] GroupType type)
+		public IEnumerable<Group> GetAll([FromRoute] GroupType type)
 		{
-			return repository.GetAllGroups(type);
+			return repository.GetAll(type);
 		}
 
 		[HttpPut]
-		public void UpdateGroup([FromBody] Group updatedGroup)
+		public void Update([FromBody] Group updatedGroup)
 		{
-			repository.UpdateGroup(updatedGroup);
+			repository.Update(updatedGroup);
 		}
 
 		[HttpDelete("{id}")]
-		public void DeleteGroup([FromRoute] long id)
+		public void Delete([FromRoute] long id)
 		{
-			repository.DeleteGroup(id);
+			repository.Delete(id);
 		}
 
 		[HttpGet("{id}")]
-		public Group GetGroupById([FromRoute] long id)
+		public Group Get([FromRoute] long id)
 		{
-			return repository.GetGroupById(id);
+			return repository.Get(id);
 		}
 	}
 }

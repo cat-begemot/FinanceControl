@@ -24,7 +24,7 @@ namespace FinanceControl.Models
 		private long currentUserId;
 
 
-#if UnitTest
+		#if UnitTest
 		#region Constructor for xUnit tests
 		/// <summary>
 		/// For xUnit tests only. It sets currentUserId=0
@@ -35,8 +35,8 @@ namespace FinanceControl.Models
 			context = ctx;
 			currentUserId = userId;
 		}
-#endregion
-#endif   
+		#endregion
+		#endif   
 
 		// IHttpContextAccessor, UserManager<T> and SignInManager<T> using in constructor only
 		// with purpose to set currentUserId
@@ -48,7 +48,7 @@ namespace FinanceControl.Models
 			userManager = userMgr;
 			signInManager = signInMgr;
 
-			// set currentUserId value
+			// Set currentUserId value
 			string currentUserName = httpContextAccessor.HttpContext.User.Identity.Name;
 			User currentUser = userManager.Users.Where(user => user.UserName == currentUserName).FirstOrDefault();
 			if (currentUser != null)
@@ -56,6 +56,8 @@ namespace FinanceControl.Models
 				currentUserId = currentUser.UserId;
 			}
 		}
+		
+
 
 		#region Accounts
 		/// <summary>
@@ -104,7 +106,7 @@ namespace FinanceControl.Models
 		/// 0 - returns all active accounts. In other cases returns active accounts with appropriate currency
 		/// </param>
 		/// <returns></returns>
-		public IEnumerable<Account> GetActiveAccount(long currencyId = 0)
+		public IEnumerable<Account> GetActiveAccounts(long currencyId = 0)
 		{
 			IQueryable<Account> activeAccounts = context.Accounts
 				.Where(account => account.UserId == currentUserId && account.ActiveAccount == true)
@@ -126,7 +128,7 @@ namespace FinanceControl.Models
 		/// 0 - returns all hidden accounts. In other cases returns hidden accounts with appropriate currency
 		/// </param>
 		/// <returns></returns>
-		public IEnumerable<Account> GetInactiveAccount(long currencyId = 0)
+		public IEnumerable<Account> GetInactiveAccounts(long currencyId = 0)
 		{
 			IQueryable<Account> inactiveAccounts = context.Accounts
 				.Where(account => account.UserId == currentUserId && account.ActiveAccount == false)
@@ -287,6 +289,8 @@ namespace FinanceControl.Models
 			}
 		}
 #endregion // Currency section
+
+
 
 		#region Session section
 		public Account GetSessionAccount()
@@ -662,6 +666,12 @@ namespace FinanceControl.Models
 
 			return transactionIdList;
 		}
+
+
+
+
+
+
 
 		/// <summary>
 		/// Get all transactions

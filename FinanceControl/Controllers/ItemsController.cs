@@ -5,23 +5,24 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using FinanceControl.Models;
 using System.ComponentModel.DataAnnotations;
+using FinanceControl.Models.Repo;
 
 namespace FinanceControl.Controllers
 {
 	[Route("api/items")]
 	public class ItemsController : Controller
 	{
-		IRepository repository;
+		IItemsRepository repository;
 
-		public ItemsController(IRepository repo)
+		public ItemsController(IItemsRepository repo)
 		{
 			repository = repo;
 		}
 
 		[HttpGet("all/{type}")]
-		public IEnumerable<Item> GetItems([FromRoute] GroupType type)
+		public IEnumerable<Item> Get([FromRoute] GroupType type)
 		{
-			return repository.GetItems(type);
+			return repository.GetAll(type);
 		}
 
 		[HttpGet("getIncomeExpense")]
@@ -31,35 +32,35 @@ namespace FinanceControl.Controllers
 		}
 
 		[HttpPost("isNameExists")]
-		public bool IsItemNameExists([FromBody] Item item)
+		public bool NameExists([FromBody] Item item)
 		{
-			return repository.IsItemNameExists(item.Name);
+			return repository.NameExists(item.Name);
 		}
 
 		[HttpPost]
-		public void CreateItem([FromBody] Item newItem)
+		public void Create([FromBody] Item newItem)
 		{
-			repository.CreateItem(newItem);
+			repository.Create(newItem);
 		}
 
 		[HttpPut]
-		public void UpdateItem([FromBody] Item updatedItem)
+		public void Update([FromBody] Item updatedItem)
 		{
-			repository.UpdateItem(updatedItem);
+			repository.Update(updatedItem);
 		}
 
 		[HttpDelete("{id}")]
-		public void DeleteItem([FromRoute] long id)
+		public void Delete([FromRoute] long id)
 		{
-			repository.DeleteItem(id);
+			repository.Delete(id);
 		}
 
 		[HttpGet("{id}")]
-		public Item GetItemById([FromRoute] long id)
+		public Item Get([FromRoute] long id)
 		{
 			if(id>0)
 			{
-				return repository.GetItemById(id);
+				return repository.Get(id);
 			}
 			else
 			{

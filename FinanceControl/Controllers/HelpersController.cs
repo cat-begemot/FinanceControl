@@ -4,24 +4,24 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using FinanceControl.Models;
+using FinanceControl.Models.Repo;
 
 namespace FinanceControl.Controllers
 {
 	[Route("api/helpers")]
 	public class HelpersController
 	{
-		private IRepository repository;
+		private IHelpersRepository repository;
 
-		public HelpersController(IRepository repo)
+		public HelpersController(IHelpersRepository repo)
 		{
 			repository = repo;
 		}
 
 		[HttpGet("{target}")]
-		public IEnumerable<Helper> GetHelpersByTarget([FromRoute] Target target)
+		public IEnumerable<Helper> GetByTarget([FromRoute] Target target)
 		{
-
-			return repository.GetHelpersByTarget(target);
+			return repository.GetByTarget(target);
 		}
 	}
 }

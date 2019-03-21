@@ -5,53 +5,54 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using FinanceControl.Models;
 using System.ComponentModel.DataAnnotations;
+using FinanceControl.Models.Repo;
 
 namespace FinanceControl.Controllers
 {
 	[Route("api/transactions")]
 	public class TransactionsController : Controller
 	{
-		IRepository repository;
+		ITransactionsRepository repository;
 
-		public TransactionsController(IRepository repo)
+		public TransactionsController(ITransactionsRepository repo)
 		{
 			repository = repo;
 		}
 
 		[HttpPost]
-		public void CreateTransaction([FromBody] Transaction newTransaction)
+		public void Create([FromBody] Transaction newTransaction)
 		{
-			repository.CreateTransaction(newTransaction);
+			repository.Create(newTransaction);
 		}
 
 		[HttpGet]
-		public IEnumerable<Transaction> GetTransactions()
+		public IEnumerable<Transaction> GetAll()
 		{
-			return repository.GetTransactions();
+			return repository.GetAll();
 		}
 
 		[HttpGet("{id}")]
-		public Transaction GetTransactionById([FromRoute] long id)
+		public Transaction Get([FromRoute] long id)
 		{
-			return repository.GetTransactionById(id);
+			return repository.Get(id);
 		}
 
 		[HttpDelete("{id}")]
-		public void DeleteTransaction([FromRoute] long id)
+		public void Delete([FromRoute] long id)
 		{
-			repository.DeleteTransaction(id);
+			repository.Delete(id);
 		}
 
 		[HttpPut]
-		public void UpdatedTransaction([FromBody] Transaction updatedTransaction)
+		public void Update([FromBody] Transaction updatedTransaction)
 		{
-			repository.UpdateTransaction(updatedTransaction);
+			repository.Update(updatedTransaction);
 		}
 
 		[HttpGet("getMovementFirstId/{id}")]
-		public long GetFirstMovementTransaction([FromRoute] long id)
+		public long GetFirstMovementRecord([FromRoute] long id)
 		{
-			return repository.GetFirstMovementTransaction(id);
+			return repository.GetFirstMovementRecord(id);
 		}
 	}
 }

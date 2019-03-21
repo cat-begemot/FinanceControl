@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using FinanceControl.Models;
 using Microsoft.AspNetCore.Authorization;
+using FinanceControl.Models.Repo;
 
 namespace FinanceControl.Controllers
 {
@@ -12,56 +13,47 @@ namespace FinanceControl.Controllers
 	[Route("api/accounts")]
 	public class AccountsController : Controller
 	{
-		private IRepository repository;
+		private IAccountsRepository repository;
 
-		public AccountsController(IRepository repo)
+		public AccountsController(IAccountsRepository repo)
 		{
 			repository = repo;
 		}
 
 		[HttpGet("active/{currencyId}")]
-		public IEnumerable<Account> GetActiveAccount([FromRoute] long currencyId)
+		public IEnumerable<Account> GetActive([FromRoute] long currencyId)
 		{
-			return repository.GetActiveAccount(currencyId);
+			return repository.GetActive(currencyId);
 		}
 
 		[HttpGet("inactive/{currencyId}")]
-		public IEnumerable<Account> GetInactiveAccount([FromRoute] long currencyId)
+		public IEnumerable<Account> GetInactive([FromRoute] long currencyId)
 		{
-			return repository.GetInactiveAccount(currencyId);
+			return repository.GetInactive(currencyId);
 		}
 
 		[HttpGet("{id}")]
 		public Account GetAccountById([FromRoute] long id)
 		{
-			return repository.GetAccountById(id);
+			return repository.Get(id);
 		}
 
 		[HttpPost]
 		public void CreateAccount([FromBody] Account newAccount)
 		{
-			repository.CreateAccount(newAccount);
+			repository.Create(newAccount);
 		}
 
 		[HttpDelete("{id}")]
 		public void DeleteAccount([FromRoute] long id)
 		{
-			repository.DeleteAccount(id);
+			repository.Delete(id);
 		}
 
 		[HttpPut]
 		public void UpdateAccount([FromBody] Account updatedAccount)
 		{
-			repository.UpdateAccount(updatedAccount);
-		}
-
-
-
-		// Move to CurrenciesController
-		[HttpGet("currencies/{method}")]
-		public IEnumerable<Currency> GetAllCurrencies([FromRoute] string method="none")
-		{
-			return repository.GetCurrencies(method);
+			repository.Update(updatedAccount);
 		}
 	}
 }

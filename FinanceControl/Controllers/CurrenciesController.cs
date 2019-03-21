@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using FinanceControl.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
+using FinanceControl.Models.Repo;
 
 namespace FinanceControl.Controllers
 {
@@ -14,26 +15,26 @@ namespace FinanceControl.Controllers
 	[Route("api/currencies")]
 	public class CurrenciesController : Controller
 	{
-		private IRepository repository;
+		private ICurrenciesRepository repository;
 
-		public CurrenciesController(IRepository repo)
+		public CurrenciesController(ICurrenciesRepository repo)
 		{
 			repository = repo;
 		}
 
 		[HttpGet("{id}")]
-		public Currency GetCurrencyById([FromRoute] long id)
+		public Currency Get([FromRoute] long id)
 		{
-			return repository.GetCurrencyById(id);
+			return repository.Get(id);
 		}
 
 		[HttpPost]
-		public void CreateCurrency([FromBody] Currency newCurrency)
+		public void Create([FromBody] Currency newCurrency)
 		{
 			newCurrency.CurrencyId = 0;
 			newCurrency.Accounts = null;
 
-			repository.CreateCurrency(newCurrency);
+			repository.Create(newCurrency);
 		}
 
 		/// <summary>
@@ -43,21 +44,27 @@ namespace FinanceControl.Controllers
 		/// <param name="code"></param>
 		/// <returns></returns>
 		[HttpGet("isCurrencyCodeExist/{code}")]
-		public bool IsCurrencyCodeExist([FromRoute] string code)
+		public bool CodeExist([FromRoute] string code)
 		{
-			return repository.IsCurrencyCodeExist(code);
+			return repository.CodeExists(code);
 		}
 
 		[HttpPut]
-		public void UpdateCurrency([FromBody] Currency updatedCurrency)
+		public void Update([FromBody] Currency updatedCurrency)
 		{
-			repository.UpdateCurrency(updatedCurrency);
+			repository.Update(updatedCurrency);
 		}
 
 		[HttpDelete("{id}")]
-		public void DeleteCurrency([FromRoute] long id)
+		public void Delete([FromRoute] long id)
 		{
-			repository.DeleteCurrency(id);
+			repository.Delete(id);
+		}
+
+		[HttpGet("{method}")]
+		public IEnumerable<Currency> GetAllCurrencies([FromRoute] string method = "none")
+		{
+			return repository.GetAll(method);
 		}
 	}
 }
