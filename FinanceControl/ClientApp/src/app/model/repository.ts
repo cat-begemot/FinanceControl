@@ -61,11 +61,11 @@ export class Repository {
   // CURRENCY SECTION ===========================================================================================
   // Get all currencies
   public get allCurrencies(): Observable<Currency[]>{
-    return this.http.get<Currency[]>(accountUrl + "/currencies/none");
+    return this.http.get<Currency[]>(currencyUrl + "/method/none");
   }
 
   public getAllCurrencies(method: string): Observable<Currency[]>{
-    return this.http.get<Currency[]>(accountUrl + `/currencies/${method}`);
+    return this.http.get<Currency[]>(currencyUrl + `/method/${method}`);
   }
 
   // Get currency by ID

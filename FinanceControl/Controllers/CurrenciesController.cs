@@ -61,8 +61,8 @@ namespace FinanceControl.Controllers
 			repository.Delete(id);
 		}
 
-		[HttpGet("{method}")]
-		public IEnumerable<Currency> GetAllCurrencies([FromRoute] string method = "none")
+		[HttpGet("method/{method}")]
+		public IEnumerable<Currency> GetAllByMethod([FromRoute] string method = "none")
 		{
 			return repository.GetAll(method);
 		}
