@@ -4,14 +4,16 @@ using FinanceControl.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace FinanceControl.Migrations
 {
     [DbContext(typeof(DbRepositoryContext))]
-    partial class DbRepositoryContextModelSnapshot : ModelSnapshot
+    [Migration("20190322093746_AddInfos")]
+    partial class AddInfos
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -130,7 +132,6 @@ namespace FinanceControl.Migrations
                 {
                     b.Property<long>("InfoId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("infoId")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Header")
@@ -145,7 +146,7 @@ namespace FinanceControl.Migrations
                     b.HasKey("InfoId")
                         .HasName("PK_Infos");
 
-                    b.ToTable("Infos","help");
+                    b.ToTable("infos","help");
                 });
 
             modelBuilder.Entity("FinanceControl.Models.Item", b =>

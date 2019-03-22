@@ -7,6 +7,7 @@ import { Group, GroupType } from './group.model';
 import { Item } from "./item.model";
 import { Transaction } from './transaction.model';
 import { Helper } from './helper.model';
+import { Info } from './info.model';
 
 const accountUrl: string = "api/accounts";
 const currencyUrl: string = "api/currencies";
@@ -15,6 +16,7 @@ const groupsUrl: string = "api/groups";
 const itemsUrl: string = "api/items";
 const transactionsUrl: string = "api/transactions";
 const helpersUrl: string = "api/helpers";
+const infosUrl: string="api/infos";
 
 @Injectable({
   providedIn: 'root'
@@ -201,5 +203,10 @@ export class Repository {
   // HELPERS SECTION ===========================================================================================
   public getHelpersByTarget(target: number): Observable<Helper[]>{
     return this.http.get<Helper[]>(helpersUrl + `/${target}`);
+  }
+
+  // HELPERS SECTION ===========================================================================================
+  public getAllInfos(): Observable<Info[]>{
+    return this.http.get<Info[]>(infosUrl + '/all');
   }
 }

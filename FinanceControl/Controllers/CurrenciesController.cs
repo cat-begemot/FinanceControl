@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using FinanceControl.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
-using FinanceControl.Models.Repo;
+using FinanceControl.Models.Repository;
 
 namespace FinanceControl.Controllers
 {

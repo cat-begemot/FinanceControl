@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Info } from "../model/info.model";
+import { Repository } from "../model/repository";
 
 @Component({
   selector: 'app-news',
@@ -6,10 +8,16 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./news.component.css']
 })
 export class NewsComponent implements OnInit {
+  public infos: Info[];
 
-  constructor() { }
+  constructor(
+    public repository: Repository
+  ) { }
 
   ngOnInit() {
+    this.repository.getAllInfos().subscribe(response=>{
+      this.infos=response;
+    });
   }
 
 }

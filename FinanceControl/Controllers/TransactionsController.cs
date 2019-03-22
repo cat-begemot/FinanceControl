@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using FinanceControl.Models;
 using System.ComponentModel.DataAnnotations;
-using FinanceControl.Models.Repo;
+using FinanceControl.Models.Repository;
 
 namespace FinanceControl.Controllers
 {

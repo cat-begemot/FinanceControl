@@ -7,7 +7,8 @@ using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using FinanceControl.Models;
-using FinanceControl.Models.Repo;
+using FinanceControl.Models.Repository;
+using Microsoft.AspNetCore.Http;
 
 namespace FinanceControl.Controllers
 {
@@ -16,15 +17,18 @@ namespace FinanceControl.Controllers
 	{
 		private UserManager<User> userManager;
 		private SignInManager<User> signInManager;
-		private IRepository repository;
 		private IDbSeedRepository dbSeedRepo;
+		private IHttpContextAccessor httpContextAccessor;
 
-		public ProfilesController(UserManager<User> userMgr, SignInManager<User> signInMgr, IRepository repo, IDbSeedRepository seedRepo)
+		public ProfilesController(UserManager<User> userMgr,
+			SignInManager<User> signInMgr,
+			IDbSeedRepository seedRepo,
+			IHttpContextAccessor httpContAcc)
 		{
 			userManager = userMgr;
 			signInManager = signInMgr;
-			repository = repo;
 			dbSeedRepo = seedRepo;
+			httpContextAccessor = httpContAcc;
 		}
 
 		/// <summary>
@@ -62,7 +66,7 @@ namespace FinanceControl.Controllers
 		[HttpGet("isAuth")]
 		public bool IsUserAuthenticated()
 		{
-			return repository.IsUserAuthenticated();
+			return httpContextAccessor.HttpContext.User.Identity.IsAuthenticated;
 		}
 
 		[HttpPost("isNameExist/{userName}")]

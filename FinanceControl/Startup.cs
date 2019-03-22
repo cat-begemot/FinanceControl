@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using FinanceControl.Models.Repo;
+using FinanceControl.Models.Repository;
 
 namespace FinanceControl
 {
@@ -53,14 +53,13 @@ namespace FinanceControl
 			services.BuildServiceProvider().GetService<IdentityDataContext>().Database.Migrate();
 
 			// Binding interface with it realization class
-			services.AddTransient<IRepository, Repository>(); // Delete after refactoring
-
 			services.AddTransient<IAccountsRepository, AccountsRepository>();
 			services.AddTransient<ICurrenciesRepository, CurrenciesRepository>();
 			services.AddTransient<IGroupsRepository, GroupsRepository>();
 			services.AddTransient<IItemsRepository, ItemsRepository>();
 			services.AddTransient<ITransactionsRepository, TransactionsRepository>();
 			services.AddTransient<IHelpersRepository, HelpersRepository>();
+			services.AddTransient<IInfosRepository, InfosRepository>();
 			services.AddTransient<IDbSeedRepository, DbSeedRepository>(); // TODO: make static class
 
 			// Identity configurations
