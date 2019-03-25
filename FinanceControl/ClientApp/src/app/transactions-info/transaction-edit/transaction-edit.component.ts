@@ -8,6 +8,7 @@ import { Item } from "../../model/item.model";
 import { GroupType } from "../../model/group.model";
 import { Comment } from 'src/app/model/comment.model';
 import { ActivatedRoute } from "@angular/router";
+import { Router } from "@angular/router";
 
 @Component({
   selector: 'app-transaction-edit',
@@ -26,7 +27,8 @@ export class TransactionEditComponent implements OnInit {
   constructor(
     private location: Location,
     private repository: Repository,
-    private router: ActivatedRoute
+    private router: ActivatedRoute,
+    private routerNav: Router
   ) { }
 
   ngOnInit() {
@@ -163,7 +165,10 @@ export class TransactionEditComponent implements OnInit {
 
   // change event for Item select
   public change_item(): void{
-    this.setRateControls();
+    if(this.accountControl.value!="")
+    {
+      this.setRateControls();
+    }    
   }
 
   // Set rate and disabled rate names fields according to elected type, account and item
@@ -241,4 +246,15 @@ export class TransactionEditComponent implements OnInit {
   public get rateNameControl(): FormControl{
     return this.transactionForm.get("rateNameControl") as FormControl;
   }
+
+  public click_AddItem(): void{
+    this.routerNav.navigate(["/items/add"]);
+  }
+
+  public click_itemEdit(){
+    if(this.itemControl.value!="")
+    {
+      this.routerNav.navigate(["/items/edit/", this.itemControl.value]);
+    }    
+  } 
 }
