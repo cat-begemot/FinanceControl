@@ -256,5 +256,16 @@ export class TransactionEditComponent implements OnInit {
     {
       this.routerNav.navigate(["/items/edit/", this.itemControl.value]);
     }    
+  }
+
+  public click_AddAccount(): void{
+    this.routerNav.navigate(["/accounts/add"]);
+  }
+
+  public click_accountEdit(){
+    if(this.accountControl.value!="")
+    {
+      this.routerNav.navigate(["/accounts/edit/", this.accountControl.value]);
+    }    
   } 
 }

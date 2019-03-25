@@ -7,6 +7,7 @@ import { Router } from "@angular/router";
 import { FormControl, Validators } from "@angular/forms";
 import { AppStatusService } from "../../app-status.service";
 import { Group, GroupType } from "../../model/group.model";
+import { Location } from "@angular/common";
 
 @Component({
   selector: 'account-editor',
@@ -25,7 +26,8 @@ export class AccountEditorComponent implements OnInit{
     private repository: Repository,
     private router: ActivatedRoute,
     private routerNav: Router,
-    public appStatus: AppStatusService
+    public appStatus: AppStatusService,
+    public location: Location
   ) { }
 
   ngOnInit()
@@ -91,7 +93,7 @@ export class AccountEditorComponent implements OnInit{
     // Create account
     this.repository.createAccount(this.appStatus.currentAccount).subscribe(()=>{
       // Navigate to parent route after receive response from Web server
-      this.routerNav.navigate(["/accounts"]);
+      this.location.back();
       this.appStatus.clearAccount();
     });
   }
@@ -100,7 +102,7 @@ export class AccountEditorComponent implements OnInit{
   clickEditAccount(){
     this.appStatus.currentAccount.currency=null;
     this.repository.updateAccount(this.appStatus.currentAccount).subscribe(()=>{
-      this.routerNav.navigate(["/accounts"]);
+      this.location.back();
       this.appStatus.clearAccount();
     });
   }
@@ -130,7 +132,7 @@ export class AccountEditorComponent implements OnInit{
 
   // Event for "Cancel" button
   public click_Cancel(){
-    this.routerNav.navigate(["/accounts"]);
+    this.location.back();
     this.appStatus.clearAccount();
   }
 
