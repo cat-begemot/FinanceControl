@@ -26,15 +26,15 @@ export class ItemEditorComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.checkEditMode();
-    this.isItemNameExist=false;
-    this.currentItem = new Item();
-
     this.itemForm=new FormGroup({
       typeControl: new FormControl(1, Validators.required),
       nameControl: new FormControl('', Validators.required),
       groupControl: new FormControl('', Validators.required)
     });
+    
+    this.checkEditMode();
+    this.isItemNameExist=false;
+    this.currentItem = new Item();
   }
 
   private checkEditMode(): void{
@@ -42,6 +42,7 @@ export class ItemEditorComponent implements OnInit {
     if(id==0){ // create mode
       this.editorHeader="Create item";
       this.editMode=false;
+      this.change_typeControl();
     } else { // edit mode
       this.editorHeader="Edit item";
       this.editMode=true;
