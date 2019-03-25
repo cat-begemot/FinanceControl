@@ -122,7 +122,18 @@ export class AccountEditorComponent implements OnInit{
   public isInvalid(control: any): boolean{
     return control.invalid && (control.dirty || control.touched);
   }
-
+/*
+  public IsNumber(): boolean{
+    let balValue: string=this.appStatus.currentAccount.balance.toString();
+    if(Number.isNaN(Number.parseFloat(balValue))){
+      console.error("ALARM!!!");
+      return true;
+    } else {
+      console.warn("All ok... phuh...");
+      return false;
+    }
+  }
+*/
   // add currency during editing account
   public click_AddCurrency(){
     this.routerNav.navigate(["/currencies/add"]);

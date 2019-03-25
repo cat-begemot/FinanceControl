@@ -69,7 +69,7 @@
         <h5 class="pb-0 mb-0">Balance</h5>
         <h6 class="pt-0 mt-0 text-secondary">(current account balance)</h6>
         <input class="form-control" name="balance" placeholder="0.00" [(ngModel)]="appStatus.currentAccount.balance"
-          #balanceControl="ngModel" pattern="[0-9]*\.?[0-9]*" [disabled]="!editMode"/>
+          #balanceControl="ngModel" pattern="^-?[0-9]\d*(\.\d+)?$" [disabled]="!editMode"/>
         <div *ngIf="isInvalid(balanceControl)" class="text-danger">
             Only number are allowed
         </div>
