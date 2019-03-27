@@ -1,16 +1,19 @@
 <div class="m-1">
-  <div class="row border-bottom mb-3 py-1">
-    <div class="col">
+  <!-- Component header -->
+  <div class="d-flex flex-row">
+    <div class="mr-auto">
       <h4>{{editorHeader}}</h4>
     </div>
-    <div class="col-1 text-right">
+    <div>
       <button class="btn btn-sm btn-dark text-light float-right" style="width: 90px" (click)="click_Cancel()">
         <i class="fas fa-sign-out-alt mr-1"></i>
         Cancel
       </button>
     </div>
   </div>
+  <hr class="mt-0 mb-3">
 
+  <!-- Component form -->
   <form [formGroup]="transactionForm" (ngSubmit)="onSubmit()" autocomplete="off">
       <div class="form-group">
         <h5 class="pb-0 mb-0">Type</h5>
@@ -113,6 +116,5 @@
         </button>
       </div>
     </div>
-
   </form>
 </div>

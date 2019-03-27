@@ -1,18 +1,21 @@
-<div class="container-fluid">
+<div class="container-fluid px-0">
 	<div class="row">
 		<div class="col" style="min-width: 320px">
-			<div class="row border-bottom mb-3 py-1" style="vertical-align: middle">
-				<div class="col-7" style="transform: translateY(-3px);">
-					<span class="font-weight-bold" style="font-size: 18pt;">Items</span>	
+			<!-- Component header -->
+			<div class="d-flex flex-row">
+				<div class="mr-auto">
+					<h4>Items</h4>	
 				</div>
-				<div class="col text-right">
+				<div>
 					<button class="btn btn-sm btn-dark text-light" routerLink="/items/add">
 						<i class="fas fa-plus-circle mr-1"></i>
 						New
 					</button>
 				</div>
 			</div>
+			<hr class="mt-0 mb-3">
 
+			<!-- Items list -->
 			<table class="table table-sm table-bordered table-hover">
 				<tr class="bg-dark text-light" style="line-height: 25px">
 					<th colspan="2">Name</th>
@@ -29,7 +32,8 @@
 			</table>
 		</div>
 
-		<div class="col"> <!-- Helper -->
+		<!-- Helper -->
+		<div class="col" style="min-width: 320px">
 			<app-helper [id]="4"></app-helper>
 		</div>
 	</div>

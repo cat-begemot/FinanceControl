@@ -1,18 +1,21 @@
-<div class="container-fluid">
+<div class="container-fluid px-0">
   <div class="row">
     <div class="col screen-width mb-5" style="min-width: 300px"> <!-- Login component -->
-      <div class="row border-bottom mb-3 py-1">
-        <div class="col-7">
-          <h4>Sign in</h4>
+      <!-- Component header (LOG IN) -->
+      <div class="d-flex flex-row">
+        <div class="mr-auto">
+          <h4>Sign in</h4>        
         </div>
-        <div class="col text-right">
+        <div>
           <button class="btn btn-sm btn-dark text-light" routerLink="/signup">
             <i class="fas fa-user-plus mr-1"></i>
             Registration
           </button>
         </div>
       </div>
+      <hr class="mt-0 mb-3">
       
+      <!-- Component form -->
       <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" autocomplete="off">
         <div *ngIf="!appStatus.validCredentials" class="alert alert-danger p-2" role="alert">
           <h5 class="alert-heading">Invalid credentials!</h5>
@@ -47,7 +50,7 @@
       </form>
     </div>
 
-    <div class="col"> <!-- Helper -->
+    <div class="col" style="min-width: 320px"> <!-- Helper -->
       <app-helper [id]="0"></app-helper>
     </div>
   </div>

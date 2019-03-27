@@ -1,121 +1,120 @@
-<div class="container m-1">
-  <div class="row border-bottom mb-3 py-1">
-    <div class="col p-0">
-        <span class="font-weight-bold" style="font-size: 18pt;">{{editorHeader}}</span>
+<div class="container px-0">
+  <div class="d-flex flex-row">
+    <div class="mr-auto">
+        <h4>{{editorHeader}}</h4>
     </div>
-    <div class="col-1 text-right">
+    <div>
       <button class="btn btn-sm btn-dark text-light float-right" style="width: 80px" (click)="click_Cancel()">
         <i class="fas fa-sign-out-alt"></i>
         Cancel
       </button>
     </div>
   </div>
+  <hr class="mt-0 mb-3">
 
-  <div class="">
-    <form autocomplete="off" #accountEditorForm="ngForm" >
-      <div class="form-group">
-        <h5 class="pb-0 mb-0">Account name</h5>
-        <h6 class="pt-0 mt-0 text-secondary">(it must be unique name from your accounts list)</h6>
-        <input class="form-control" name="name" placeholder="Name" [(ngModel)]="appStatus.currentAccount.accountName"
-          required #nameControl="ngModel" [class.is-invalid]="isInvalid(nameControl)"/>
-        <div *ngIf="isInvalid(nameControl)" class="text-danger">
-          Account name is required
-        </div>
+  <form autocomplete="off" #accountEditorForm="ngForm" >
+    <div class="form-group">
+      <h5 class="pb-0 mb-0">Account name</h5>
+      <h6 class="pt-0 mt-0 text-secondary">(it must be unique name from your accounts list)</h6>
+      <input class="form-control" name="name" placeholder="Name" [(ngModel)]="appStatus.currentAccount.accountName"
+        required #nameControl="ngModel" [class.is-invalid]="isInvalid(nameControl)"/>
+      <div *ngIf="isInvalid(nameControl)" class="text-danger">
+        Account name is required
       </div>
+    </div>
 
-      <!-- Group -->
-      <div class="form-group">
-        <h5>Group</h5>
-        <div class="input-group">
-          <select class="form-control" [formControl]="groupSelect" required>
-            <option *ngFor="let group of groups" [value]="group.groupId">{{group.name}}</option>
-          </select>
-          <!-- Edit elected group -->
-          <button type="button" class="btn btn-dark text-light input-group-append ml-1" (click)="click_groupEdit()">
-            <i class="fas fa-edit" style="font-size: 16pt"></i>
-          </button>
-          <!-- Add new group -->
-          <button type="button" class="btn btn-dark text-light input-group-append ml-1"
-            (click)="click_AddGroup()">
-              <i class="fas fa-plus" style="font-size: 16pt"></i>
-          </button>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <h5 class="pb-0 mb-0">Start amount</h5>
-        <h6 class="pt-0 mt-0 text-secondary">(start sum from which accouting will begin)</h6>
-        <div class="input-group">
-          <input class="form-control" name="amount" placeholder="0.00" [(ngModel)]="appStatus.currentAccount.startAmount"
-            pattern="[0-9]*\.?[0-9]*" #startAmountControl="ngModel" [class.is-invalid]="isInvalid(startAmountControl)"/>
-          <select class="form-control input-group-append ml-1" [formControl]="currencySelect" required
-            style="max-width: 100px !important">
-            <option *ngFor="let currency of currencies" name="currency" [value]="currency.currencyId">{{currency.code}}</option>
-          </select>
-          <!-- Edit elected currency -->
-          <button type="button" class="btn btn-dark text-light input-group-append ml-1" routerLink="/currencies/edit/{{appStatus.currentAccount.currencyId}}">
-            <i class="fas fa-edit" style="font-size: 16pt"></i>
-          </button>
-          <button type="button" class="btn btn-dark text-light input-group-append ml-1" (click)="click_AddCurrency()">
+    <!-- Group -->
+    <div class="form-group">
+      <h5>Group</h5>
+      <div class="input-group">
+        <select class="form-control" [formControl]="groupSelect" required>
+          <option *ngFor="let group of groups" [value]="group.groupId">{{group.name}}</option>
+        </select>
+        <!-- Edit elected group -->
+        <button type="button" class="btn btn-dark text-light input-group-append ml-1" (click)="click_groupEdit()">
+          <i class="fas fa-edit" style="font-size: 16pt"></i>
+        </button>
+        <!-- Add new group -->
+        <button type="button" class="btn btn-dark text-light input-group-append ml-1"
+          (click)="click_AddGroup()">
             <i class="fas fa-plus" style="font-size: 16pt"></i>
-          </button>
-        </div>
-        <div *ngIf="isInvalid(startAmountControl)" class="text-danger">
-          Only numbers are allowed
-        </div>
+        </button>
       </div>
+    </div>
 
-      <div class="form-group">
-        <h5 class="pb-0 mb-0">Balance</h5>
-        <h6 class="pt-0 mt-0 text-secondary">(current account balance)</h6>
-        <input class="form-control" name="balance" placeholder="0.00" [(ngModel)]="appStatus.currentAccount.balance"
-          #balanceControl="ngModel" pattern="^-?[0-9]\d*(\.\d+)?$" [disabled]="!editMode"/>
-        <div *ngIf="isInvalid(balanceControl)" class="text-danger">
-            Only number are allowed
-        </div>
+    <div class="form-group">
+      <h5 class="pb-0 mb-0">Start amount</h5>
+      <h6 class="pt-0 mt-0 text-secondary">(start sum from which accouting will begin)</h6>
+      <div class="input-group">
+        <input class="form-control" name="amount" placeholder="0.00" [(ngModel)]="appStatus.currentAccount.startAmount"
+          pattern="[0-9]*\.?[0-9]*" #startAmountControl="ngModel" [class.is-invalid]="isInvalid(startAmountControl)"/>
+        <select class="form-control input-group-append ml-1" [formControl]="currencySelect" required
+          style="max-width: 100px !important">
+          <option *ngFor="let currency of currencies" name="currency" [value]="currency.currencyId">{{currency.code}}</option>
+        </select>
+        <!-- Edit elected currency -->
+        <button type="button" class="btn btn-dark text-light input-group-append ml-1" routerLink="/currencies/edit/{{appStatus.currentAccount.currencyId}}">
+          <i class="fas fa-edit" style="font-size: 16pt"></i>
+        </button>
+        <button type="button" class="btn btn-dark text-light input-group-append ml-1" (click)="click_AddCurrency()">
+          <i class="fas fa-plus" style="font-size: 16pt"></i>
+        </button>
       </div>
-      
-
-      <div class="form-group">
-        <h5>Description</h5>
-        <textarea class="form-control" name="description" [(ngModel)]="appStatus.currentAccount.description"
-          placeholder="Description"></textarea>
+      <div *ngIf="isInvalid(startAmountControl)" class="text-danger">
+        Only numbers are allowed
       </div>
-      
-      <div class="form-row">
-        <div class="col">
-          <button *ngIf="!editMode" type="button" name="btn_create" class="btn btn-dark text-ligth" (click)="clickCreateAccount()"
-            [disabled]="accountEditorForm.invalid || currencySelect.invalid || groupSelect.invalid">
-              <i class="fas fa-plus-circle mr-1"></i>
-              Create
-          </button>
-          
-          <button *ngIf="editMode" type="button" class="btn btn-dark text-ligth" (click)="clickEditAccount()"
-            [disabled]="accountEditorForm.invalid || currencySelect.invalid || groupSelect.invalid">
-            <i class="far fa-save mr-1"></i>
-            Save
-          </button>
+    </div>
 
-          <button *ngIf="appStatus.activeAccountsMode && editMode" type="button" class="btn btn-dark text-light ml-1"
-            (click)="click_HideActivateAccount(false)">
-              <i class="fas fa-minus"></i>
-              Hide
-          </button>
+    <div class="form-group">
+      <h5 class="pb-0 mb-0">Balance</h5>
+      <h6 class="pt-0 mt-0 text-secondary">(current account balance)</h6>
+      <input class="form-control" name="balance" placeholder="0.00" [(ngModel)]="appStatus.currentAccount.balance"
+        #balanceControl="ngModel" pattern="^-?[0-9]\d*(\.\d+)?$" [disabled]="!editMode"/>
+      <div *ngIf="isInvalid(balanceControl)" class="text-danger">
+          Only number are allowed
+      </div>
+    </div>
+    
 
-          <button *ngIf="!appStatus.activeAccountsMode && editMode" type="button" class="btn btn-dark text-light ml-1"
-            (click)="click_HideActivateAccount(true)">
-              <i class="fas fa-plus"></i>
-              Activate
-          </button>
-        </div>
+    <div class="form-group">
+      <h5>Description</h5>
+      <textarea class="form-control" name="description" [(ngModel)]="appStatus.currentAccount.description"
+        placeholder="Description"></textarea>
+    </div>
+    
+    <div class="form-row">
+      <div class="col">
+        <button *ngIf="!editMode" type="button" name="btn_create" class="btn btn-dark text-ligth" (click)="clickCreateAccount()"
+          [disabled]="accountEditorForm.invalid || currencySelect.invalid || groupSelect.invalid">
+            <i class="fas fa-plus-circle mr-1"></i>
+            Create
+        </button>
         
-        <div *ngIf="editMode" class="col-1">
-          <button type="button" class="btn btn-dark text-light float-right" (click)="clickDeleteAccount()" style="width: 100px">
-              <i class="far fa-trash-alt"></i>
-              Delete
-          </button>
-        </div>
+        <button *ngIf="editMode" type="button" class="btn btn-dark text-ligth" (click)="clickEditAccount()"
+          [disabled]="accountEditorForm.invalid || currencySelect.invalid || groupSelect.invalid">
+          <i class="far fa-save mr-1"></i>
+          Save
+        </button>
+
+        <button *ngIf="appStatus.activeAccountsMode && editMode" type="button" class="btn btn-dark text-light ml-1"
+          (click)="click_HideActivateAccount(false)">
+            <i class="fas fa-minus"></i>
+            Hide
+        </button>
+
+        <button *ngIf="!appStatus.activeAccountsMode && editMode" type="button" class="btn btn-dark text-light ml-1"
+          (click)="click_HideActivateAccount(true)">
+            <i class="fas fa-plus"></i>
+            Activate
+        </button>
       </div>
-    </form>
-  </div>
+      
+      <div *ngIf="editMode" class="col-1">
+        <button type="button" class="btn btn-dark text-light float-right" (click)="clickDeleteAccount()" style="width: 100px">
+            <i class="far fa-trash-alt"></i>
+            Delete
+        </button>
+      </div>
+    </div>
+  </form>
 </div>

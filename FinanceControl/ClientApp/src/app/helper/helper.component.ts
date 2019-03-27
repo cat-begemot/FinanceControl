@@ -44,6 +44,7 @@ export class HelperComponent implements OnInit {
     this.repository.getHelpersByTarget(target).subscribe(res=>
       {
         this.helpers=res;
+        console.error(this.helpers.length);
       });
 
   }
