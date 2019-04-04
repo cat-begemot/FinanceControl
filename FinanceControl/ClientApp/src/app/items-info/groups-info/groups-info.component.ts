@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Repository } from "../../model/repository";
 import { Group, GroupType } from "../../model/group.model";
+import { Target } from "../../model/helper.model";
 
 @Component({
   selector: 'app-groups-info',
@@ -11,12 +12,14 @@ export class GroupsInfoComponent implements OnInit {
   public groups: Group[];
   public nameSortAcs: boolean; // sorting direction
   public typeSortAcs: boolean; // sorting direction
+  public targetComponent: Target;
 
   constructor(
     private repository: Repository
   ) { }
 
   ngOnInit() {
+    this.targetComponent=Target.Groups;
     this.repository.getAllGroup(GroupType.None).subscribe(response=>{
       this.groups=response;
     });

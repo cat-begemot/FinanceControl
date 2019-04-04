@@ -4,6 +4,7 @@ import { FormGroup, FormControl, Validators, AbstractControl } from "@angular/fo
 import { Repository } from 'src/app/model/repository';
 import { Router } from "@angular/router";
 import { AppStatusService } from 'src/app/app-status.service';
+import { Target } from "../../model/helper.model";
 
 @Component({
   selector: 'app-authentication',
@@ -12,6 +13,7 @@ import { AppStatusService } from 'src/app/app-status.service';
 })
 export class AuthenticationComponent implements OnInit {
   public loginForm: FormGroup;
+  public targetComponent: Target;
 
   constructor(
     private authService: AuthenticationService,
@@ -21,6 +23,7 @@ export class AuthenticationComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.targetComponent=Target.Signin;
     this.loginForm=new FormGroup({
       loginControl: new FormControl('', Validators.required),
       passwordControl: new FormControl('', Validators.required)

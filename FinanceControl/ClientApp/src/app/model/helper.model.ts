@@ -8,6 +8,7 @@ export class Helper{
 }
 
 export enum Target{
+	None=-1, // Do not show help information about component
 	Signin,
 	Signup,
 	Accounts,

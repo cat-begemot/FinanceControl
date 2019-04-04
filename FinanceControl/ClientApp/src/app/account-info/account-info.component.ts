@@ -5,6 +5,7 @@ import { Repository } from "../model/repository";
 import { ActivatedRoute } from "@angular/router";
 import { FormControl} from "@angular/forms";
 import { AppStatusService } from "../app-status.service";
+import { Target } from "../model/helper.model";
 
 @Component({
   selector: 'account-info',
@@ -16,6 +17,7 @@ export class AccountInfoComponent implements OnInit{
   public accounts: Account[];
   public currencies: Currency[]; // currencies which is consisting of filter (show only currency of active or hidden accounts)
   public selectCurrency: FormControl; // link to dropbox elements with currencies list
+  public targetComponent: Target; // defines which help documents to show in template
 
   constructor(
     private repository: Repository,
@@ -24,6 +26,7 @@ export class AccountInfoComponent implements OnInit{
   ) { }
 
   ngOnInit(){
+    this.targetComponent=Target.Accounts;
     this.accountsStatusInfo=new AccountsStatus();
     this.selectCurrency=new FormControl('ALL');
     this.loadAppropriateAccountsType(0);

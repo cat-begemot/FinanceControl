@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Item } from "../model/item.model";
 import { Repository } from "../model/repository";
 import { Router } from "@angular/router";
+import { Target } from "../model/helper.model";
 
 @Component({
   selector: 'app-items-info',
@@ -11,6 +12,7 @@ import { Router } from "@angular/router";
 export class ItemsInfoComponent implements OnInit {
   public currentItem: Item;
   public items: Item[];
+  public targetComponent: Target;
 
   constructor(
     private repository: Repository,
@@ -18,6 +20,7 @@ export class ItemsInfoComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.targetComponent=Target.Items;
     this.repository.getIncomeExpenseItems().subscribe(response=>{
       this.items=response;
     });

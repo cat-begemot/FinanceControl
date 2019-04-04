@@ -3,6 +3,7 @@ import { Transaction } from "../model/transaction.model";
 import { Repository } from "../model/repository";
 import { GroupType } from "../model/group.model";
 import { Route, Router } from "@angular/router";
+import { Target } from "../model/helper.model";
 
 @Component({
   selector: 'app-transactions-info',
@@ -20,6 +21,8 @@ export class TransactionsInfoComponent implements OnInit {
 
   public accountDetailCollapsed: boolean;
   public itemDetailCollapsed: boolean;
+
+  public targetComponent: Target;
 
   constructor(
     private repository: Repository,
@@ -41,6 +44,8 @@ export class TransactionsInfoComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.targetComponent=Target.Transactions;
+    
     this.accountDetailCollapsed=true;
     this.itemDetailCollapsed=true;
     

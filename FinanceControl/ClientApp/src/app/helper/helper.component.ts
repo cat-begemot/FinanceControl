@@ -9,7 +9,7 @@ import { Repository } from "../model/repository";
 })
 export class HelperComponent implements OnInit {
   @Input()
-  id: number;
+  targetComponent: Target;
   
   public helpers: Helper[];
   
@@ -18,35 +18,13 @@ export class HelperComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    let target: Target;
-    if(this.id==0){
-      target=Target.Signin
+    if(this.targetComponent!=Target.None){
+      this.repository.getHelpersByTarget(this.targetComponent).subscribe(res=>
+        {
+          this.helpers=res;
+          console.error(this.targetComponent);
+        });
     }
-    else if(this.id==1){
-      target=Target.Signup;
-    }
-    else if(this.id==2){
-      target=Target.Accounts;
-    }
-    else if(this.id==3){
-      target=Target.Transactions;
-    }
-    else if(this.id==4){
-      target=Target.Items;
-    }
-    else if(this.id==5){
-      target=Target.Currencies;
-    }
-    else if(this.id==6){
-      target=Target.Groups;
-    }
-
-    this.repository.getHelpersByTarget(target).subscribe(res=>
-      {
-        this.helpers=res;
-        console.error(this.helpers.length);
-      });
-
   }
 
 }

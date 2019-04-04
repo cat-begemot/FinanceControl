@@ -4,6 +4,7 @@ import { Location } from "@angular/common";
 import { Router } from "@angular/router";
 import { Repository } from "../../model/repository";
 import { AuthenticationService } from "../authentication.service";
+import { Target } from "../../model/helper.model";
 
 @Component({
   selector: 'app-signup',
@@ -14,6 +15,7 @@ export class SignupComponent implements OnInit {
   public signUpForm: FormGroup;
   public errorLogin: boolean;
   public errorPasswordConfirmation: boolean;
+  public targetComponent: Target;
 
   constructor(
     private location: Location,
@@ -23,6 +25,7 @@ export class SignupComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.targetComponent=Target.Signup;
     this.authService.isSeedData=true;
     this.signUpForm=new FormGroup({
       loginControl: new FormControl('', Validators.required),
